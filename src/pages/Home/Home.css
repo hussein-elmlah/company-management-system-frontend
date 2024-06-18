@@ -1,0 +1,138 @@
+.main {
+    /* padding: 20px; */
+    direction: rtl;
+  }
+  
+  .about {
+    /* background-color: #f8f9fa; */
+    padding: 0px 0;
+    margin: 0;
+  }
+  
+  .about p {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  
+  .about .imagebox {
+    text-align: center;
+  }
+  
+  .working {
+    background-color: #e9ecef;
+    padding: 50px 0;
+  }
+  
+  .working .col-md-3 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .working .col-md-3 h1 {
+    font-size: 36px;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  
+  .services {
+    margin-top: 50px;
+  }
+  
+  .services .single-service {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .services .single-service i {
+    font-size: 36px;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  
+  .portfolio {
+    margin-top: 50px;
+    padding: 50px 0;
+    background-color: #f8f9fa;
+  }
+  
+  .portfolio .portfolio-item {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  
+  .portfolio .portfolio-item img {
+    transition: transform 0.3s ease;
+  }
+  
+  .portfolio .portfolio-item:hover img {
+    transform: scale(1.1);
+  }
+  
+  .portfolio .portfolio-item .portfolio-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 123, 255, 0.8);
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: opacity 0.3s ease;
+  }
+  
+  .portfolio .portfolio-item:hover .portfolio-overlay {
+    opacity: 1;
+  }
+  
+  .portfolio .portfolio-item .portfolio-overlay h4 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  } 
+  
+  .portfolio .portfolio-item .portfolio-overlay p {
+    font-size: 16px;
+  }
+  
+  .contact {
+    padding:30px 0;
+  }
+  
+  .contact .form-control {
+    margin-bottom: 20px;
+  }
+  
+  .contact .contact-info {
+    text-align: right;
+    line-height: .5rem;
+    scale: .95;
+  }
+  
+  .contact .contact-item {
+    margin-bottom: 20px;
+  }
+  
+  .contact .contact-item i {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #007bff;
+  }
+  
+  @media (max-width: 767px) {
+    .about .imagebox {
+      margin-top: 20px;
+    }
+  
+    .working .col-md-3 {
+      margin-bottom: 20px;
+    }
+  
+    .portfolio .portfolio-item {
+      margin-bottom: 20px;
+    }
+  }
+  

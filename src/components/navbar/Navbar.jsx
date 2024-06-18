@@ -29,14 +29,14 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div className="container">
         <NavLink className="navbar-brand" to="/">
-          <img src="./src/assets/images/navlogo.png" className='p-0 m-0' alt="logo" />
+          <img src="./src/assets/images/navlogo.png" className='p-0 m-0 w-10' alt="logo" />
         </NavLink>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <NavLink className="nav-link" to="/">الرئيسية</NavLink>
             </li>
             <li className="nav-item">
@@ -50,7 +50,7 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/portfolio">أعمالنا</NavLink>
-            </li>
+            </li> */}
             {isLoggedIn && role === 'client' && (
               <>
                 <li className="nav-item">
