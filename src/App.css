@@ -1,0 +1,38 @@
+.container {
+  flex: 1; /* This will make the container take up the remaining space */
+}
+
+.navbar {
+  background-color: #f8f9fa;
+}
+
+.nav-link {
+  color: #000;
+  margin-right: 15px;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #007bff;
+}
+
+.navbar-brand img {
+  width: 50px;
+}
+
+.btn-outline-primary {
+  margin-right: 10px;
+}
+
+.dropdown-menu {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.dropdown-item {
+  color: #fff;
+}
+
+.dropdown-item:hover {
+  background-color: #007bff;
+}

@@ -6,7 +6,8 @@ const Home = () => {
   // const user = useSelector(selectUser);
 
   return (
-    <div>
+    <div className='text-center'>
+      <div className='row justify-content-center align-items-center' style={{minHeight:400}}>
       <h1>Home</h1>
       {/* {user ? (
         <p>Welcome, {user?.name}!</p>
@@ -14,6 +15,7 @@ const Home = () => {
         <p>Please login.</p>
       )} */}
     </div>
+      </div>
   );
 };
 
