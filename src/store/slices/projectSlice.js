@@ -53,6 +53,19 @@ export const deleteProject = createAsyncThunk(
   }
 );
 
+export const fetchProjectById = createAsyncThunk(
+  'projects/fetchProjectById',
+  async (projectId) => {
+    try {
+      const response = await axiosInstance.get(`/projects/${projectId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching project with ID ${projectId}:`, error);
+      throw error;
+    }
+  }
+);
+
 
 const initialState = {
     projectList: [],
