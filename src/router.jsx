@@ -6,11 +6,12 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import Home from "./pages/Home/Home";
 import EmployeeSignup from "./pages/signup/employeeSignup/EmployeeSignup";
 import Project from "./components/project/Project";
+import ProjectForm from "./components/project/ProjectForm";
 
 function UserLayout() {
   return (
     <div className="m-0 p-0">
-    <Navbar />
+    {/* <Navbar /> */}
       <div className="container my-0 py-0" style={{ paddingTop: "85px", minHeight: "calc(100vh - 104px)" }}>
         <Outlet />
       </div>
@@ -31,8 +32,11 @@ const router = createBrowserRouter([
         path: "/signEmp",
         element: <PrivateRoute element={<EmployeeSignup />} />
       },{
-        path: "/createproject",
+        path: "/createpro",
         element: <PrivateRoute element={<Project/>} />
+      },{
+        path: "/createproject",
+        element: <PrivateRoute element={<ProjectForm/>} />
       }, 
       {
         path: "*",
