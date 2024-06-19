@@ -7,6 +7,7 @@ import Home from "./pages/Home/Home";
 import EmployeeSignup from "./pages/signup/employeeSignup/EmployeeSignup";
 import Project from "./components/project/Project";
 import ProjectForm from "./components/project/ProjectForm";
+import ProjectList from "./components/project/ProjectList";
 
 function UserLayout() {
   return (
@@ -32,8 +33,8 @@ const router = createBrowserRouter([
         path: "/signEmp",
         element: <PrivateRoute element={<EmployeeSignup />} />
       },{
-        path: "/createpro",
-        element: <PrivateRoute element={<Project/>} />
+        path: "/projects",
+        element: <PrivateRoute element={<ProjectList/>} />
       },{
         path: "/createproject",
         element: <PrivateRoute element={<ProjectForm/>} />
