@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchProjects } from '../../store/slices/projectSlice';
 import ProjectTable from './ProjectTable';
 import Pagination from '../pagination/Pagination';
+import LoadingSpinner from '../reusables/LoadingSpinner';
 
 const ProjectList = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const ProjectList = () => {
   }, [dispatch]);
 
   if (!projects) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner/>;
   }
 
   const indexOfLastProject = currentPage * projectsPerPage;
