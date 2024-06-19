@@ -70,8 +70,8 @@ const Navbar = () => {
                     انشئ حساب
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={NavLink} to="/employeesignup">موظف</Dropdown.Item>
-                    <Dropdown.Item as={NavLink} to="/usersignup">عميل</Dropdown.Item>
+                    <Dropdown.Item as={NavLink} to="/signEmp">موظف</Dropdown.Item>
+                    <Dropdown.Item as={NavLink} to="/signUser">عميل</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </>
