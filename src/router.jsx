@@ -4,11 +4,12 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import Home from "./pages/Home/Home";
+import EmployeeSignup from "./pages/signup/employeeSignup/EmployeeSignup";
 
 function UserLayout() {
   return (
     <div className="m-0 p-0">
-      <Navbar />
+    <Navbar />
       <div className="container my-0 py-0" style={{ paddingTop: "85px", minHeight: "calc(100vh - 104px)" }}>
         <Outlet />
       </div>
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <PrivateRoute element={<Home />} />
       },  
+      {
+        path: "/signEmp",
+        element: <PrivateRoute element={<EmployeeSignup />} />
+      }, 
       {
         path: "*",
         element: <NotFoundPage />,
