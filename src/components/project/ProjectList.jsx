@@ -7,31 +7,35 @@ import LoadingSpinner from '../reusables/LoadingSpinner';
 
 const ProjectList = () => {
   const dispatch = useDispatch();
-  const projects = useSelector(state => state.projects.projectList.data);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [projectsPerPage] = useState(10);
+  const projectsData = useSelector(state => state.projects.projectList); 
+  const { data: projects, currentPage, totalPages } = projectsData || {};
+  const [currentPageState, setCurrentPage] = useState(1);
+  const projectsPerPage = 10; 
 
   useEffect(() => {
-    dispatch(fetchProjects());
-  }, [dispatch]);
+    dispatch(fetchProjects(currentPageState, projectsPerPage)); 
+  }, [dispatch, currentPageState, projectsPerPage]);
 
   if (!projects) {
-    return <LoadingSpinner/>;
+    return <LoadingSpinner />;
   }
 
-  const indexOfLastProject = currentPage * projectsPerPage;
+  const onPageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    dispatch(fetchProjects(pageNumber, projectsPerPage));
+  };
+
+  const indexOfLastProject = currentPageState * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
-
-  const onPageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">All Projects</h1>
       <ProjectTable projects={currentProjects} />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.ceil(projects.length / projectsPerPage)}
+        currentPage={currentPageState}
+        totalPages={totalPages}
         onPageChange={onPageChange}
       />
     </div>

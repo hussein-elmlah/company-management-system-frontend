@@ -3,9 +3,9 @@ import { axiosInstance } from "../../axios";
 
 export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
-  async () => {
+  async (page) => {
     try {
-      const response = await axiosInstance.get("/projects");
+      const response = await axiosInstance.get(`/projects?page=${page}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -13,6 +13,7 @@ export const fetchProjects = createAsyncThunk(
     }
   }
 );
+
 
 export const createProject = createAsyncThunk(
   "projects/createProject",
@@ -68,15 +69,21 @@ export const fetchProjectById = createAsyncThunk(
 
 
 const initialState = {
-    projectList: [],
-    isLoading: false,
-    error: null,
-  };
+  projectList: [],
+  loading: false,
+  error: null,
+  currentPage: 1,
+  totalPages: 1, 
+  projectsPerPage: 10,
+};
   
   const projectSlice = createSlice({
     name: "projects",
     initialState,
-    reducers: {
+    reducers:{
+      setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    }
     },
     extraReducers: (builder) => {
       builder
@@ -131,5 +138,7 @@ const initialState = {
         });
     },
   });
-
+  
+  
+   export const { setCurrentPage } = projectSlice.actions;
 export default projectSlice.reducer;

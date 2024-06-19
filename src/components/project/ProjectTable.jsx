@@ -1,5 +1,3 @@
-// ProjectTable.jsx
-
 import React from 'react';
 
 const ProjectTable = ({ projects }) => {
