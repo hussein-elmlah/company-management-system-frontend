@@ -17,7 +17,7 @@ const ProjectTable = ({ projects }) => {
             <tr key={project.id}>
               <td>{project.name}</td>
               <td>{project.description}</td>
-              <td>{project.client.fullName}</td>
+              {/* <td>{project.client.fullName}</td> */}
               {/* Display more project details as needed */}
             </tr>
           ))}

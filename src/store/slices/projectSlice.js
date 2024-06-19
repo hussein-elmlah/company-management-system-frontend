@@ -6,7 +6,9 @@ export const fetchProjects = createAsyncThunk(
   async (page) => {
     try {
       const response = await axiosInstance.get(`/projects?page=${page}`);
-      return response.data;
+      const data= await response.data;
+      console.log(data);
+      return data;
     } catch (error) {
       console.error("Error fetching projects:", error);
       throw error;
@@ -68,77 +70,44 @@ export const fetchProjectById = createAsyncThunk(
 );
 
 
+
+  
 const initialState = {
   projectList: [],
   loading: false,
   error: null,
   currentPage: 1,
-  totalPages: 1, 
+  totalPages: 1,
   projectsPerPage: 10,
 };
-  
-  const projectSlice = createSlice({
-    name: "projects",
-    initialState,
-    reducers:{
-      setCurrentPage: (state, action) => {
+
+const projectSlice = createSlice({
+  name: "projects",
+  initialState,
+  reducers: {
+    setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
     }
-    },
-    extraReducers: (builder) => {
-      builder
-        .addCase(fetchProjects.pending, (state) => {
-          state.isLoading = true;
-        })
-        .addCase(fetchProjects.fulfilled, (state, action) => {
-          state.isLoading = false;
-          state.projectList = action.payload;
-        })
-        .addCase(fetchProjects.rejected, (state, action) => {
-          state.isLoading = false;
-          state.error = action.error.message;
-        })
-        .addCase(createProject.pending, (state) => {
-          state.isLoading = true;
-        })
-        .addCase(createProject.fulfilled, (state, action) => {
-          state.isLoading = false;
-          state.projectList.push(action.payload); 
-        })
-        .addCase(createProject.rejected, (state, action) => {
-          state.isLoading = false;
-          state.error = action.error.message;
-        })
-        .addCase(updateProject.pending, (state) => {
-          state.isLoading = true;
-        })
-        .addCase(updateProject.fulfilled, (state, action) => {
-          state.isLoading = false;
-          // Update the project in the list if needed
-          state.projectList = state.projectList.map(project =>
-            project._id === action.payload._id ? action.payload : project
-          );
-        })
-        .addCase(updateProject.rejected, (state, action) => {
-          state.isLoading = false;
-          state.error = action.error.message;
-        })
-        .addCase(deleteProject.pending, (state) => {
-          state.isLoading = true;
-        })
-        .addCase(deleteProject.fulfilled, (state, action) => {
-          state.isLoading = false;
-          state.projectList = state.projectList.filter(project =>
-            project._id !== action.payload
-          );
-        })
-        .addCase(deleteProject.rejected, (state, action) => {
-          state.isLoading = false;
-          state.error = action.error.message;
-        });
-    },
-  });
-  
-  
-   export const { setCurrentPage } = projectSlice.actions;
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProjects.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProjects.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.projectList = action.payload.data; // Assuming action.payload.data is the array of projects
+        state.totalPages = Math.ceil(action.payload.totalCount / state.projectsPerPage);
+      })
+      .addCase(fetchProjects.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message; // Assuming action.error.message contains the error message
+      });
+  },
+});
+
+export const { setCurrentPage } = projectSlice.actions;
+
 export default projectSlice.reducer;

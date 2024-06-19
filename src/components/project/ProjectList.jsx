@@ -1,40 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchProjects } from '../../store/slices/projectSlice';
+import { fetchProjects, setCurrentPage } from '../../store/slices/projectSlice';
 import ProjectTable from './ProjectTable';
 import Pagination from '../pagination/Pagination';
 import LoadingSpinner from '../reusables/LoadingSpinner';
 
 const ProjectList = () => {
   const dispatch = useDispatch();
-  const projectsData = useSelector(state => state.projects.projectList); 
-  const { data: projects, currentPage, totalPages } = projectsData || {};
-  const [currentPageState, setCurrentPage] = useState(1);
-  const projectsPerPage = 10; 
+  const { projectList, loading, error, currentPage, totalPages, projectsPerPage } = useSelector(state => state.projects);
+  const [currentPageLocal, setCurrentPageLocal] = useState(currentPage);
 
   useEffect(() => {
-    dispatch(fetchProjects(currentPageState, projectsPerPage)); 
-  }, [dispatch, currentPageState, projectsPerPage]);
+    dispatch(fetchProjects(currentPageLocal));
+  }, [dispatch, currentPageLocal]);
 
-  if (!projects) {
+  const onPageChange = (pageNumber) => {
+    dispatch(setCurrentPage(pageNumber));
+    setCurrentPageLocal(pageNumber);
+  };
+
+  if (loading) {
     return <LoadingSpinner />;
   }
 
-  const onPageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    dispatch(fetchProjects(pageNumber, projectsPerPage));
-  };
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
-  const indexOfLastProject = currentPageState * projectsPerPage;
+  const indexOfLastProject = currentPage * projectsPerPage;
+  // console.log(indexOfLastProject);
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+  // console.log(projectList);
+  // const currentProjects = projectList.slice(indexOfFirstProject, indexOfLastProject);
+  const currentProjects = projectList;
 
+  // console.log('Projects:', JSON.stringify(currentProjects, null, 2));
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">All Projects</h1>
       <ProjectTable projects={currentProjects} />
       <Pagination
-        currentPage={currentPageState}
+        currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={onPageChange}
       />
