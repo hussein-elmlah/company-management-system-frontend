@@ -36,6 +36,12 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/notify-me"> Check Notifications </NavLink>
+          </li>
+
+
             {/* <li className="nav-item">
               <NavLink className="nav-link" to="/">الرئيسية</NavLink>
             </li>

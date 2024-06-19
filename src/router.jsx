@@ -4,6 +4,7 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import Home from "./pages/Home/Home";
+import Notifications from "./pages/Notifications/Notifications";
 
 function UserLayout() {
   return (
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <PrivateRoute element={<Home />} />
-      },  
+      },
+      {
+        path: "/notify-me",
+        element: <Notifications />
+      },        
       {
         path: "*",
         element: <NotFoundPage />,
