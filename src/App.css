@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 .container {
   flex: 1; /* This will make the container take up the remaining space */
 }
