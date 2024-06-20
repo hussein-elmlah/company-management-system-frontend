@@ -65,14 +65,35 @@ const ProjectForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto mt-8">
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="location">
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+      <div className="grid grid-cols-2 gap-6">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+            Project Name
+          </label>
+          <input
+            className={`shadow appearance-none border ${
+              errors.name ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            id="name"
+            type="text"
+            placeholder="Enter project name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+          />
+          {errors.name && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
             Project Location
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.location ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.location ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="location"
             type="text"
             placeholder="Enter project location"
@@ -80,14 +101,18 @@ const ProjectForm = () => {
             value={formData.location}
             onChange={handleChange}
           />
-          {errors.location && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.location && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="owner">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="owner">
             Owner Name
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.owner ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.owner ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="owner"
             type="text"
             placeholder="Enter owner name"
@@ -95,17 +120,18 @@ const ProjectForm = () => {
             value={formData.owner}
             onChange={handleChange}
           />
-          {errors.owner && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.owner && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="plotNumber">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="plotNumber">
             Plot Number
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.plotNumber ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.plotNumber ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="plotNumber"
             type="text"
             placeholder="Enter plot number"
@@ -113,14 +139,18 @@ const ProjectForm = () => {
             value={formData.plotNumber}
             onChange={handleChange}
           />
-          {errors.plotNumber && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.plotNumber && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="planNumber">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="planNumber">
             Plan Number
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.planNumber ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.planNumber ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="planNumber"
             type="text"
             placeholder="Enter plan number"
@@ -128,17 +158,18 @@ const ProjectForm = () => {
             value={formData.planNumber}
             onChange={handleChange}
           />
-          {errors.planNumber && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.planNumber && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="landPerimeter">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="landPerimeter">
             Land Perimeter
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.landPerimeter ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.landPerimeter ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="landPerimeter"
             type="text"
             placeholder="Enter land perimeter"
@@ -146,14 +177,18 @@ const ProjectForm = () => {
             value={formData.landPerimeter}
             onChange={handleChange}
           />
-          {errors.landPerimeter && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.landPerimeter && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="landArea">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="landArea">
             Land Area
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.landArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.landArea ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="landArea"
             type="text"
             placeholder="Enter land area"
@@ -161,17 +196,18 @@ const ProjectForm = () => {
             value={formData.landArea}
             onChange={handleChange}
           />
-          {errors.landArea && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.landArea && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="program">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="program">
             Program Type
           </label>
           <select
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.program ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.program ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="program"
             name="program"
             value={formData.program}
@@ -181,14 +217,18 @@ const ProjectForm = () => {
             <option value="autocad">AutoCAD</option>
             <option value="revit">Revit</option>
           </select>
-          {errors.program && <p className="text-red-500 text-xs italic">Please select a program type.</p>}
+          {errors.program && (
+            <p className="text-red-500 text-xs italic">Please select a program type.</p>
+          )}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="type">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
             Project Type
           </label>
           <select
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.type ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.type ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="type"
             name="type"
             value={formData.type}
@@ -197,21 +237,20 @@ const ProjectForm = () => {
             <option value="">Select project type</option>
             <option value="villa">Villa</option>
             <option value="residential">Residential</option>
-            <option value="administrative">Administrative</option>
             <option value="commercial">Commercial</option>
-            <option value="other">Other</option>
           </select>
-          {errors.type && <p className="text-red-500 text-xs italic">Please select a project type.</p>}
+          {errors.type && (
+            <p className="text-red-500 text-xs italic">Please select a project type.</p>
+          )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="numberOfFloors">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="numberOfFloors">
             Number of Floors
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.numberOfFloors ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.numberOfFloors ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="numberOfFloors"
             type="number"
             placeholder="Enter number of floors"
@@ -219,122 +258,143 @@ const ProjectForm = () => {
             value={formData.numberOfFloors}
             onChange={handleChange}
           />
-          {errors.numberOfFloors && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.numberOfFloors && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="buildingArea">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="buildingArea">
             Building Area
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.buildingArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.buildingArea ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="buildingArea"
-            type="number"
+            type="text"
             placeholder="Enter building area"
             name="buildingArea"
             value={formData.buildingArea}
             onChange={handleChange}
           />
-          {errors.buildingArea && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.buildingArea && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="totalBuildingArea">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalBuildingArea">
             Total Building Area
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.totalBuildingArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`shadow appearance-none border ${
+              errors.totalBuildingArea ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="totalBuildingArea"
-            type="number"
+            type="text"
             placeholder="Enter total building area"
             name="totalBuildingArea"
             value={formData.totalBuildingArea}
             onChange={handleChange}
           />
-          {errors.totalBuildingArea && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.totalBuildingArea && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Basement</label>
-          <div>
+        <div className="mb-4 col-span-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Basement
+          </label>
+          <div className="flex items-center">
             <input
+              className="mr-2 leading-tight"
               type="radio"
-              id="basement-yes"
+              id="basementYes"
               name="basement"
               value={true}
               checked={formData.basement === true}
               onChange={handleChange}
-              className="mr-2"
             />
-            <label htmlFor="basement-yes" className="mr-4">
+            <label className="text-gray-700 text-sm font-bold" htmlFor="basementYes">
               Yes
             </label>
             <input
+              className="ml-4 mr-2 leading-tight"
               type="radio"
-              id="basement-no"
+              id="basementNo"
               name="basement"
               value={false}
               checked={formData.basement === false}
               onChange={handleChange}
-              className="mr-2"
             />
-            <label htmlFor="basement-no">No</label>
+            <label className="text-gray-700 text-sm font-bold" htmlFor="basementNo">
+              No
+            </label>
           </div>
+          {errors.basement && (
+            <p className="text-red-500 text-xs italic">Please select an option.</p>
+          )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Ground Annex</label>
-          <div>
+        <div className="mb-4 col-span-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Ground Annex
+          </label>
+          <div className="flex items-center">
             <input
+              className="mr-2 leading-tight"
               type="radio"
-              id="groundAnnex-yes"
+              id="groundAnnexYes"
               name="groundAnnex"
               value={true}
               checked={formData.groundAnnex === true}
               onChange={handleChange}
-              className="mr-2"
             />
-            <label htmlFor="groundAnnex-yes" className="mr-4">
+            <label className="text-gray-700 text-sm font-bold" htmlFor="groundAnnexYes">
               Yes
             </label>
             <input
+              className="ml-4 mr-2 leading-tight"
               type="radio"
-              id="groundAnnex-no"
+              id="groundAnnexNo"
               name="groundAnnex"
               value={false}
               checked={formData.groundAnnex === false}
               onChange={handleChange}
-              className="mr-2"
             />
-            <label htmlFor="groundAnnex-no">No</label>
+            <label className="text-gray-700 text-sm font-bold" htmlFor="groundAnnexNo">
+              No
+            </label>
           </div>
+          {errors.groundAnnex && (
+            <p className="text-red-500 text-xs italic">Please select an option.</p>
+          )}
+        </div>
+        <div className="mb-4 col-span-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+            Description
+          </label>
+          <textarea
+            className={`shadow appearance-none border ${
+              errors.description ? "border-red-500" : "border-gray-200"
+            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            id="description"
+            placeholder="Enter project description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+          />
+          {errors.description && (
+            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
+          )}
+        </div>
+        <div className="flex items-center justify-between col-span-2">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Create Project
+          </button>
         </div>
       </div>
-
-      <div className="mb-6">
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="description">
-          Project Description
-        </label>
-        <textarea
-          className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.description ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
-          id="description"
-          name="description"
-          placeholder="Enter project description"
-          value={formData.description}
-          onChange={handleChange}
-          rows="4"
-        ></textarea>
-        {errors.description && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
-      </div>
-
-      <button
-        type="submit"
-        className="bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
-      >
-        Add Project
-      </button>
     </form>
   );
 };

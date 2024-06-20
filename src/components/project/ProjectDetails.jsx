@@ -58,7 +58,7 @@ const ProjectDetails = () => {
                 <FaUser className="text-gray-700 mr-2" />
                 <p className="text-gray-700 font-semibold">Owner:</p>
               </div>
-              <p>{project.client.fullName}</p>
+              {/* <p>{project.client?.fullName}</p> */}
             </div>
             <div className="w-full md:w-1/2">
               <div className="flex items-center">

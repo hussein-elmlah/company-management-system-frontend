@@ -3,9 +3,11 @@ import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { deleteProject } from '../../store/slices/projectSlice';
+import { useDispatch } from 'react-redux';
 
 const ProjectTable = ({ projects }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleView = (projectId) => {
     navigate(`/projectdetails/${projectId}`);
@@ -24,14 +26,23 @@ const ProjectTable = ({ projects }) => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        deleteProject(projectId);
-        Swal.fire(
-          'Deleted!',
-          'Your project has been deleted.',
-          'success'
-        );
+        try {
+          await dispatch(deleteProject(projectId));
+          Swal.fire(
+            'Deleted!',
+            'Your project has been deleted.',
+            'success'
+          );
+        } catch (error) {
+          console.error("Error deleting project:", error);
+          Swal.fire(
+            'Error!',
+            'Failed to delete the project.',
+            'error'
+          );
+        }
       }
     });
   };
