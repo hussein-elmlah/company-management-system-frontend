@@ -1,15 +1,18 @@
+// ProjectDetails.jsx
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fetchProjectById, setSelectedProject } from '../../store/slices/projectSlice';
+import { useParams } from 'react-router-dom'; // Importing useParams for accessing route parameters
+import { fetchProjectById, deleteProject ,setSelectedProject} from '../../store/slices/projectSlice';
+import { useNavigate } from 'react-router-dom';
 
 const ProjectDetails = () => {
-  const { projectId } = useParams(); 
+  const { projectId } = useParams();
   const dispatch = useDispatch();
   const project = useSelector(state => state.projects.selectedProject);
   const loading = useSelector(state => state.projects.loading);
   const error = useSelector(state => state.projects.error);
+  const navigate = useNavigate(); // Use useNavigate hook here
 
   useEffect(() => {
     dispatch(fetchProjectById(projectId));
@@ -18,6 +21,18 @@ const ProjectDetails = () => {
       dispatch(setSelectedProject(null));
     };
   }, [dispatch, projectId]);
+
+  const handleDeleteProject = async () => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      try {
+        await dispatch(deleteProject(projectId));
+        navigate('/projects'); // Navigate to '/projects' route after deletion
+      } catch (error) {
+        console.error("Error deleting project:", error);
+        // Handle error as needed
+      }
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -36,6 +51,8 @@ const ProjectDetails = () => {
       <h2>{project.name}</h2>
       <p>Location: {project.location}</p>
       <p>Owner: {project.owner}</p>
+      {/* Render other project details as needed */}
+      <button onClick={handleDeleteProject}>Delete Project</button>
     </div>
   );
 };

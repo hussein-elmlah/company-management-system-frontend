@@ -115,7 +115,6 @@ const projectSlice = createSlice({
       })
       .addCase(updateProject.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // Update the specific project in the state with action.payload
         const updatedProject = action.payload;
         const existingProjectIndex = state.projects.findIndex((p) => p.id === updatedProject.id);
         if (existingProjectIndex !== -1) {
@@ -136,6 +135,19 @@ const projectSlice = createSlice({
         state.selectedProject = action.payload; 
       })
       .addCase(fetchProjectById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.projects = state.projects.filter((project) => project.id !== action.payload);
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

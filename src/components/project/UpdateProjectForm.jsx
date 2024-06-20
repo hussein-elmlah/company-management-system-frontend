@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProjectById, updateProject } from "../../store/slices/projectSlice";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { fetchProjectById, deleteProject } from '../../store/slices/projectSlice';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateProjectForm = () => {
   const dispatch = useDispatch();
