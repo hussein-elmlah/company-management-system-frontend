@@ -1,34 +1,52 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import axiosInstance from './config';
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const handlePrev = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
-  };
-
-  return (
-    <div className="join pb-5 text-center">
-      <button className="join-item btn" onClick={handlePrev} disabled={currentPage === 1}>«</button>
-      {[...Array(totalPages).keys()].map(page => (
-        <button key={page} className="join-item btn" onClick={() => onPageChange(page + 1)}>{page + 1}</button>
-      ))}
-      <button className="join-item btn" onClick={handleNext} disabled={currentPage === totalPages}>»</button>
-    </div>
-  );
+export const subscribeSource = (sourceToSubscribe) => {
+  return axiosInstance.post('/sources/subscribe', sourceToSubscribe)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error subscribing to source:', error);
+      throw error;
+    });
 };
 
-Pagination.propTypes = {
-  currentPage: PropTypes.number.isRequired,
-  totalPages: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired,
+export const unsubscribeSource = (sourceId) => {
+  return axiosInstance.post(`/sources/unsubscribe/${sourceId}`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error unsubscribing from source:', error);
+      throw error;
+    });
 };
 
-export default Pagination;
+export const getTopFiveSources = () => {
+  return axiosInstance.get('/sources/topFive')
+    .then(response => {
+        return response.data;
+    })
+    .catch(error => {
+      console.error('Error fetching top five sources:', error);
+      throw error;
+    });
+};
+
+export const getPaginatedSources = (page = 1, pageSize = 10) => {
+  return axiosInstance.get(`/sources?page=${page}&pageSize=${pageSize}`)
+    .then(response => {
+        return response.data
+    })
+    .catch(error => {
+      console.error('Error fetching paginated sources:', error);
+      throw error;
+    });
+};
+
+export const getSubscribedArticles = (page = 1, pageSize = 10) => {
+  return axiosInstance.get(`/articles/subscribed?page=${page}&pageSize=${pageSize}`)
+    .then(response => {
+        return response.data
+    })
+    .catch(error => {
+      console.error('Error fetching subscribed articles:', error);
+      throw error;
+    });
+};
