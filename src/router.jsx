@@ -9,6 +9,7 @@ import Project from "./components/project/Project";
 import ProjectForm from "./components/project/ProjectForm";
 import ProjectList from "./components/project/ProjectList";
 import UpdateProjectForm from "./components/project/UpdateProjectForm";
+import ProjectDetails from "./components/project/ProjectDetails";
 
 function UserLayout() {
   return (
@@ -42,7 +43,10 @@ const router = createBrowserRouter([
       },{
         path: '/projects/:projectId',
         element: <PrivateRoute element={<UpdateProjectForm/>} />
-      },  
+      },{
+        path: '/projectdetails/:projectId',
+        element: <PrivateRoute element={<ProjectDetails/>} />
+      },   
       {
         path: "*",
         element: <NotFoundPage />,

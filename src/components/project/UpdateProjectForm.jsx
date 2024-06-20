@@ -16,8 +16,8 @@ const UpdateProjectForm = () => {
     planNumber: "",
     landPerimeter: "",
     landArea: "",
-    program: "autocad", // Default to a valid enum value
-    type: "villa", // Default to a valid enum value
+    program: "autocad", 
+    type: "villa", 
     numberOfFloors: "",
     buildingArea: "",
     totalBuildingArea: "",
@@ -51,17 +51,17 @@ const UpdateProjectForm = () => {
         navigate("/projects");
       })
       .catch((error) => {
-        if (error.response && error.response.data && error.response.data.errors) {
-          setErrors(error.response.data.errors);
+        if (error.response && error.response.data && error.response.data.message) {
+          setErrors({ ...errors, server: error.response.data.message });
         } else {
           console.error("Error updating project:", error);
+          setErrors({ ...errors, general: "An error occurred while updating the project." });
         }
       });
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto mt-8">
-      {/* Form structure similar to ProjectForm */}
       <div className="flex flex-wrap -mx-3 mb-6">
         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
           <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="name">
@@ -76,7 +76,7 @@ const UpdateProjectForm = () => {
             value={formData.name}
             onChange={handleChange}
           />
-          {errors.name && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.name && <p className="text-red-500 text-xs italic">{errors.name}</p>}
         </div>
         <div className="w-full md:w-1/2 px-3">
           <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="location">
@@ -91,7 +91,7 @@ const UpdateProjectForm = () => {
             value={formData.location}
             onChange={handleChange}
           />
-          {errors.location && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.location && <p className="text-red-500 text-xs italic">{errors.location}</p>}
         </div>
       </div>
       <div className="flex flex-wrap -mx-3 mb-6">
@@ -108,7 +108,7 @@ const UpdateProjectForm = () => {
             value={formData.owner}
             onChange={handleChange}
           />
-          {errors.owner && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.owner && <p className="text-red-500 text-xs italic">{errors.owner}</p>}
         </div>
       </div>
       <div className="flex flex-wrap -mx-3 mb-6">
@@ -125,7 +125,7 @@ const UpdateProjectForm = () => {
             value={formData.plotNumber}
             onChange={handleChange}
           />
-          {errors.plotNumber && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.plotNumber && <p className="text-red-500 text-xs italic">{errors.plotNumber}</p>}
         </div>
         <div className="w-full md:w-1/2 px-3">
           <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="planNumber">
@@ -140,7 +140,7 @@ const UpdateProjectForm = () => {
             value={formData.planNumber}
             onChange={handleChange}
           />
-          {errors.planNumber && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.planNumber && <p className="text-red-500 text-xs italic">{errors.planNumber}</p>}
         </div>
       </div>
       <div className="flex flex-wrap -mx-3 mb-6">
@@ -157,7 +157,7 @@ const UpdateProjectForm = () => {
             value={formData.landPerimeter}
             onChange={handleChange}
           />
-          {errors.landPerimeter && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.landPerimeter && <p className="text-red-500 text-xs italic">{errors.landPerimeter}</p>}
         </div>
         <div className="w-full md:w-1/2 px-3">
           <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="landArea">
@@ -172,7 +172,7 @@ const UpdateProjectForm = () => {
             value={formData.landArea}
             onChange={handleChange}
           />
-          {errors.landArea && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.landArea && <p className="text-red-500 text-xs italic">{errors.landArea}</p>}
         </div>
       </div>
       <div className="flex flex-wrap -mx-3 mb-6">
@@ -191,7 +191,7 @@ const UpdateProjectForm = () => {
             <option value="revit">Revit</option>
             <option value="archicad">ArchiCAD</option>
           </select>
-          {errors.program && <p className="text-red-500 text-xs italic">Please select a program.</p>}
+          {errors.program && <p className="text-red-500 text-xs italic">{errors.program}</p>}
         </div>
         <div className="w-full md:w-1/2 px-3">
           <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="type">
@@ -208,7 +208,7 @@ const UpdateProjectForm = () => {
             <option value="apartment">Apartment</option>
             <option value="office">Office</option>
           </select>
-          {errors.type && <p className="text-red-500 text-xs italic">Please select a type.</p>}
+          {errors.type && <p className="text-red-500 text-xs italic">{errors.type}</p>}
         </div>
       </div>
       <div className="flex flex-wrap -mx-3 mb-6">
@@ -225,7 +225,7 @@ const UpdateProjectForm = () => {
             value={formData.numberOfFloors}
             onChange={handleChange}
           />
-          {errors.numberOfFloors && <p className="text-red-500 text-xs italic">Please enter a number.</p>}
+          {errors.numberOfFloors && <p className="text-red-500 text-xs italic">{errors.numberOfFloors}</p>}
         </div>
         <div className="w-full md:w-1/2 px-3">
           <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="buildingArea">
@@ -240,7 +240,7 @@ const UpdateProjectForm = () => {
             value={formData.buildingArea}
             onChange={handleChange}
           />
-          {errors.buildingArea && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.buildingArea && <p className="text-red-500 text-xs italic">{errors.buildingArea}</p>}
         </div>
       </div>
       <div className="flex flex-wrap -mx-3 mb-6">
@@ -257,7 +257,7 @@ const UpdateProjectForm = () => {
             value={formData.totalBuildingArea}
             onChange={handleChange}
           />
-          {errors.totalBuildingArea && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.totalBuildingArea && <p className="text-red-500 text-xs italic">{errors.totalBuildingArea}</p>}
         </div>
       </div>
       <div className="flex flex-wrap -mx-3 mb-6">
@@ -273,7 +273,7 @@ const UpdateProjectForm = () => {
             value={formData.description}
             onChange={handleChange}
           />
-          {errors.description && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
+          {errors.description && <p className="text-red-500 text-xs italic">{errors.description}</p>}
         </div>
       </div>
       <div className="flex items-center justify-between">

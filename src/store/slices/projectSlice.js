@@ -80,6 +80,8 @@ const initialState = {
   currentPage: 1,
   totalPages: 1,
   projectsPerPage: 10,
+  selectedProject: null,  
+
 };
 
 const projectSlice = createSlice({
@@ -88,6 +90,8 @@ const projectSlice = createSlice({
   reducers: {
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
+    },setSelectedProject: (state, action) => {
+      state.selectedProject = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -121,11 +125,25 @@ const projectSlice = createSlice({
       .addCase(updateProject.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(fetchProjectById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProjectById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.selectedProject = action.payload; 
+      })
+      .addCase(fetchProjectById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
+
 
   },
 });
 
-export const { setCurrentPage } = projectSlice.actions;
+export const { setCurrentPage, setSelectedProject } = projectSlice.actions;
 
 export default projectSlice.reducer;
