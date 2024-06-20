@@ -6,7 +6,7 @@ export const fetchProjects = createAsyncThunk(
   async (page) => {
     try {
       const response = await axiosInstance.get(`/projects?page=${page}`);
-      const data= await response.data;
+      const data = await response.data;
       console.log(data);
       return data;
     } catch (error) {
@@ -15,7 +15,6 @@ export const fetchProjects = createAsyncThunk(
     }
   }
 );
-
 
 export const createProject = createAsyncThunk(
   "projects/createProject",
@@ -69,9 +68,6 @@ export const fetchProjectById = createAsyncThunk(
   }
 );
 
-
-
-  
 const initialState = {
   projects: [],
   projectList: [],
@@ -81,7 +77,6 @@ const initialState = {
   totalPages: 1,
   projectsPerPage: 10,
   selectedProject: null,  
-
 };
 
 const projectSlice = createSlice({
@@ -90,7 +85,8 @@ const projectSlice = createSlice({
   reducers: {
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
-    },setSelectedProject: (state, action) => {
+    },
+    setSelectedProject: (state, action) => {
       state.selectedProject = action.payload;
     }
   },
@@ -103,12 +99,12 @@ const projectSlice = createSlice({
       .addCase(fetchProjects.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.projectList = action.payload.data; // Assuming action.payload.data is the array of projects
+        state.projectList = action.payload.data; 
         state.totalPages = Math.ceil(action.payload.totalCount / state.projectsPerPage);
       })
       .addCase(fetchProjects.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message; // Assuming action.error.message contains the error message
+        state.error = action.error.message; 
       })
       .addCase(updateProject.pending, (state) => {
         state.status = "loading";
@@ -116,9 +112,9 @@ const projectSlice = createSlice({
       .addCase(updateProject.fulfilled, (state, action) => {
         state.status = "succeeded";
         const updatedProject = action.payload;
-        const existingProjectIndex = state.projects.findIndex((p) => p.id === updatedProject.id);
+        const existingProjectIndex = state.projectList.findIndex((p) => p.id === updatedProject.id);
         if (existingProjectIndex !== -1) {
-          state.projects[existingProjectIndex] = updatedProject;
+          state.projectList[existingProjectIndex] = updatedProject;
         }
       })
       .addCase(updateProject.rejected, (state, action) => {
@@ -145,14 +141,12 @@ const projectSlice = createSlice({
       .addCase(deleteProject.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.projects = state.projects.filter((project) => project.id !== action.payload);
+        state.projectList = state.projectList.filter((project) => project.id !== action.payload);
       })
       .addCase(deleteProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
-
-
   },
 });
 

@@ -1,8 +1,7 @@
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fetchProjectById, deleteProject } from '../../store/slices/projectSlice';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { fetchProjectById, updateProject } from '../../store/slices/projectSlice';
 
 const UpdateProjectForm = () => {
   const dispatch = useDispatch();
@@ -17,8 +16,8 @@ const UpdateProjectForm = () => {
     planNumber: "",
     landPerimeter: "",
     landArea: "",
-    program: "autocad", 
-    type: "villa", 
+    program: "autocad",
+    type: "villa",
     numberOfFloors: "",
     buildingArea: "",
     totalBuildingArea: "",
@@ -62,14 +61,14 @@ const UpdateProjectForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto mt-8">
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="name">
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mt-8 p-8 bg-white rounded-lg shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
             Project Name
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.name ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.name ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="name"
             type="text"
             placeholder="Enter project name"
@@ -79,12 +78,12 @@ const UpdateProjectForm = () => {
           />
           {errors.name && <p className="text-red-500 text-xs italic">{errors.name}</p>}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="location">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
             Project Location
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.location ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.location ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="location"
             type="text"
             placeholder="Enter project location"
@@ -95,13 +94,13 @@ const UpdateProjectForm = () => {
           {errors.location && <p className="text-red-500 text-xs italic">{errors.location}</p>}
         </div>
       </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="owner">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="owner">
             Owner Name
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.owner ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.owner ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="owner"
             type="text"
             placeholder="Enter owner name"
@@ -111,14 +110,12 @@ const UpdateProjectForm = () => {
           />
           {errors.owner && <p className="text-red-500 text-xs italic">{errors.owner}</p>}
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="plotNumber">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="plotNumber">
             Plot Number
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.plotNumber ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.plotNumber ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="plotNumber"
             type="text"
             placeholder="Enter plot number"
@@ -128,12 +125,14 @@ const UpdateProjectForm = () => {
           />
           {errors.plotNumber && <p className="text-red-500 text-xs italic">{errors.plotNumber}</p>}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="planNumber">
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="planNumber">
             Plan Number
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.planNumber ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.planNumber ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="planNumber"
             type="text"
             placeholder="Enter plan number"
@@ -143,14 +142,12 @@ const UpdateProjectForm = () => {
           />
           {errors.planNumber && <p className="text-red-500 text-xs italic">{errors.planNumber}</p>}
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="landPerimeter">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="landPerimeter">
             Land Perimeter
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.landPerimeter ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.landPerimeter ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="landPerimeter"
             type="text"
             placeholder="Enter land perimeter"
@@ -160,12 +157,14 @@ const UpdateProjectForm = () => {
           />
           {errors.landPerimeter && <p className="text-red-500 text-xs italic">{errors.landPerimeter}</p>}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="landArea">
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="landArea">
             Land Area
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.landArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.landArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="landArea"
             type="text"
             placeholder="Enter land area"
@@ -175,14 +174,12 @@ const UpdateProjectForm = () => {
           />
           {errors.landArea && <p className="text-red-500 text-xs italic">{errors.landArea}</p>}
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="program">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="program">
             Program
           </label>
           <select
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.program ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.program ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="program"
             name="program"
             value={formData.program}
@@ -194,12 +191,14 @@ const UpdateProjectForm = () => {
           </select>
           {errors.program && <p className="text-red-500 text-xs italic">{errors.program}</p>}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="type">
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
             Type
           </label>
           <select
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.type ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.type ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="type"
             name="type"
             value={formData.type}
@@ -211,14 +210,12 @@ const UpdateProjectForm = () => {
           </select>
           {errors.type && <p className="text-red-500 text-xs italic">{errors.type}</p>}
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="numberOfFloors">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="numberOfFloors">
             Number of Floors
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.numberOfFloors ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.numberOfFloors ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="numberOfFloors"
             type="number"
             placeholder="Enter number of floors"
@@ -228,12 +225,14 @@ const UpdateProjectForm = () => {
           />
           {errors.numberOfFloors && <p className="text-red-500 text-xs italic">{errors.numberOfFloors}</p>}
         </div>
-        <div className="w-full md:w-1/2 px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="buildingArea">
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="buildingArea">
             Building Area
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.buildingArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.buildingArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="buildingArea"
             type="text"
             placeholder="Enter building area"
@@ -243,14 +242,12 @@ const UpdateProjectForm = () => {
           />
           {errors.buildingArea && <p className="text-red-500 text-xs italic">{errors.buildingArea}</p>}
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="totalBuildingArea">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalBuildingArea">
             Total Building Area
           </label>
           <input
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.totalBuildingArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.totalBuildingArea ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="totalBuildingArea"
             type="text"
             placeholder="Enter total building area"
@@ -261,21 +258,19 @@ const UpdateProjectForm = () => {
           {errors.totalBuildingArea && <p className="text-red-500 text-xs italic">{errors.totalBuildingArea}</p>}
         </div>
       </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="description">
-            Description
-          </label>
-          <textarea
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.description ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
-            id="description"
-            placeholder="Enter project description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          />
-          {errors.description && <p className="text-red-500 text-xs italic">{errors.description}</p>}
-        </div>
+      <div className="mb-6">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+          Description
+        </label>
+        <textarea
+          className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.description ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
+          id="description"
+          placeholder="Enter project description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+        />
+        {errors.description && <p className="text-red-500 text-xs italic">{errors.description}</p>}
       </div>
       <div className="flex items-center justify-between">
         <button
@@ -285,6 +280,8 @@ const UpdateProjectForm = () => {
           Update Project
         </button>
       </div>
+      {errors.general && <p className="text-red-500 text-xs italic">{errors.general}</p>}
+      {errors.server && <p className="text-red-500 text-xs italic">{errors.server}</p>}
     </form>
   );
 };

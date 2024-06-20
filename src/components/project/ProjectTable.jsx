@@ -29,7 +29,7 @@ const ProjectTable = ({ projects }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await dispatch(deleteProject(projectId));
+          await dispatch(deleteProject(projectId)).unwrap();
           Swal.fire(
             'Deleted!',
             'Your project has been deleted.',
