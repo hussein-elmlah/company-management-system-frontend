@@ -27,14 +27,9 @@ const ProjectList = () => {
     return <div>Error: {error}</div>;
   }
 
-  const indexOfLastProject = currentPage * projectsPerPage;
-  // console.log(indexOfLastProject);
-  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  // console.log(projectList);
-  // const currentProjects = projectList.slice(indexOfFirstProject, indexOfLastProject);
+
   const currentProjects = projectList;
 
-  // console.log('Projects:', JSON.stringify(currentProjects, null, 2));
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">All Projects</h1>

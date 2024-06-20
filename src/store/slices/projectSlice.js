@@ -73,6 +73,7 @@ export const fetchProjectById = createAsyncThunk(
 
   
 const initialState = {
+  projects: [],
   projectList: [],
   loading: false,
   error: null,
@@ -104,7 +105,24 @@ const projectSlice = createSlice({
       .addCase(fetchProjects.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message; // Assuming action.error.message contains the error message
+      })
+      .addCase(updateProject.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateProject.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        // Update the specific project in the state with action.payload
+        const updatedProject = action.payload;
+        const existingProjectIndex = state.projects.findIndex((p) => p.id === updatedProject.id);
+        if (existingProjectIndex !== -1) {
+          state.projects[existingProjectIndex] = updatedProject;
+        }
+      })
+      .addCase(updateProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
+
   },
 });
 
