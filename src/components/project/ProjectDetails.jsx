@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'; 
 import { fetchProjectById, deleteProject ,setSelectedProject} from '../../store/slices/projectSlice';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../reusables/LoadingSpinner';
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -32,7 +33,7 @@ const ProjectDetails = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner/>;
   }
 
   if (error) {
