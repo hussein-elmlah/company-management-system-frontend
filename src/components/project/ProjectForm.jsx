@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createProject } from "../../store/slices/projectSlice";
 
 const ProjectForm = () => {
   const dispatch = useDispatch();
+  const { error } = useSelector(state => state.projects);
+  console.log(error);
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -23,6 +25,7 @@ const ProjectForm = () => {
   });
   const [errors, setErrors] = useState({});
 
+
   const handleChange = (e) => {
     const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
     setFormData({
@@ -33,6 +36,7 @@ const ProjectForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    typeof(+formData.name)=="string"?
     dispatch(createProject(formData))
       .then(() => {
         console.log("Project created successfully!");
@@ -61,7 +65,7 @@ const ProjectForm = () => {
         } else {
           console.error("Error creating project:", error);
         }
-      });
+      }):console.log("error from ternary")
   };
 
   return (
@@ -82,7 +86,7 @@ const ProjectForm = () => {
             value={formData.name}
             onChange={handleChange}
           />
-          {errors.name && (
+          {error && (
             <p className="text-red-500 text-xs italic">Please fill out this field.</p>
           )}
         </div>
@@ -92,7 +96,7 @@ const ProjectForm = () => {
           </label>
           <input
             className={`shadow appearance-none border ${
-              errors.location ? "border-red-500" : "border-gray-200"
+              error ? "border-red-500" : "border-gray-200"
             } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="location"
             type="text"
@@ -101,7 +105,7 @@ const ProjectForm = () => {
             value={formData.location}
             onChange={handleChange}
           />
-          {errors.location && (
+          {error && (
             <p className="text-red-500 text-xs italic">Please fill out this field.</p>
           )}
         </div>
@@ -111,7 +115,7 @@ const ProjectForm = () => {
           </label>
           <input
             className={`shadow appearance-none border ${
-              errors.owner ? "border-red-500" : "border-gray-200"
+              error ? "border-red-500" : "border-gray-200"
             } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="owner"
             type="text"
@@ -120,7 +124,7 @@ const ProjectForm = () => {
             value={formData.owner}
             onChange={handleChange}
           />
-          {errors.owner && (
+          {error && (
             <p className="text-red-500 text-xs italic">Please fill out this field.</p>
           )}
         </div>
@@ -130,7 +134,7 @@ const ProjectForm = () => {
           </label>
           <input
             className={`shadow appearance-none border ${
-              errors.plotNumber ? "border-red-500" : "border-gray-200"
+              error ? "border-red-500" : "border-gray-200"
             } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="plotNumber"
             type="text"
@@ -311,7 +315,6 @@ const ProjectForm = () => {
               id="basementYes"
               name="basement"
               value={true}
-              checked={formData.basement === true}
               onChange={handleChange}
             />
             <label className="text-gray-700 text-sm font-bold" htmlFor="basementYes">
@@ -323,10 +326,10 @@ const ProjectForm = () => {
               id="basementNo"
               name="basement"
               value={false}
-              checked={formData.basement === false}
               onChange={handleChange}
+              defaultChecked
             />
-            <label className="text-gray-700 text-sm font-bold" htmlFor="basementNo">
+            <label className="text-gray-700 text-sm font-bold" htmlFor="basementNo" >
               No
             </label>
           </div>
@@ -345,7 +348,7 @@ const ProjectForm = () => {
               id="groundAnnexYes"
               name="groundAnnex"
               value={true}
-              checked={formData.groundAnnex === true}
+              // checked={formData.groundAnnex === true}
               onChange={handleChange}
             />
             <label className="text-gray-700 text-sm font-bold" htmlFor="groundAnnexYes">
@@ -357,7 +360,8 @@ const ProjectForm = () => {
               id="groundAnnexNo"
               name="groundAnnex"
               value={false}
-              checked={formData.groundAnnex === false}
+              // checked={formData.groundAnnex === false}
+              defaultChecked
               onChange={handleChange}
             />
             <label className="text-gray-700 text-sm font-bold" htmlFor="groundAnnexNo">

@@ -3,28 +3,32 @@ import { axiosInstance } from "../../axios";
 
 export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
-  async (page) => {
+  async (page,thunkAPI) => {
+    const {rejectWithValue} = thunkAPI;
     try {
       const response = await axiosInstance.get(`/projects?page=${page}`);
       const data = await response.data;
       console.log(data);
       return data;
     } catch (error) {
-      console.error("Error fetching projects:", error);
-      throw error;
+      // console.error("Error fetching projects:", error);
+      // throw error;
+      return rejectWithValue(error.message);
     }
   }
 );
 
 export const createProject = createAsyncThunk(
   "projects/createProject",
-  async (projectData) => {
+  async (projectData,thunkAPI) => {
+    const {rejectWithValue} = thunkAPI;
+
     try {
       const response = await axiosInstance.post("/projects", projectData);
       return response.data;
     } catch (error) {
-      console.error("Error creating project:", error);
-      throw error;
+      console.error("Error creating project:hereeeeeeee", error);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -121,6 +125,27 @@ const projectSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+
+
+
+
+
+
+
+
+      .addCase(createProject.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createProject.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const createProject = action.payload;
+        state.projectList.push(createProject);
+      })
+      .addCase(createProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
       .addCase(fetchProjectById.pending, (state) => {
         state.loading = true;
         state.error = null;

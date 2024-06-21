@@ -1,7 +1,27 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import { fetchProjectById, updateProject } from '../../store/slices/projectSlice';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchProjectById, updateProject } from "../../store/slices/projectSlice";
+
+const validateFormData = (data) => {
+  const errors = {};
+
+  if (!data.name) errors.name = "Project name is required.";
+  if (!data.location) errors.location = "Project location is required.";
+  if (!data.owner) errors.owner = "Owner name is required.";
+  if (!data.plotNumber) errors.plotNumber = "Plot number is required.";
+  if (!data.planNumber) errors.planNumber = "Plan number is required.";
+  if (!data.landPerimeter || isNaN(data.landPerimeter)) errors.landPerimeter = "Valid land perimeter is required.";
+  if (!data.landArea || isNaN(data.landArea)) errors.landArea = "Valid land area is required.";
+  if (!data.numberOfFloors || isNaN(data.numberOfFloors)) errors.numberOfFloors = "Valid number of floors is required.";
+  if (!data.buildingArea || isNaN(data.buildingArea)) errors.buildingArea = "Valid building area is required.";
+  if (!data.totalBuildingArea || isNaN(data.totalBuildingArea)) errors.totalBuildingArea = "Valid total building area is required.";
+  if (!data.program) errors.program = "Program is required.";
+  if (!data.type) errors.type = "Type is required.";
+  if (!data.description) errors.description = "Description is required.";
+
+  return errors;
+};
 
 const UpdateProjectForm = () => {
   const dispatch = useDispatch();
@@ -45,6 +65,12 @@ const UpdateProjectForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = validateFormData(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     dispatch(updateProject({ projectId, updatedFields: formData }))
       .then(() => {
         console.log("Project updated successfully!");
@@ -175,49 +201,13 @@ const UpdateProjectForm = () => {
           {errors.landArea && <p className="text-red-500 text-xs italic">{errors.landArea}</p>}
         </div>
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="program">
-            Program
-          </label>
-          <select
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.program ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
-            id="program"
-            name="program"
-            value={formData.program}
-            onChange={handleChange}
-          >
-            <option value="autocad">AutoCAD</option>
-            <option value="revit">Revit</option>
-            <option value="archicad">ArchiCAD</option>
-          </select>
-          {errors.program && <p className="text-red-500 text-xs italic">{errors.program}</p>}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
-            Type
-          </label>
-          <select
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.type ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
-            id="type"
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-          >
-            <option value="villa">Villa</option>
-            <option value="apartment">Apartment</option>
-            <option value="office">Office</option>
-          </select>
-          {errors.type && <p className="text-red-500 text-xs italic">{errors.type}</p>}
-        </div>
-        <div>
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="numberOfFloors">
             Number of Floors
           </label>
           <input
             className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.numberOfFloors ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             id="numberOfFloors"
-            type="number"
+            type="text"
             placeholder="Enter number of floors"
             name="numberOfFloors"
             value={formData.numberOfFloors}
@@ -258,20 +248,89 @@ const UpdateProjectForm = () => {
           {errors.totalBuildingArea && <p className="text-red-500 text-xs italic">{errors.totalBuildingArea}</p>}
         </div>
       </div>
-      <div className="mb-6">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-          Description
-        </label>
-        <textarea
-          className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.description ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
-          id="description"
-          placeholder="Enter project description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-        />
-        {errors.description && <p className="text-red-500 text-xs italic">{errors.description}</p>}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="program">
+            Program
+          </label>
+          <select
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.program ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
+            id="program"
+            name="program"
+            value={formData.program}
+            onChange={handleChange}
+          >
+            <option value="">Select program type</option>
+            <option value="autocad">AutoCAD</option>
+            <option value="revit">Revit</option>
+          </select>
+          {errors.program && <p className="text-red-500 text-xs italic">{errors.program}</p>}
+        </div>
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
+          Project Type
+          </label>
+          <select
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.type ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
+            id="type"
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+          ><option value="">Select project type</option>
+            <option value="">Select project type</option>
+            <option value="villa">Villa</option>
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+          </select>
+          {errors.type && <p className="text-red-500 text-xs italic">{errors.type}</p>}
+        </div>
       </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+            Description
+          </label>
+          <textarea
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${errors.description ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
+            id="description"
+            placeholder="Enter project description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+          ></textarea>
+          {errors.description && <p className="text-red-500 text-xs italic">{errors.description}</p>}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Basement
+          </label>
+          <input
+            className="mr-2 leading-tight"
+            type="checkbox"
+            name="basement"
+            checked={formData.basement}
+            onChange={handleChange}
+          />
+          <span className="text-sm">Has basement</span>
+        </div>
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Ground Annex
+          </label>
+          <input
+            className="mr-2 leading-tight"
+            type="checkbox"
+            name="groundAnnex"
+            checked={formData.groundAnnex}
+            onChange={handleChange}
+          />
+          <span className="text-sm">Has ground annex</span>
+        </div>
+      </div>
+      {errors.server && <p className="text-red-500 text-xs italic mb-4">{errors.server}</p>}
+      {errors.general && <p className="text-red-500 text-xs italic mb-4">{errors.general}</p>}
       <div className="flex items-center justify-between">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -280,8 +339,6 @@ const UpdateProjectForm = () => {
           Update Project
         </button>
       </div>
-      {errors.general && <p className="text-red-500 text-xs italic">{errors.general}</p>}
-      {errors.server && <p className="text-red-500 text-xs italic">{errors.server}</p>}
     </form>
   );
 };
