@@ -4,8 +4,7 @@ import { createProject } from "../../store/slices/projectSlice";
 
 const ProjectForm = () => {
   const dispatch = useDispatch();
-  const { error } = useSelector(state => state.projects);
-  console.log(error);
+  const { error } = useSelector((state) => state.projects);
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -25,6 +24,30 @@ const ProjectForm = () => {
   });
   const [errors, setErrors] = useState({});
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name) newErrors.name = "Project name is required.";
+    if (!formData.location) newErrors.location = "Project location is required.";
+    if (!formData.owner) newErrors.owner = "Owner name is required.";
+    if (!formData.plotNumber || !/^[a-zA-Z0-9]+$/.test(formData.plotNumber))
+      newErrors.plotNumber = "Plot number is required and must be alphanumeric.";
+    if (!formData.planNumber || !/^[a-zA-Z0-9]+$/.test(formData.planNumber))
+      newErrors.planNumber = "Plan number is required and must be alphanumeric.";
+    if (!formData.landPerimeter) newErrors.landPerimeter = "Land perimeter is required.";
+    if (!formData.landArea) newErrors.landArea = "Land area is required.";
+    if (!formData.program) newErrors.program = "Program type is required.";
+    if (!formData.type) newErrors.type = "Project type is required.";
+    if (!formData.numberOfFloors || isNaN(formData.numberOfFloors))
+      newErrors.numberOfFloors = "Number of floors is required and must be a number.";
+    if (!formData.buildingArea) newErrors.buildingArea = "Building area is required.";
+    if (!formData.totalBuildingArea) newErrors.totalBuildingArea = "Total building area is required.";
+    if (formData.basement === "") newErrors.basement = "Basement selection is required.";
+    if (formData.groundAnnex === "") newErrors.groundAnnex = "Ground annex selection is required.";
+    if (!formData.description) newErrors.description = "Description is required.";
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
@@ -36,36 +59,37 @@ const ProjectForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    typeof(+formData.name)=="string"?
-    dispatch(createProject(formData))
-      .then(() => {
-        console.log("Project created successfully!");
-        setFormData({
-          name: "",
-          location: "",
-          owner: "",
-          plotNumber: "",
-          planNumber: "",
-          landPerimeter: "",
-          landArea: "",
-          program: "",
-          type: "",
-          buildingArea: "",
-          numberOfFloors: "",
-          totalBuildingArea: "",
-          basement: false,
-          groundAnnex: false,
-          description: "",
+    if (validateForm()) {
+      dispatch(createProject(formData))
+        .then(() => {
+          console.log("Project created successfully!");
+          setFormData({
+            name: "",
+            location: "",
+            owner: "",
+            plotNumber: "",
+            planNumber: "",
+            landPerimeter: "",
+            landArea: "",
+            program: "",
+            type: "",
+            numberOfFloors: "",
+            buildingArea: "",
+            totalBuildingArea: "",
+            basement: false,
+            groundAnnex: false,
+            description: "",
+          });
+          setErrors({});
+        })
+        .catch((error) => {
+          if (error.response && error.response.data && error.response.data.errors) {
+            setErrors(error.response.data.errors);
+          } else {
+            console.error("Error creating project:", error);
+          }
         });
-        setErrors({});
-      })
-      .catch((error) => {
-        if (error.response && error.response.data && error.response.data.errors) {
-          setErrors(error.response.data.errors);
-        } else {
-          console.error("Error creating project:", error);
-        }
-      }):console.log("error from ternary")
+    }
   };
 
   return (
@@ -76,9 +100,7 @@ const ProjectForm = () => {
             Project Name
           </label>
           <input
-            className={`shadow appearance-none border ${
-              errors.name ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.name ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="name"
             type="text"
             placeholder="Enter project name"
@@ -86,18 +108,14 @@ const ProjectForm = () => {
             value={formData.name}
             onChange={handleChange}
           />
-          {error && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.name && <p className="text-red-500 text-xs italic">{errors.name}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
             Project Location
           </label>
           <input
-            className={`shadow appearance-none border ${
-              error ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.location ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="location"
             type="text"
             placeholder="Enter project location"
@@ -105,18 +123,14 @@ const ProjectForm = () => {
             value={formData.location}
             onChange={handleChange}
           />
-          {error && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.location && <p className="text-red-500 text-xs italic">{errors.location}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="owner">
             Owner Name
           </label>
           <input
-            className={`shadow appearance-none border ${
-              error ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.owner ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="owner"
             type="text"
             placeholder="Enter owner name"
@@ -124,18 +138,14 @@ const ProjectForm = () => {
             value={formData.owner}
             onChange={handleChange}
           />
-          {error && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.owner && <p className="text-red-500 text-xs italic">{errors.owner}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="plotNumber">
             Plot Number
           </label>
           <input
-            className={`shadow appearance-none border ${
-              error ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.plotNumber ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="plotNumber"
             type="text"
             placeholder="Enter plot number"
@@ -143,18 +153,14 @@ const ProjectForm = () => {
             value={formData.plotNumber}
             onChange={handleChange}
           />
-          {errors.plotNumber && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.plotNumber && <p className="text-red-500 text-xs italic">{errors.plotNumber}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="planNumber">
             Plan Number
           </label>
           <input
-            className={`shadow appearance-none border ${
-              errors.planNumber ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.planNumber ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="planNumber"
             type="text"
             placeholder="Enter plan number"
@@ -162,18 +168,14 @@ const ProjectForm = () => {
             value={formData.planNumber}
             onChange={handleChange}
           />
-          {errors.planNumber && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.planNumber && <p className="text-red-500 text-xs italic">{errors.planNumber}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="landPerimeter">
             Land Perimeter
           </label>
           <input
-            className={`shadow appearance-none border ${
-              errors.landPerimeter ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.landPerimeter ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="landPerimeter"
             type="text"
             placeholder="Enter land perimeter"
@@ -181,18 +183,14 @@ const ProjectForm = () => {
             value={formData.landPerimeter}
             onChange={handleChange}
           />
-          {errors.landPerimeter && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.landPerimeter && <p className="text-red-500 text-xs italic">{errors.landPerimeter}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="landArea">
             Land Area
           </label>
           <input
-            className={`shadow appearance-none border ${
-              errors.landArea ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.landArea ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="landArea"
             type="text"
             placeholder="Enter land area"
@@ -200,18 +198,14 @@ const ProjectForm = () => {
             value={formData.landArea}
             onChange={handleChange}
           />
-          {errors.landArea && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.landArea && <p className="text-red-500 text-xs italic">{errors.landArea}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="program">
             Program Type
           </label>
           <select
-            className={`shadow appearance-none border ${
-              errors.program ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.program ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="program"
             name="program"
             value={formData.program}
@@ -221,18 +215,14 @@ const ProjectForm = () => {
             <option value="autocad">AutoCAD</option>
             <option value="revit">Revit</option>
           </select>
-          {errors.program && (
-            <p className="text-red-500 text-xs italic">Please select a program type.</p>
-          )}
+          {errors.program && <p className="text-red-500 text-xs italic">{errors.program}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
             Project Type
           </label>
           <select
-            className={`shadow appearance-none border ${
-              errors.type ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.type ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="type"
             name="type"
             value={formData.type}
@@ -243,18 +233,14 @@ const ProjectForm = () => {
             <option value="residential">Residential</option>
             <option value="commercial">Commercial</option>
           </select>
-          {errors.type && (
-            <p className="text-red-500 text-xs italic">Please select a project type.</p>
-          )}
+          {errors.type && <p className="text-red-500 text-xs italic">{errors.type}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="numberOfFloors">
             Number of Floors
           </label>
           <input
-            className={`shadow appearance-none border ${
-              errors.numberOfFloors ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.numberOfFloors ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="numberOfFloors"
             type="number"
             placeholder="Enter number of floors"
@@ -262,18 +248,14 @@ const ProjectForm = () => {
             value={formData.numberOfFloors}
             onChange={handleChange}
           />
-          {errors.numberOfFloors && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.numberOfFloors && <p className="text-red-500 text-xs italic">{errors.numberOfFloors}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="buildingArea">
             Building Area
           </label>
           <input
-            className={`shadow appearance-none border ${
-              errors.buildingArea ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.buildingArea ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="buildingArea"
             type="text"
             placeholder="Enter building area"
@@ -281,18 +263,14 @@ const ProjectForm = () => {
             value={formData.buildingArea}
             onChange={handleChange}
           />
-          {errors.buildingArea && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.buildingArea && <p className="text-red-500 text-xs italic">{errors.buildingArea}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalBuildingArea">
             Total Building Area
           </label>
           <input
-            className={`shadow appearance-none border ${
-              errors.totalBuildingArea ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.totalBuildingArea ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="totalBuildingArea"
             type="text"
             placeholder="Enter total building area"
@@ -300,9 +278,7 @@ const ProjectForm = () => {
             value={formData.totalBuildingArea}
             onChange={handleChange}
           />
-          {errors.totalBuildingArea && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.totalBuildingArea && <p className="text-red-500 text-xs italic">{errors.totalBuildingArea}</p>}
         </div>
         <div className="mb-4 col-span-2">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -329,13 +305,11 @@ const ProjectForm = () => {
               onChange={handleChange}
               defaultChecked
             />
-            <label className="text-gray-700 text-sm font-bold" htmlFor="basementNo" >
+            <label className="text-gray-700 text-sm font-bold" htmlFor="basementNo">
               No
             </label>
           </div>
-          {errors.basement && (
-            <p className="text-red-500 text-xs italic">Please select an option.</p>
-          )}
+          {errors.basement && <p className="text-red-500 text-xs italic">{errors.basement}</p>}
         </div>
         <div className="mb-4 col-span-2">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -348,7 +322,6 @@ const ProjectForm = () => {
               id="groundAnnexYes"
               name="groundAnnex"
               value={true}
-              // checked={formData.groundAnnex === true}
               onChange={handleChange}
             />
             <label className="text-gray-700 text-sm font-bold" htmlFor="groundAnnexYes">
@@ -360,7 +333,6 @@ const ProjectForm = () => {
               id="groundAnnexNo"
               name="groundAnnex"
               value={false}
-              // checked={formData.groundAnnex === false}
               defaultChecked
               onChange={handleChange}
             />
@@ -368,27 +340,21 @@ const ProjectForm = () => {
               No
             </label>
           </div>
-          {errors.groundAnnex && (
-            <p className="text-red-500 text-xs italic">Please select an option.</p>
-          )}
+          {errors.groundAnnex && <p className="text-red-500 text-xs italic">{errors.groundAnnex}</p>}
         </div>
         <div className="mb-4 col-span-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
             Description
           </label>
           <textarea
-            className={`shadow appearance-none border ${
-              errors.description ? "border-red-500" : "border-gray-200"
-            } rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border ${errors.description ? "border-red-500" : "border-gray-200"} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="description"
             placeholder="Enter project description"
             name="description"
             value={formData.description}
             onChange={handleChange}
           />
-          {errors.description && (
-            <p className="text-red-500 text-xs italic">Please fill out this field.</p>
-          )}
+          {errors.description && <p className="text-red-500 text-xs italic">{errors.description}</p>}
         </div>
         <div className="flex items-center justify-between col-span-2">
           <button
