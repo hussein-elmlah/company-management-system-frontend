@@ -45,13 +45,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   );
 };
 
-export const getSubscribedArticles = (page = 1, pageSize = 10) => {
-  return axiosInstance.get(`/articles/subscribed?page=${page}&pageSize=${pageSize}`)
-    .then(response => {
-        return response.data
-    })
-    .catch(error => {
-      console.error('Error fetching subscribed articles:', error);
-      throw error;
-    });
+Pagination.propTypes = {
+  currentPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
 };
+
+export default Pagination;
