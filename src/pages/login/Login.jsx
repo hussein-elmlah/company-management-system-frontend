@@ -1,4 +1,4 @@
-// import React from 'react';
+ 
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -21,10 +21,11 @@ const LoginComponent = () => {
       UserService.login(values)
         .then((response) => {
           console.log('Login successful:', response);
-          localStorage.setItem('token', response.user);
-          navigate('/').then(() => {
-            window.location.reload();
-          });
+          localStorage.setItem('token', response.data.user);
+           navigate('/');
+          // .then(() => {
+          //   window.location.reload();
+          // });
         })
          .catch((error) => {
             console.error('Login error:', error);
@@ -37,7 +38,7 @@ const LoginComponent = () => {
     <div className="px-3">
       <div className="loginpage rounded-2">
         <form onSubmit={formik.handleSubmit} className="mt-2 p-4">
-          <label htmlFor="username" className="mb-2"> اسم المستخدم</label>
+          <label htmlFor="username" className="mb-2 tl"> اسم المستخدم</label>
           <input
             type="text"
             className="form-control mb-2"
@@ -50,7 +51,7 @@ const LoginComponent = () => {
             </div>
           ) : null}
 
-          <label htmlFor="password" className="mb-2">كلمة السر</label>
+          <label htmlFor="password" className="mb-2 tl">كلمة السر</label>
           <input
             type="password"
             className="form-control mb-2"
@@ -65,19 +66,24 @@ const LoginComponent = () => {
 
           <button
             type="submit"
-            className="mb-2 mt-2 rounded-2"
+            // className="mb-2 mt-2 rounded-2 bt"
             disabled={!formik.isValid || formik.isSubmitting}
-            className={!formik.isValid || formik.isSubmitting ? 'disabled' : ''}
+            className={!formik.isValid || formik.isSubmitting ? 'disabled mb-2 mt-2 rounded-2 bt' : 'mb-2 mt-2 rounded-2 bt'}
           >
             تسجيل الدخول
           </button>
         </form>
       </div>
       <div className="text-center">
-        <p>ليس لديك حساب ؟ <a href="/signup">انشئ حساب</a></p>
+        <p className="tl">ليس لديك حساب ؟ <a className="tl" href="/signUser">انشئ حساب</a></p>
       </div>
     </div>
   );
 };
 
 export default LoginComponent;
+
+
+
+
+ 

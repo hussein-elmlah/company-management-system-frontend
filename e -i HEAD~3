@@ -1,0 +1,66 @@
+[33mcommit b7d768add430009e6284ae18ee6900c8e57e9d38[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/queue-component[m[33m)[m
+Author: Hussein Elmlah <147069168+hussein-elmlah@users.noreply.github.com>
+Date:   Thu Jun 20 08:49:45 2024 +0300
+
+    Update Pagination.jsx
+
+[33mcommit 51ad7dc84a9a8e4f994a216f17f0bdd76ad82756[m[33m ([m[1;31morigin/feature/SignAndLogin[m[33m)[m
+Merge: 6cc8609 f42fbb3
+Author: EngAlaaKamal <alaa.kamal.ghonem@gmail.com>
+Date:   Wed Jun 19 22:36:33 2024 +0300
+
+    Merge branch 'main' of github.com:hussein-elmlah/company-management-system-frontend
+
+[33mcommit 6cc860952cd8571c55cf991390dc30932df1e090[m
+Author: EngAlaaKamal <alaa.kamal.ghonem@gmail.com>
+Date:   Wed Jun 19 22:36:22 2024 +0300
+
+    add sign for user and login pages
+
+[33mcommit f42fbb3fad3516b8ae4e93b488d74a8c0b50e85b[m
+Author: esraamagddi <esraamagdy20133@gmail.com>
+Date:   Wed Jun 19 18:13:19 2024 +0300
+
+    fix Navbar error
+
+[33mcommit 38d67a26fb91e9c6c1eda4ffe3df0efe859c5436[m
+Author: EngAlaaKamal <alaa.kamal.ghonem@gmail.com>
+Date:   Wed Jun 19 06:06:05 2024 +0300
+
+    add initial signup for employee
+
+[33mcommit 4eaf98ab4df2e519c240f776ff330beeb15c1415[m
+Author: hussein-elmlah <husseinelmlah11@gmail.com>
+Date:   Tue Jun 18 08:59:02 2024 +0300
+
+    Implement Home page with a temporary static content
+
+[33mcommit a136e677600073415a1c70979c2af0408cb30917[m
+Author: hussein-elmlah <husseinelmlah11@gmail.com>
+Date:   Tue Jun 18 07:49:38 2024 +0300
+
+    update navbar component
+
+[33mcommit e6b67938b5600ad49261845ac217d170bed0c7cf[m
+Author: hussein-elmlah <husseinelmlah11@gmail.com>
+Date:   Tue Jun 18 06:40:59 2024 +0300
+
+    Add some assets
+
+[33mcommit c72513589b707f95ab1eecc7c9f7ffdca7569caa[m
+Author: hussein-elmlah <husseinelmlah11@gmail.com>
+Date:   Tue Jun 18 06:11:12 2024 +0300
+
+    Create project structure with Axios, Redux store, Folders for component & pages and make basic route structure with router file
+
+[33mcommit e7a7207ae9c97f769d0d917f37d6d086b3c877a1[m
+Author: hussein-elmlah <husseinelmlah11@gmail.com>
+Date:   Tue Jun 18 04:51:34 2024 +0300
+
+    feat: Initialize React project using Vite
+
+[33mcommit ad3046d72b02b54d809207d0099d137ab1aea47b[m
+Author: Hussein Elmlah <147069168+hussein-elmlah@users.noreply.github.com>
+Date:   Tue Jun 18 02:29:03 2024 +0300
+
+    Initial commit
