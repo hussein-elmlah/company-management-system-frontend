@@ -16,7 +16,7 @@ import ProjectDetails from "./components/project/ProjectDetails";
 function UserLayout() {
   return (
     <div className="m-0 p-0">
-    {/* <Navbar /> */}
+    <Navbar />
       <div className="container my-0 py-0" style={{ paddingTop: "85px", minHeight: "calc(100vh - 104px)" }}>
         <Outlet />
       </div>
