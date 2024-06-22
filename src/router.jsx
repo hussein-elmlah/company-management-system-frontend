@@ -2,6 +2,7 @@ import { Outlet, createBrowserRouter } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
+import Queue from "./components/queue/Queue";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import Home from "./pages/Home/Home";
 import EmployeeSignup from "./pages/signup/employeeSignup/EmployeeSignup";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         path: "/login",
         element: <PrivateRoute element={<Login />} />
       },
+      {
+        path: "/queue",
+        element: <Queue />
+      }, 
       {
         path: "*",
         element: <NotFoundPage />,

@@ -1,0 +1,11 @@
+/* MainComponent.css */
+.queue th,
+.queue td {
+  text-align: center;
+  padding: 10px;
+}
+
+.queue .card {
+  box-shadow: none;
+  border: none;
+}
