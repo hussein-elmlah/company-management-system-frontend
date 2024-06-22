@@ -1,0 +1,37 @@
+.loginpage {
+    padding: 20px;
+    width: 50%;
+    margin: 30px auto;
+    /* box-shadow: 5px 5px 10px 10px rgb(226, 226, 226); */
+  }
+  @media (max-width: 767px) {
+    .loginpage {
+      width: 90%;
+    }
+  }
+  label,
+  p,
+  a {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: black;
+    /* text-decoration: none; */
+  }
+  button {
+    padding: 10px 20px 10px 20px;
+    /* border-radius: 15px; */
+    transition: all 0.4s ease-in-out;
+    background-color: rgb(0, 34, 66);
+    color: white;
+    width: 100%;
+  }
+  button:hover:not(.disabled) {
+    background-color: white;
+    color: rgb(0, 34, 66);
+    border-color: rgb(0, 34, 66);
+  }
+  .disabled {
+    cursor: not-allowed;
+  }
+  

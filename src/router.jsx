@@ -10,14 +10,16 @@ import ProjectForm from "./components/project/ProjectForm";
 import ProjectList from "./components/project/ProjectList";
 import UpdateProjectForm from "./components/project/UpdateProjectForm";
 import ProjectDetails from "./components/project/ProjectDetails";
+import UserSignup from "./pages/signup/userSignup/UserSignup";
+import Login from "./pages/login/Login";
 
 function UserLayout() {
   return (
     <div className="m-0 p-0">
-    {/* <Navbar /> */}
-      <div className="container my-0 py-0" style={{ paddingTop: "85px", minHeight: "calc(100vh - 104px)" }}>
-        <Outlet />
-      </div>
+      <Navbar />      
+        <div className="container my-0 py-0" style={{ paddingTop: "85px", minHeight: "calc(100vh - 104px)" }}>
+          <Outlet />
+        </div>
       <Footer />
     </div>
   );
@@ -51,6 +53,14 @@ const router = createBrowserRouter([
         path: '/projectdetails/:projectId',
         element: <PrivateRoute element={<ProjectDetails/>} />
       },   
+      {
+        path: "/signUser",
+        element: <PrivateRoute element={<UserSignup />} />
+      },
+      {
+        path: "/login",
+        element: <PrivateRoute element={<Login />} />
+      },
       {
         path: "*",
         element: <NotFoundPage />,
