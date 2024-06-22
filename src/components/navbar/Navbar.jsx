@@ -14,10 +14,18 @@ const Navbar = () => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
     if (token) {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setRole(payload.role);
+      try {
+        const tokenPayload = token.split('.')[1];
+        const decodedPayload = atob(tokenPayload);
+        const payload = JSON.parse(decodedPayload);
+        setRole(payload.role);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        setRole('');
+      }
     }
   };
+  
 
   const logOut = () => {
     localStorage.removeItem('token');
