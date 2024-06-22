@@ -10,15 +10,24 @@ import 'vis-timeline/styles/vis-timeline-graph2d.min.css';
 import './Queue.css';
 import dummyProjects from './dummyProjects/dummyProjects';
 
+const getUserRoleFromLocalStorage = () => {
+  // Replace 'userRole' with the actual key used to store role in local storage
+  const user = JSON.parse(localStorage.getItem('user'));
+  return user ? user.role : null;
+};
+
 const Queue = () => {
   const [projects, setProjects] = useState([]);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(5);
   const [selectedVisualization, setSelectedVisualization] = useState('table');
+  const [userRole, setUserRole] = useState(null); // State to store user role
   const timelineRef = useRef(null);
 
   useEffect(() => {
-    setProjects(dummyProjects);
+    setProjects(dummyProjects); // Replace with actual data fetching logic
+    const role = getUserRoleFromLocalStorage();
+    setUserRole(role);
     setSelectedVisualization('timeline');
   }, []);
 
@@ -32,8 +41,8 @@ const Queue = () => {
                       <div>Client: ${project.client.fullName}</div>
                       <div>Owner: ${project.owner}</div>
                       <div>Type: ${project.type}</div>
-                      <div>Start: ${project.expectedStartDate.substr(0,10)}</div>
-                      <div>End: ${project.expectedCompletionDate.substr(0,10)}</div>
+                      <div>Start: ${project.expectedStartDate.substr(0, 10)}</div>
+                      <div>End: ${project.expectedCompletionDate.substr(0, 10)}</div>
                     </div>
                   </div>`,
         start: project.expectedStartDate,
@@ -91,18 +100,18 @@ const Queue = () => {
     </DataTable>
   );
 
-  // const renderChart = () => (
-  //   <LineChart width={600} height={300} data={projects}>
-  //     <Line type="monotone" dataKey="landArea" stroke="#8884d8" />
-  //     <CartesianGrid stroke="#ccc" />
-  //     <XAxis dataKey="client.fullName" />
-  //     <YAxis />
-  //     <Tooltip />
-  //   </LineChart>
-  // );
-
   const renderTimeline = () => (
     <div ref={timelineRef} style={{ width: '100%', height: '300px' }}></div>
+  );
+
+  const renderChart = () => (
+    <LineChart width={600} height={300} data={projects}>
+      <Line type="monotone" dataKey="landArea" stroke="#8884d8" />
+      <CartesianGrid stroke="#ccc" />
+      <XAxis dataKey="client.fullName" />
+      <YAxis />
+      <Tooltip />
+    </LineChart>
   );
 
   return (
@@ -111,11 +120,11 @@ const Queue = () => {
         <select className='form-select mb-3' onChange={handleVisualizationChange} value={selectedVisualization}>
           <option value="timeline">Timeline</option>
           <option value="table">Table</option>
-          {/* <option value="chart">Chart</option> */}
+          {userRole === 'branchManager' && <option value="chart">Chart</option>}
         </select>
         {selectedVisualization === 'timeline' && renderTimeline()}
         {selectedVisualization === 'table' && renderTable()}
-        {/* {selectedVisualization === 'chart' && renderChart()} */}
+        {selectedVisualization === 'chart' && renderChart()}
       </div>
     </div>
   );
