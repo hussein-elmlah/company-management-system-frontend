@@ -5,39 +5,30 @@ import { io } from 'socket.io-client';
 import { getMyNotifications } from '../../axios/notifications';
 const socket = io('http://127.0.0.1:3001'); // Replace with your server URL
 
+const fetchMyNotifications = async () => {
+  try {
+      const myNotifications = await getMyNotifications();
+      return myNotifications.data;
+  } catch (error) {
+    console.error("err:", error);
+  }
+}
+
 const Navbar = () => {
   
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
-  const [role, setRole] = useState('');
-  
+  const [role, setRole] = useState('');  
   const [notifications, setNotifications] = useState([]);
 
-    useEffect(() => {
+    useEffect(() => {     
 
-      const fetchMyNotifications = async () => {
-      try {
-          const myNotifications = await getMyNotifications();
-          console.log(myNotifications.data);
-          setNotifications(myNotifications.data);
-      } catch (error) {
-        console.error("err:", error);
-      }
-    }
-
-      socket.on('branch-managers-channel', (data) => {
-        console.log('Notification received:', data);
-        setNotifications((prev) => [...prev, data.message]);
+      socket.on('branch-managers-channel', () => {
+        fetchMyNotifications().then(setNotifications);
       });
       
-      fetchMyNotifications();
+      fetchMyNotifications().then(setNotifications);
       
-      return () => {
-        socket.off('connect');
-        socket.off('branch-managers-channel');
-        socket.off('disconnect');
-      };
-      
-    }, [notifications]);
+    }, []);
 
   useEffect(() => {
     checkLoggedIn();
@@ -128,11 +119,17 @@ const Navbar = () => {
                   <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
                      اشعارات
                   </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    {notifications.map((e)=>(
-                      <Dropdown.Item as={NavLink} key={e._id} to="/signEmp">{JSON.stringify(e.message)}</Dropdown.Item>
-                    ))}
-                  </Dropdown.Menu>
+                  {notifications.length > 0 ? (
+                        <Dropdown.Menu>
+                        {notifications.map((e)=>(
+                          <Dropdown.Item as={NavLink} key={e._id} to="/signEmp">{JSON.stringify(e.message)}</Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    ) : (
+                      <Dropdown.Menu>
+                        <Dropdown.Item> No Notifications Yet! </Dropdown.Item>
+                    </Dropdown.Menu>
+                    )}
                 </Dropdown>
 
                 <li className="nav-item">
