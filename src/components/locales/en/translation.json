@@ -1,0 +1,22 @@
+{
+    "projectName": "Project Name",
+    "projectLocation": "Project Location",
+    "ownerName": "Owner Name",
+    "plotNumber": "Plot Number",
+    "planNumber": "Plan Number",
+    "landPerimeter": "Land Perimeter",
+    "landArea": "Land Area",
+    "programType": "Program Type",
+    "projectType": "Project Type",
+    "numberOfFloors": "Number of Floors",
+    "buildingArea": "Building Area",
+    "totalBuildingArea": "Total Building Area",
+    "basement": "Basement",
+    "groundAnnex": "Ground Annex",
+    "description": "Description",
+    "enterProjectName": "Enter project name",
+    "enterProjectLocation": "Enter project location",
+    "createProject": "Create Project",
+    "updateProject": "Update Project"
+  }
+  

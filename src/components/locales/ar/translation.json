@@ -1,0 +1,22 @@
+{
+    "projectName": "اسم المشروع",
+    "projectLocation": "موقع المشروع",
+    "ownerName": "اسم المالك",
+    "plotNumber": "رقم القطعة",
+    "planNumber": "رقم الخطة",
+    "landPerimeter": "محيط الأرض",
+    "landArea": "مساحة الأرض",
+    "programType": "نوع البرنامج",
+    "projectType": "نوع المشروع",
+    "numberOfFloors": "عدد الطوابق",
+    "buildingArea": "مساحة البناء",
+    "totalBuildingArea": "إجمالي مساحة البناء",
+    "basement": "البدروم",
+    "groundAnnex": "الملحق الأرضي",
+    "description": "الوصف",
+    "enterProjectName": "ادخل اسم المشروع",
+    "enterProjectLocation": "ادخل موقع المشروع",
+    "createProject": "إنشاء المشروع",
+    "updateProject": "تحديث المشروع"
+  }
+  

@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createProject } from '../../store/slices/projectSlice';
 import FormInput from './FormInput';
 import { validateForm } from './validateForm';
-
+import { useTranslation } from 'react-i18next';
 const ProjectForm = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.projects);
   const [formData, setFormData] = useState({
@@ -77,13 +78,13 @@ const ProjectForm = () => {
       <div className="row g-3">
         <FormInput
           id="name"
-          label="Project Name"
+          label={t('projectName')}
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
           errors={errors.name}
-          placeholder="Enter project name"
+          placeholder={t('enterProjectName')}
         />
         <FormInput
           id="location"
