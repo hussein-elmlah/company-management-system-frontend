@@ -12,12 +12,13 @@ import ProjectForm from "./components/project/ProjectForm";
 import ProjectList from "./components/project/ProjectList";
 import UpdateProjectForm from "./components/project/UpdateProjectForm";
 import ProjectDetails from "./components/project/ProjectDetails";
+import Queue from "./components/queue/Queue";
 
 function UserLayout() {
   return (
     <div className="m-0 p-0">
     <Navbar />
-      <div className="container my-0 py-0" style={{ paddingTop: "85px", minHeight: "calc(100vh - 104px)" }}>
+      <div className="container my-0" style={{ paddingTop: "85px", minHeight: "calc(100vh - 104px)" }}>
         <Outlet />
       </div>
       <Footer />
@@ -56,7 +57,11 @@ const router = createBrowserRouter([
       },{
         path: '/projectdetails/:projectId',
         element: <PrivateRoute element={<ProjectDetails/>} />
-      },  
+      },
+      {
+        path: "/queue",
+        element: <Queue />
+      },
       {
         path: "*",
         element: <NotFoundPage />,
