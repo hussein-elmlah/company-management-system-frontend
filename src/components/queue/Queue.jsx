@@ -16,11 +16,18 @@ const getUserRoleFromLocalStorage = () => {
   return user ? user.role : null;
 };
 
+const getUserRoleFromLocalStorage = () => {
+  // Replace 'userRole' with the actual key used to store role in local storage
+  const user = JSON.parse(localStorage.getItem('user'));
+  return user ? user.role : null;
+};
+
 const Queue = () => {
   const [projects, setProjects] = useState([]);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(5);
   const [selectedVisualization, setSelectedVisualization] = useState('table');
+  const [userRole, setUserRole] = useState(null); // State to store user role
   const [userRole, setUserRole] = useState(null); // State to store user role
   const timelineRef = useRef(null);
 
