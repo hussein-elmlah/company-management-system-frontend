@@ -49,30 +49,30 @@ const ProjectTable = ({ projects }) => {
 
   return (
     <div className="table-responsive">
-      <table className="min-w-full bg-white">
-        <thead>
+      <table className="table table-bordered">
+        <thead className="thead-light">
           <tr>
-            <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Name</th>
-            <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Description</th>
-            <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Client</th>
-            <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Actions</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Client</th>
+            <th>Actions</th>
           </tr>
         </thead>
-        <tbody className="bg-white">
+        <tbody>
           {projects.map((project) => (
             <tr key={project.id}>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{project.name}</td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{project.description}</td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{project.client?.fullName}</td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                <div className="flex space-x-4">
-                  <button className="text-blue-500 hover:text-blue-700" onClick={() => handleView(project.id)}>
+              <td>{project.name}</td>
+              <td>{project.description}</td>
+              <td>{project.client?.fullName}</td>
+              <td>
+                <div className="d-flex justify-content-between">
+                  <button className="btn btn-link text-primary" onClick={() => handleView(project.id)}>
                     <FaEye />
                   </button>
-                  <button className="text-green-500 hover:text-green-700" onClick={() => handleUpdate(project.id)}>
+                  <button className="btn btn-link text-success" onClick={() => handleUpdate(project.id)}>
                     <FaEdit />
                   </button>
-                  <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(project.id)}>
+                  <button className="btn btn-link text-danger" onClick={() => handleDelete(project.id)}>
                     <FaTrash />
                   </button>
                 </div>

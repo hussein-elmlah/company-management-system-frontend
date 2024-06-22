@@ -27,12 +27,11 @@ const ProjectList = () => {
     return <div>Error: {error}</div>;
   }
 
-
   const currentProjects = projectList;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">All Projects</h1>
+    <div className="container py-4">
+      <h1 className="mb-4">All Projects</h1>
       <ProjectTable projects={currentProjects} />
       <Pagination
         currentPage={currentPage}
