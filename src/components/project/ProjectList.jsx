@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProjects, setCurrentPage } from '../../store/slices/projectSlice';
 import ProjectTable from './ProjectTable';
-import Pagination from '../pagination/Pagination';
+import Pagination from '../pagination/projectPagination';
 import LoadingSpinner from '../reusables/LoadingSpinner';
 
 const ProjectList = () => {
