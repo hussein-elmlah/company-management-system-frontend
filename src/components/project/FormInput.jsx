@@ -1,9 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const FormInput = ({ id, label, type, name, value, onChange, errors, placeholder, options }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="col-md-6 mb-3">
-      <label htmlFor={id} className="form-label">{label}</label>
+      <label htmlFor={id} className="form-label">{t(label)}</label>
       {type === 'select' ? (
         <select
           id={id}
@@ -12,7 +15,7 @@ const FormInput = ({ id, label, type, name, value, onChange, errors, placeholder
           onChange={onChange}
           className={`form-select ${errors ? 'is-invalid' : ''}`}
         >
-          <option value="">Select an option</option>
+          <option value="">{t('selectOption')}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>{option.label}</option>
           ))}
@@ -24,7 +27,7 @@ const FormInput = ({ id, label, type, name, value, onChange, errors, placeholder
           value={value}
           onChange={onChange}
           className={`form-control ${errors ? 'is-invalid' : ''}`}
-          placeholder={placeholder}
+          placeholder={t(placeholder)}
         />
       ) : (
         <input
@@ -34,7 +37,7 @@ const FormInput = ({ id, label, type, name, value, onChange, errors, placeholder
           value={value}
           onChange={onChange}
           className={`form-control ${errors ? 'is-invalid' : ''}`}
-          placeholder={placeholder}
+          placeholder={t(placeholder)}
         />
       )}
       {errors && <div className="invalid-feedback">{errors}</div>}
@@ -43,3 +46,4 @@ const FormInput = ({ id, label, type, name, value, onChange, errors, placeholder
 };
 
 export default FormInput;
+

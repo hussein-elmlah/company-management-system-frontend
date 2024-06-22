@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { deleteProject } from '../../store/slices/projectSlice';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const ProjectTable = ({ projects }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const handleView = (projectId) => {
     navigate(`/projectdetails/${projectId}`);
@@ -19,27 +21,28 @@ const ProjectTable = ({ projects }) => {
 
   const handleDelete = (projectId) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: t('deleteConfirmationTitle'),
+      text: t('deleteConfirmationText'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: t('deleteConfirmationYes'),
+      cancelButtonText: t('cancel')
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await dispatch(deleteProject(projectId)).unwrap();
           Swal.fire(
-            'Deleted!',
-            'Your project has been deleted.',
+            t('deleteSuccessTitle'),
+            t('deleteSuccessMessage'),
             'success'
           );
         } catch (error) {
           console.error("Error deleting project:", error);
           Swal.fire(
-            'Error!',
-            'Failed to delete the project.',
+            t('deleteErrorTitle'),
+            t('deleteErrorMessage'),
             'error'
           );
         }
@@ -52,10 +55,10 @@ const ProjectTable = ({ projects }) => {
       <table className="table table-bordered">
         <thead className="thead-light">
           <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Client</th>
-            <th>Actions</th>
+            <th>{t('projectName')}</th>
+            <th>{t('description')}</th>
+            <th>{t('client')}</th>
+            <th>{t('actions')}</th>
           </tr>
         </thead>
         <tbody>

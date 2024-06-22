@@ -5,7 +5,7 @@ import { fetchProjectById, setSelectedProject } from '../../store/slices/project
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../reusables/LoadingSpinner';
 import { FaProjectDiagram, FaUser, FaPhone, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
-
+import { useTranslation } from 'react-i18next';
 const ProjectDetails = () => {
   const { projectId } = useParams();
   const dispatch = useDispatch();
@@ -13,6 +13,7 @@ const ProjectDetails = () => {
   const loading = useSelector(state => state.projects.loading);
   const error = useSelector(state => state.projects.error);
   const navigate = useNavigate();
+  const { t } = useTranslation(); // <-- Add this line
 
   useEffect(() => {
     dispatch(fetchProjectById(projectId));
@@ -31,7 +32,7 @@ const ProjectDetails = () => {
   }
 
   if (!project) {
-    return <div className="text-muted">No project found.</div>;
+    return <div className="text-muted">{t('noProjectFound')}</div>;
   }
 
   return (
@@ -44,11 +45,11 @@ const ProjectDetails = () => {
           </div>
           <div className="row mb-3">
             <div className="col-md-6 mb-3 mb-md-0">
-              <p className="font-weight-bold">Project Number:</p>
+              <p className="font-weight-bold">{t('projectNumber')}:</p>
               <p>{project.number}</p>
             </div>
             <div className="col-md-6">
-              <p className="font-weight-bold">Project Status:</p>
+              <p className="font-weight-bold">{t('projectStatus')}:</p>
               <p>{project.projectStatus}</p>
             </div>
           </div>
@@ -56,14 +57,14 @@ const ProjectDetails = () => {
             <div className="col-md-6 mb-3 mb-md-0">
               <div className="d-flex align-items-center">
                 <FaUser className="text-muted mr-2" />
-                <p className="font-weight-bold">Owner:</p>
+                <p className="font-weight-bold">{t('ownerName')}:</p>
               </div>
               <p>{project.owner}</p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center">
                 <FaPhone className="text-muted mr-2" />
-                <p className="font-weight-bold">Owner's Mobile:</p>
+                <p className="font-weight-bold">{t('ownerMobile')}:</p>
               </div>
               <p>{project.client?.mobileNumber}</p>
             </div>
@@ -71,7 +72,7 @@ const ProjectDetails = () => {
           <div className="mb-3">
             <div className="d-flex align-items-center">
               <FaInfoCircle className="text-muted mr-2" />
-              <p className="font-weight-bold">Description:</p>
+              <p className="font-weight-bold">{t('description')}:</p>
             </div>
             <p>{project.description}</p>
           </div>
@@ -79,11 +80,11 @@ const ProjectDetails = () => {
             <div>
               <div className="d-flex align-items-center">
                 <FaCalendarAlt className="text-muted mr-2" />
-                <p className="text-muted small mb-0">Created At: {new Date(project.createdAt).toLocaleString()}</p>
+                <p className="text-muted small mb-0">{t('createdAt')}: {new Date(project.createdAt).toLocaleString()}</p>
               </div>
               <div className="d-flex align-items-center">
                 <FaCalendarAlt className="text-muted mr-2" />
-                <p className="text-muted small mb-0">Last Updated At: {new Date(project.updatedAt).toLocaleString()}</p>
+                <p className="text-muted small mb-0">{t('updatedAt')}: {new Date(project.updatedAt).toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -94,3 +95,4 @@ const ProjectDetails = () => {
 };
 
 export default ProjectDetails;
+

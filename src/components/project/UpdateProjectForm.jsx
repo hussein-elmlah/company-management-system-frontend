@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom';
 import { updateProject, fetchProjectById } from '../../store/slices/projectSlice';
 import FormInput from './FormInput';
 import { validateForm } from './validateForm';
+import { useTranslation } from 'react-i18next';
 
 const UpdateProjectForm = () => {
+  const { t } = useTranslation();
   const { projectId } = useParams();
   console.log(projectId);
   const dispatch = useDispatch();
@@ -73,136 +75,136 @@ const UpdateProjectForm = () => {
   return (
     <form onSubmit={handleSubmit} className="container mt-4 p-4 bg-white shadow rounded">
       <div className="row g-3">
-        <FormInput
+      <FormInput
           id="name"
-          label="Project Name"
+          label={t('projectName')}
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
           errors={errors.name}
-          placeholder="Enter project name"
+          placeholder={t('enterProjectName')}
         />
         <FormInput
           id="location"
-          label="Project Location"
+          label={t('projectLocation')}
           type="text"
           name="location"
           value={formData.location}
           onChange={handleChange}
           errors={errors.location}
-          placeholder="Enter project location"
+          placeholder={t('enterProjectLocation')}
         />
         <FormInput
           id="owner"
-          label="Owner Name"
+          label={t('ownerName')}
           type="text"
           name="owner"
           value={formData.owner}
           onChange={handleChange}
           errors={errors.owner}
-          placeholder="Enter owner name"
+          placeholder={t('enterOwnerName')}
         />
         <FormInput
           id="plotNumber"
-          label="Plot Number"
+          label={t('plotNumber')}
           type="text"
           name="plotNumber"
           value={formData.plotNumber}
           onChange={handleChange}
           errors={errors.plotNumber}
-          placeholder="Enter plot number"
+          placeholder={t('enterPlotNumber')}
         />
         <FormInput
           id="planNumber"
-          label="Plan Number"
+          label={t('planNumber')}
           type="text"
           name="planNumber"
           value={formData.planNumber}
           onChange={handleChange}
           errors={errors.planNumber}
-          placeholder="Enter plan number"
+          placeholder={t('enterPlanNumber')}
         />
         <FormInput
           id="landPerimeter"
-          label="Land Perimeter"
+          label={t('landPerimeter')}
           type="text"
           name="landPerimeter"
           value={formData.landPerimeter}
           onChange={handleChange}
           errors={errors.landPerimeter}
-          placeholder="Enter land perimeter"
+          placeholder={t('enterLandPerimeter')}
         />
         <FormInput
           id="landArea"
-          label="Land Area"
+          label={t('landArea')}
           type="text"
           name="landArea"
           value={formData.landArea}
           onChange={handleChange}
           errors={errors.landArea}
-          placeholder="Enter land area"
+          placeholder={t('enterLandArea')}
         />
         <FormInput
           id="program"
-          label="Program Type"
+          label={t('programType')}
           type="select"
           name="program"
           value={formData.program}
           onChange={handleChange}
           errors={errors.program}
           options={[
-            { value: 'autocad', label: 'AutoCAD' },
-            { value: 'revit', label: 'Revit' },
+            { value: 'autocad', label: t('autocad') },
+            { value: 'revit', label: t('revit') },
           ]}
         />
         <FormInput
           id="type"
-          label="Project Type"
+          label={t('projectType')}
           type="select"
           name="type"
           value={formData.type}
           onChange={handleChange}
           errors={errors.type}
           options={[
-            { value: 'villa', label: 'Villa' },
-            { value: 'residential', label: 'Residential' },
-            { value: 'commercial', label: 'Commercial' },
+            { value: 'villa', label: t('villa') },
+            { value: 'residential', label: t('residential') },
+            { value: 'commercial', label: t('commercial') },
           ]}
         />
         <FormInput
           id="numberOfFloors"
-          label="Number of Floors"
+          label={t('numberOfFloors')}
           type="number"
           name="numberOfFloors"
           value={formData.numberOfFloors}
           onChange={handleChange}
           errors={errors.numberOfFloors}
-          placeholder="Enter number of floors"
+          placeholder={t('enterNumberOfFloors')}
         />
         <FormInput
           id="buildingArea"
-          label="Building Area"
+          label={t('buildingArea')}
           type="text"
           name="buildingArea"
           value={formData.buildingArea}
           onChange={handleChange}
           errors={errors.buildingArea}
-          placeholder="Enter building area"
+          placeholder={t('enterBuildingArea')}
         />
         <FormInput
           id="totalBuildingArea"
-          label="Total Building Area"
+          label={t('totalBuildingArea')}
           type="text"
           name="totalBuildingArea"
           value={formData.totalBuildingArea}
           onChange={handleChange}
           errors={errors.totalBuildingArea}
-          placeholder="Enter total building area"
+          placeholder={t('enterTotalBuildingArea')}
         />
         <div className="mb-3 form-check">
           <label className="form-check-label" htmlFor="basement">
-            Basement
+            {t('basement')}
           </label>
           <input
             type="checkbox"
@@ -215,7 +217,7 @@ const UpdateProjectForm = () => {
         </div>
         <div className="mb-3 form-check">
           <label className="form-check-label" htmlFor="groundAnnex">
-            Ground Annex
+            {t('groundAnnex')}
           </label>
           <input
             type="checkbox"
@@ -228,20 +230,20 @@ const UpdateProjectForm = () => {
         </div>
         <FormInput
           id="description"
-          label="Description"
+          label={t('description')}
           type="textarea"
           name="description"
           value={formData.description}
           onChange={handleChange}
           errors={errors.description}
-          placeholder="Enter project description"
+          placeholder={t('enterDescription')}
         />
       </div>
       <button
         type="submit"
         className="btn btn-primary mt-3"
       >
-        Update Project
+        {t('updateProject')}
       </button>
     </form>
   );
