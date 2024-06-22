@@ -1,14 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
+import { io } from 'socket.io-client';
+import { getMyNotifications } from '../../axios/notifications';
+const socket = io('http://127.0.0.1:3001'); // Replace with your server URL
 
 const Navbar = () => {
+  
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [role, setRole] = useState('');
+  
+  const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+
+      const fetchMyNotifications = async () => {
+      try {
+          const myNotifications = await getMyNotifications();
+          console.log(myNotifications.data);
+          setNotifications(myNotifications.data);
+      } catch (error) {
+        console.error("err:", error);
+      }
+    }
+
+      socket.on('branch-managers-channel', (data) => {
+        console.log('Notification received:', data);
+        setNotifications((prev) => [...prev, data.message]);
+      });
+      
+      fetchMyNotifications();
+      
+      return () => {
+        socket.off('connect');
+        socket.off('branch-managers-channel');
+        socket.off('disconnect');
+      };
+      
+    }, [notifications]);
 
   useEffect(() => {
     checkLoggedIn();
   }, []);
+
 
   const checkLoggedIn = () => {
     const token = localStorage.getItem('token');
@@ -25,6 +59,7 @@ const Navbar = () => {
       }
     }
   };
+  
   
 
   const logOut = () => {
@@ -44,6 +79,8 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+
+                
 
             {/* <li className="nav-item">
               <NavLink className="nav-link" to="/">الرئيسية</NavLink>
@@ -86,6 +123,18 @@ const Navbar = () => {
               </>
             ) : (
               <>
+
+                <Dropdown>
+                  <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
+                     اشعارات
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {notifications.map((e)=>(
+                      <Dropdown.Item as={NavLink} key={e._id} to="/signEmp">{JSON.stringify(e.message)}</Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+
                 <li className="nav-item">
                   <button className="btn btn-outline-primary" onClick={logOut}>تسجيل خروج</button>
                 </li>

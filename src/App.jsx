@@ -10,16 +10,6 @@ import Test from './components/Test';
 import "./styles/tailwind.css";
 function App() {
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service_worker.js', { scope: '/' })
-          .then( registration         => registration.pushManager.getSubscription())
-          .then( existingSubscription => existingSubscription.unsubscribe())
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          })
-      
-    }
-
   return (
     <>
       <Provider store={store}>
