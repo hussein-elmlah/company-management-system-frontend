@@ -1,41 +1,43 @@
-// FormInput.js
 import React from 'react';
 
 const FormInput = ({ id, label, type, name, value, onChange, errors, placeholder, options }) => {
-  const inputClassName = `shadow appearance-none border ${errors ? 'border-red-500' : 'border-gray-200'} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`;
-
   return (
-    <div className="mb-4">
-      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={id}>
-        {label}
-      </label>
+    <div className="col-md-6 mb-3">
+      <label htmlFor={id} className="form-label">{label}</label>
       {type === 'select' ? (
         <select
-          className={inputClassName}
           id={id}
           name={name}
           value={value}
           onChange={onChange}
+          className={`form-select ${errors ? 'is-invalid' : ''}`}
         >
-          <option value="">Select {label.toLowerCase()}</option>
+          <option value="">Select an option</option>
           {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
+            <option key={option.value} value={option.value}>{option.label}</option>
           ))}
         </select>
-      ) : (
-        <input
-          className={inputClassName}
+      ) : type === 'textarea' ? (
+        <textarea
           id={id}
-          type={type}
-          placeholder={placeholder}
           name={name}
           value={value}
           onChange={onChange}
+          className={`form-control ${errors ? 'is-invalid' : ''}`}
+          placeholder={placeholder}
+        />
+      ) : (
+        <input
+          id={id}
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          className={`form-control ${errors ? 'is-invalid' : ''}`}
+          placeholder={placeholder}
         />
       )}
-      {errors && <p className="text-red-500 text-xs italic">{errors}</p>}
+      {errors && <div className="invalid-feedback">{errors}</div>}
     </div>
   );
 };

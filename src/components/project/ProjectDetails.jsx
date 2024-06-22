@@ -58,7 +58,7 @@ const ProjectDetails = () => {
                 <FaUser className="text-muted mr-2" />
                 <p className="font-weight-bold">Owner:</p>
               </div>
-              <p>{project.client?.fullName}</p>
+              <p>{project.owner}</p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center">

@@ -1,4 +1,3 @@
-// ProjectForm.js
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProject } from '../../store/slices/projectSlice';
@@ -74,8 +73,8 @@ const ProjectForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
-      <div className="grid grid-cols-2 gap-6">
+    <form onSubmit={handleSubmit} className="container mt-4 p-4 bg-white shadow rounded">
+      <div className="row g-3">
         <FormInput
           id="name"
           label="Project Name"
@@ -203,8 +202,8 @@ const ProjectForm = () => {
           errors={errors.totalBuildingArea}
           placeholder="Enter total building area"
         />
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="basement">
+        <div className="mb-3 form-check">
+          <label className="form-check-label" htmlFor="basement">
             Basement
           </label>
           <input
@@ -213,11 +212,11 @@ const ProjectForm = () => {
             name="basement"
             checked={formData.basement}
             onChange={handleChange}
-            className="form-checkbox h-5 w-5 text-blue-600"
+            className="form-check-input"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="groundAnnex">
+        <div className="mb-3 form-check">
+          <label className="form-check-label" htmlFor="groundAnnex">
             Ground Annex
           </label>
           <input
@@ -226,7 +225,7 @@ const ProjectForm = () => {
             name="groundAnnex"
             checked={formData.groundAnnex}
             onChange={handleChange}
-            className="form-checkbox h-5 w-5 text-blue-600"
+            className="form-check-input"
           />
         </div>
         <FormInput
@@ -242,7 +241,7 @@ const ProjectForm = () => {
       </div>
       <button
         type="submit"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="btn btn-primary mt-3"
       >
         Create Project
       </button>
