@@ -5,7 +5,6 @@ import Footer from "./components/footer/Footer";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import Home from "./pages/Home/Home";
 import EmployeeSignup from "./pages/signup/employeeSignup/EmployeeSignup";
-import Project from "./components/project/Project";
 import ProjectForm from "./components/project/ProjectForm";
 import ProjectList from "./components/project/ProjectList";
 import UpdateProjectForm from "./components/project/UpdateProjectForm";
@@ -32,11 +31,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <PrivateRoute element={<Home />} />
-      },
-      {
-        path: "/notify-me",
-        element: <Notifications />
-      },        
+      },   
       {
         path: "/signEmp",
         element: <PrivateRoute element={<EmployeeSignup />} />

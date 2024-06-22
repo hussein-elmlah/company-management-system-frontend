@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProjects, setCurrentPage } from '../../store/slices/projectSlice';
 import ProjectTable from './ProjectTable';
-import Pagination from '../pagination/Pagination';
+// import Pagination from '../pagination/Pagination';
 import LoadingSpinner from '../reusables/LoadingSpinner';
 
 const ProjectList = () => {
@@ -34,11 +34,11 @@ const ProjectList = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">All Projects</h1>
       <ProjectTable projects={currentProjects} />
-      <Pagination
+      {/* <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={onPageChange}
-      />
+      /> */}
     </div>
   );
 };
