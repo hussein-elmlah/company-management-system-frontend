@@ -8,7 +8,7 @@ import LanguageSwitcher from './components/locales/LanguageSwitcher.jsx';
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
   <I18nextProvider i18n={i18n}>
-    <LanguageSwitcher />
     <App />
-  </I18nextProvider>  // </React.StrictMode>,
+  </I18nextProvider>  
+  // </React.StrictMode>,
 )

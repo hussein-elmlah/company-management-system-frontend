@@ -1,7 +1,13 @@
- .con{
-    width: 50%;
+.loginpage {
     padding: 20px;
+    width: 50%;
     margin: 30px auto;
+    /* box-shadow: 5px 5px 10px 10px rgb(226, 226, 226); */
+  }
+  @media (max-width: 767px) {
+    .loginpage {
+      width: 90%;
+    }
   }
   /* label,
   p,
@@ -10,29 +16,30 @@
     font-weight: bold;
     text-transform: capitalize;
     color: black;
+     
   } */
 
-  .text {
+  .tl {
     font-size: 20px;
     font-weight: bold;
     text-transform: capitalize;
     color: black;
+     
   }
-  
-   .butext{
-    padding: 10px 20px;
+   .bt {
+    padding: 10px 20px 10px 20px;
+    /* border-radius: 15px; */
     transition: all 0.4s ease-in-out;
     background-color: rgb(0, 34, 66);
     color: white;
     width: 100%;
   }
-  .butext:hover:not([disabled]) {
+  .bt:hover:not(.disabled) {
     background-color: white;
     color: rgb(0, 34, 66);
-    cursor: pointer;
     border-color: rgb(0, 34, 66);
   }
-  .butext[disabled] {
+  .disabled {
     cursor: not-allowed;
   }
   
