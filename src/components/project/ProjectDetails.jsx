@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../reusables/LoadingSpinner';
 import { FaProjectDiagram, FaUser, FaPhone, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+
 const ProjectDetails = () => {
   const { projectId } = useParams();
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const ProjectDetails = () => {
   const loading = useSelector(state => state.projects.loading);
   const error = useSelector(state => state.projects.error);
   const navigate = useNavigate();
-  const { t } = useTranslation(); // <-- Add this line
+  const { t } = useTranslation();
 
   useEffect(() => {
     dispatch(fetchProjectById(projectId));
@@ -28,43 +29,44 @@ const ProjectDetails = () => {
   }
 
   if (error) {
-    return <div className="text-danger">Error: {error}</div>;
+    return <div className="container mt-4"><div className="alert alert-danger">{t('error')}: {error}</div></div>;
   }
 
   if (!project) {
-    return <div className="text-muted">{t('noProjectFound')}</div>;
+    return <div className="container mt-4"><div className="alert alert-info">{t('noProjectFound')}</div></div>;
   }
 
   return (
     <div className="container mt-4">
-      <div className="card bg-light shadow-sm rounded">
+      <div className="card shadow-sm">
         <div className="card-body">
           <div className="d-flex align-items-center mb-3">
             <FaProjectDiagram className="text-primary mr-2" />
-            <h2 className="card-title">{project.name}</h2>
+            <h2 className="card-title mb-0">{project.name}</h2>
           </div>
+          <hr />
           <div className="row mb-3">
-            <div className="col-md-6 mb-3 mb-md-0">
-              <p className="font-weight-bold">{t('projectNumber')}:</p>
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('projectNumber')}</p>
               <p>{project.number}</p>
             </div>
             <div className="col-md-6">
-              <p className="font-weight-bold">{t('projectStatus')}:</p>
+              <p className="text-muted mb-1">{t('projectStatus')}</p>
               <p>{project.projectStatus}</p>
             </div>
           </div>
           <div className="row mb-3">
-            <div className="col-md-6 mb-3 mb-md-0">
+            <div className="col-md-6">
               <div className="d-flex align-items-center">
                 <FaUser className="text-muted mr-2" />
-                <p className="font-weight-bold">{t('ownerName')}:</p>
+                <p className="text-muted mb-1">{t('ownerName')}</p>
               </div>
               <p>{project.owner}</p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center">
                 <FaPhone className="text-muted mr-2" />
-                <p className="font-weight-bold">{t('ownerMobile')}:</p>
+                <p className="text-muted mb-1">{t('ownerMobile')}</p>
               </div>
               <p>{project.client?.mobileNumber}</p>
             </div>
@@ -72,11 +74,11 @@ const ProjectDetails = () => {
           <div className="mb-3">
             <div className="d-flex align-items-center">
               <FaInfoCircle className="text-muted mr-2" />
-              <p className="font-weight-bold">{t('description')}:</p>
+              <p className="text-muted mb-1">{t('description')}</p>
             </div>
             <p>{project.description}</p>
           </div>
-          <div className="d-flex justify-content-between mt-3">
+          <div className="d-flex justify-content-between">
             <div>
               <div className="d-flex align-items-center">
                 <FaCalendarAlt className="text-muted mr-2" />
@@ -95,4 +97,3 @@ const ProjectDetails = () => {
 };
 
 export default ProjectDetails;
-
