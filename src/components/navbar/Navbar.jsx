@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { io } from 'socket.io-client';
-import { getMyNotifications } from '../../axios/notifications';
+import { getMyNotifications, readAllNotifications } from '../../axios/notifications';
 const socket = io('http://127.0.0.1:3001'); // Replace with your server URL
 
 
@@ -14,6 +14,15 @@ const fetchMyNotifications = async () => {
     console.error("err:", error);
   }
 }
+
+const markAsRead = async () => {
+  try {
+    await readAllNotifications();
+    return true;
+  } catch (error) {
+    console.error("err:", error);
+  }
+};
 
 const formatDate = (isoDate) => {
   const date = new Date(isoDate);
@@ -32,13 +41,13 @@ const Navbar = () => {
        * Reference: setNotifications is a reference to the function itself. It's not being called with (), so it's not executed immediately. 
        * Instead, it serves as a callback that will be invoked later, once the promise resolves.
        */
-      fetchMyNotifications().then( (data) => {
+      fetchMyNotifications().then((data) => {
         setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
         setNotifications(data);
       })
     });
-    
-    fetchMyNotifications().then( (data) => {
+
+    fetchMyNotifications().then((data) => {
       setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
       setNotifications(data);
     })
@@ -131,31 +140,39 @@ const Navbar = () => {
 
                 <li className="nav-item dropdown no-arrow mx-1">
                   <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    data-toggle="dropdown" aria-haspopup="true" onClick={markAsRead} aria-expanded="false">
                     <i className="fas fa-bell fa-2x"></i>
 
-                    <span className="badge badge-danger badge-counter">{unreadNotificationsCount}</span>
+                    <span className="badge badge-danger badge-counter">
+                      {unreadNotificationsCount > 0 ? (
+                        unreadNotificationsCount
+                      ) : (<></>)}
+                    </span>
                   </a>
 
-                  <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                    aria-labelledby="alertsDropdown">
+                  <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" onClick={markAsRead}
+                    aria-labelledby="alertsDropdown" style={{ 'max-height': '250px', width: '300px', 'overflow-y': 'auto' }}>
                     <h6 className="dropdown-header">
                       Branch Manager Notifications Center
                     </h6>
-                      {notifications.map((e, i) => (
-                        <a className="dropdown-item d-flex align-items-center" key={i} href={e.redirectURL}>
-                          <div className="mr-3">
-                            <div className="icon-circle">
-                              <i className="fa-solid fa-bullhorn"></i>
-                            </div>
+                    {notifications.map((e, i) => (
+                      <a style={{ backgroundColor: e.isRead ? '' : '#eaecf4' }}
+                        className="dropdown-item d-flex align-items-center" key={i} href={e.redirectURL}>
+                        <div className="mr-3">
+                          <div className="icon-circle">
+                            <i className="fa-solid fa-bullhorn"></i>
                           </div>
-                          <div>
-                            <div className="small text-gray-500">{formatDate(e.createdAt)}</div>
-                            <span className="font-weight-bold">{e.message}</span>
-                            </div>
-                            </a>
-                          ))}
-                    {/* <a className="dropdown-item text-center small text-gray-500" href="#">Show All Notifications</a> */}
+                        </div>
+                        <div>
+                          <div className="small text-gray-500">{formatDate(e.createdAt)}</div>
+                          <span className="font-weight-bold">{e.message}</span> &nbsp; &nbsp;
+                          {e.isRead == false ? (
+                            <span class="badge badge-success">New!!</span>
+                          ) : (<></>)}
+                        </div>
+                      </a>
+                    ))}
+                    <a className="dropdown-item text-center small text-gray-500" href="#">Show All Notifications</a>
                   </div>
                 </li>
 
