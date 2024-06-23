@@ -15,12 +15,6 @@ const fetchMyNotifications = async () => {
   }
 }
 
-const countUnreadNotifications = async () => {
-  const notifications = await fetchMyNotifications();
-  const res = notifications.filter(n => n.isRead == false);
-  return res.length;
-}
-
 const formatDate = (isoDate) => {
   const date = new Date(isoDate);
   return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -38,17 +32,16 @@ const Navbar = () => {
        * Reference: setNotifications is a reference to the function itself. It's not being called with (), so it's not executed immediately. 
        * Instead, it serves as a callback that will be invoked later, once the promise resolves.
        */
-      fetchMyNotifications().then(setNotifications);
+      fetchMyNotifications().then( (data) => {
+        setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
+        setNotifications(data);
+      })
     });
-    fetchMyNotifications().then(setNotifications);
-  }, []);
-
-
-  useEffect(() => {
-    socket.on('branchManager-channel', () => {
-      countUnreadNotifications().then(setUnreadNotificationsCount);
-    });
-    countUnreadNotifications().then(setUnreadNotificationsCount);
+    
+    fetchMyNotifications().then( (data) => {
+      setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
+      setNotifications(data);
+    })
   }, []);
 
 
