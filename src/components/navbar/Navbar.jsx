@@ -7,28 +7,33 @@ const socket = io('http://127.0.0.1:3001'); // Replace with your server URL
 
 const fetchMyNotifications = async () => {
   try {
-      const myNotifications = await getMyNotifications();
-      return myNotifications.data;
+    const myNotifications = await getMyNotifications();
+    return myNotifications.data;
   } catch (error) {
     console.error("err:", error);
   }
 }
 
+const formatDate = (isoDate) => {
+  const date = new Date(isoDate);
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+};
+
 const Navbar = () => {
-  
+
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
-  const [role, setRole] = useState('');  
+  const [role, setRole] = useState('');
   const [notifications, setNotifications] = useState([]);
 
-    useEffect(() => {     
+  useEffect(() => {
 
-      socket.on('branchManager-channel', () => {
-        fetchMyNotifications().then(setNotifications);
-      });
-      
+    socket.on('branchManager-channel', () => {
       fetchMyNotifications().then(setNotifications);
-      
-    }, []);
+    });
+
+    fetchMyNotifications().then(setNotifications);
+
+  }, []);
 
   useEffect(() => {
     checkLoggedIn();
@@ -50,8 +55,8 @@ const Navbar = () => {
       }
     }
   };
-  
-  
+
+
 
   const logOut = () => {
     localStorage.removeItem('token');
@@ -71,7 +76,7 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
 
-                
+
 
             {/* <li className="nav-item">
               <NavLink className="nav-link" to="/">الرئيسية</NavLink>
@@ -115,74 +120,36 @@ const Navbar = () => {
             ) : (
               <>
 
-                    <li className="nav-item dropdown no-arrow mx-1">
-                          <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i className="fas fa-bell fa-2x"></i>
-                              
-                              <span className="badge badge-danger badge-counter">3</span>
-                          </a>
-                          
-                          <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                              aria-labelledby="alertsDropdown">
-                              <h6 className="dropdown-header">
-                                  Alerts Center
-                              </h6>
-                              <a className="dropdown-item d-flex align-items-center" href="#">
-                                  <div className="mr-3">
-                                      <div className="icon-circle bg-primary">
-                                          <i className="fas fa-file-alt text-white"></i>
-                                      </div>
-                                  </div>
-                                  <div>
-                                      <div className="small text-gray-500">December 12, 2019</div>
-                                      <span className="font-weight-bold">A new monthly report is ready to download!</span>
-                                  </div>
-                              </a>
-                              <a className="dropdown-item d-flex align-items-center" href="#">
-                                  <div className="mr-3">
-                                      <div className="icon-circle bg-success">
-                                          <i className="fas fa-donate text-white"></i>
-                                      </div>
-                                  </div>
-                                  <div>
-                                      <div className="small text-gray-500">December 7, 2019</div>
-                                      $290.29 has been deposited into your account!
-                                  </div>
-                              </a>
-                              <a className="dropdown-item d-flex align-items-center" href="#">
-                                  <div className="mr-3">
-                                      <div className="icon-circle bg-warning">
-                                          <i className="fas fa-exclamation-triangle text-white"></i>
-                                      </div>
-                                  </div>
-                                  <div>
-                                      <div className="small text-gray-500">December 2, 2019</div>
-                                      Spending Alert: We've noticed unusually high spending for your account.
-                                  </div>
-                              </a>
-                              <a className="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                          </div>
-                      </li>
-                
-                {/* <Dropdown>
-                  <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
-                     اشعارات
-                  </Dropdown.Toggle>
-                  {notifications.length > 0 ? (
-                        <Dropdown.Menu>
-                        {notifications.map((e)=>(
-                          <Dropdown.Item as={NavLink} key={e._id} to="/signEmp">{JSON.stringify(e.message)}</Dropdown.Item>
-                        ))}
-                      </Dropdown.Menu>
-                    ) : (
-                      <Dropdown.Menu>
-                        <Dropdown.Item> No Notifications Yet! </Dropdown.Item>
-                    </Dropdown.Menu>
-                    )}
-                </Dropdown> */}
+                <li className="nav-item dropdown no-arrow mx-1">
+                  <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i className="fas fa-bell fa-2x"></i>
 
-                
+                    <span className="badge badge-danger badge-counter">3</span>
+                  </a>
+
+                  <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                    aria-labelledby="alertsDropdown">
+                    <h6 className="dropdown-header">
+                      Branch Manager Notifications Center
+                    </h6>
+                      {notifications.map((e) => (
+                        <a className="dropdown-item d-flex align-items-center" href={e.redirectURL}>
+                          <div className="mr-3">
+                            <div className="icon-circle">
+                              <i className="far fa-bell"></i>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="small text-gray-500">{formatDate(e.createdAt)}</div>
+                            <span className="font-weight-bold">{e.message}</span>
+                            </div>
+                            </a>
+                          ))}
+                    {/* <a className="dropdown-item text-center small text-gray-500" href="#">Show All Notifications</a> */}
+                  </div>
+                </li>
+
                 <li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i className="fa fa-user fa-2x"></i>
