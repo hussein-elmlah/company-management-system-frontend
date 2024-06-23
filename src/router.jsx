@@ -5,14 +5,14 @@ import Footer from "./components/footer/Footer";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import Home from "./pages/Home/Home";
 import EmployeeSignup from "./pages/signup/employeeSignup/EmployeeSignup";
-import UserSignup from "./pages/signup/userSignup/UserSignup";
-import Login from "./pages/login/Login";
 import Project from "./components/project/Project";
 import ProjectForm from "./components/project/ProjectForm";
 import ProjectList from "./components/project/ProjectList";
 import UpdateProjectForm from "./components/project/UpdateProjectForm";
 import ProjectDetails from "./components/project/ProjectDetails";
 import Queue from "./components/queue/Queue";
+import UserSignup from "./pages/signup/userSignup/UserSignup";
+import Login from "./pages/login/Login";
 
 function UserLayout() {
   return (
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <PrivateRoute element={<Home />} />
-      },  
+      },   
       {
         path: "/signEmp",
         element: <PrivateRoute element={<EmployeeSignup />} />

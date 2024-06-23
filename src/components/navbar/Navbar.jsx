@@ -3,14 +3,40 @@ import { NavLink } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../locales/LanguageSwitcher';
+import { io } from 'socket.io-client';
+import { getMyNotifications } from '../../axios/notifications';
+const socket = io('http://127.0.0.1:3001'); 
+
+const fetchMyNotifications = async () => {
+  try {
+      const myNotifications = await getMyNotifications();
+      return myNotifications.data;
+  } catch (error) {
+    console.error("err:", error);
+  }
+}
+
 const Navbar = () => {
+  
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
-  const [role, setRole] = useState('');
   const { t } = useTranslation();
+  const [role, setRole] = useState('');  
+  const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {     
+
+      socket.on('branchManager-channel', () => {
+        fetchMyNotifications().then(setNotifications);
+      });
+      
+      fetchMyNotifications().then(setNotifications);
+      
+    }, []);
 
   useEffect(() => {
     checkLoggedIn();
   }, []);
+
 
   const checkLoggedIn = () => {
     const token = localStorage.getItem('token');
@@ -45,7 +71,32 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-            {/* Your existing navigation links */}
+
+            {/* <li className="nav-item">
+              <NavLink className="nav-link" to="/">الرئيسية</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/contact">تواصل معنا</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/services">خدماتنا</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/about">من نحن</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/portfolio">أعمالنا</NavLink>
+            </li> */}
+            {isLoggedIn && role === 'client' && (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/addclientproject">اضافة مشروع</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/viewclientprojects">رؤية المشاريع</NavLink>
+                </li>
+              </>
+            )}
           </ul>
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
@@ -65,6 +116,24 @@ const Navbar = () => {
               </>
             ) : (
               <>
+
+                <Dropdown>
+                  <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
+                     اشعارات
+                  </Dropdown.Toggle>
+                  {notifications.length > 0 ? (
+                        <Dropdown.Menu>
+                        {notifications.map((e)=>(
+                          <Dropdown.Item as={NavLink} key={e._id} to="/signEmp">{JSON.stringify(e.message)}</Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    ) : (
+                      <Dropdown.Menu>
+                        <Dropdown.Item> No Notifications Yet! </Dropdown.Item>
+                    </Dropdown.Menu>
+                    )}
+                </Dropdown>
+
                 <li className="nav-item">
                   <button className="btn btn-outline-primary" onClick={logOut}>{t('logout')}</button>
                 </li>
