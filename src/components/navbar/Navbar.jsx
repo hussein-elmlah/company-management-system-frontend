@@ -58,8 +58,8 @@ const Navbar = () => {
                     {t('createAccount')}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={NavLink} to="/employeesignup">{t('employee')}</Dropdown.Item>
-                    <Dropdown.Item as={NavLink} to="/usersignup">{t('client')}</Dropdown.Item>
+                    <Dropdown.Item as={NavLink} to="/signEmp">{t('employee')}</Dropdown.Item>
+                    <Dropdown.Item as={NavLink} to="/signUser">{t('client')}</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </>
