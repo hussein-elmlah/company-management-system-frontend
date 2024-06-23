@@ -28,6 +28,7 @@ const Queue = () => {
     setProjects(dummyProjects); // Replace with actual data fetching logic
     const role = getUserRoleFromLocalStorage();
     setUserRole(role);
+    setSelectedVisualization('timeline');
   }, []);
 
   useEffect(() => {
