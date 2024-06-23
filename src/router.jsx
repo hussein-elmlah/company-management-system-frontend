@@ -8,6 +8,8 @@ import EmployeeSignup from "./pages/signup/employeeSignup/EmployeeSignup";
 import UserSignup from "./pages/signup/userSignup/UserSignup";
 import Login from "./pages/login/Login";
 
+import AcceptancePage from "./pages/projectAcceptance/AcceptancePage";
+
 function UserLayout() {
   return (
     <div className="m-0 p-0">
@@ -39,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <PrivateRoute element={<Login />} />
+      },
+      {
+        path: "/acceptance/:id",
+        element: <PrivateRoute element={<AcceptancePage />} />
       },
       {
         path: "*",
