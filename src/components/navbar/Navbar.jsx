@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import { getMyNotifications } from '../../axios/notifications';
 const socket = io('http://127.0.0.1:3001'); // Replace with your server URL
 
+
 const fetchMyNotifications = async () => {
   try {
     const myNotifications = await getMyNotifications();
@@ -14,31 +15,46 @@ const fetchMyNotifications = async () => {
   }
 }
 
+const countUnreadNotifications = async () => {
+  const notifications = await fetchMyNotifications();
+  const res = notifications.filter(n => n.isRead == false);
+  return res.length;
+}
+
 const formatDate = (isoDate) => {
   const date = new Date(isoDate);
   return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 };
 
 const Navbar = () => {
-
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [role, setRole] = useState('');
   const [notifications, setNotifications] = useState([]);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
   useEffect(() => {
-
     socket.on('branchManager-channel', () => {
+      /**
+       * Reference: setNotifications is a reference to the function itself. It's not being called with (), so it's not executed immediately. 
+       * Instead, it serves as a callback that will be invoked later, once the promise resolves.
+       */
       fetchMyNotifications().then(setNotifications);
     });
-
     fetchMyNotifications().then(setNotifications);
-
   }, []);
+
+
+  useEffect(() => {
+    socket.on('branchManager-channel', () => {
+      countUnreadNotifications().then(setUnreadNotificationsCount);
+    });
+    countUnreadNotifications().then(setUnreadNotificationsCount);
+  }, []);
+
 
   useEffect(() => {
     checkLoggedIn();
   }, []);
-
 
   const checkLoggedIn = () => {
     const token = localStorage.getItem('token');
@@ -125,7 +141,7 @@ const Navbar = () => {
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i className="fas fa-bell fa-2x"></i>
 
-                    <span className="badge badge-danger badge-counter">3</span>
+                    <span className="badge badge-danger badge-counter">{unreadNotificationsCount}</span>
                   </a>
 
                   <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -133,11 +149,11 @@ const Navbar = () => {
                     <h6 className="dropdown-header">
                       Branch Manager Notifications Center
                     </h6>
-                      {notifications.map((e) => (
-                        <a className="dropdown-item d-flex align-items-center" href={e.redirectURL}>
+                      {notifications.map((e, i) => (
+                        <a className="dropdown-item d-flex align-items-center" key={i} href={e.redirectURL}>
                           <div className="mr-3">
                             <div className="icon-circle">
-                              <i className="far fa-bell"></i>
+                              <i className="fa-solid fa-bullhorn"></i>
                             </div>
                           </div>
                           <div>
