@@ -22,7 +22,7 @@ const Navbar = () => {
 
     useEffect(() => {     
 
-      socket.on('branch-managers-channel', () => {
+      socket.on('branchManager-channel', () => {
         fetchMyNotifications().then(setNotifications);
       });
       
