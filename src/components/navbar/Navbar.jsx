@@ -41,6 +41,8 @@ const Navbar = () => {
        * Reference: setNotifications is a reference to the function itself. It's not being called with (), so it's not executed immediately. 
        * Instead, it serves as a callback that will be invoked later, once the promise resolves.
        */
+      const audio = new Audio('notification.wav');
+      audio.play()
       fetchMyNotifications().then((data) => {
         setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
         setNotifications(data);
@@ -150,7 +152,7 @@ const Navbar = () => {
                     </span>
                   </a>
 
-                  <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" onClick={markAsRead}
+                  <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                     aria-labelledby="alertsDropdown" style={{ 'max-height': '250px', width: '300px', 'overflow-y': 'auto' }}>
                     <h6 className="dropdown-header">
                       Branch Manager Notifications Center
