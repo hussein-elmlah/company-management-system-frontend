@@ -137,7 +137,7 @@ const projectSlice = createSlice({
         state.projectList = action.payload.data;
         state.totalPages = action.payload.totalPages;
         state.currentPage = action.payload.currentPage;
-        console.log('state.projectList : ', state.projectList)
+        // console.log('state.projectList : ', state.projectList)
       })
       .addCase(fetchProjectsWithParams.rejected, (state, action) => {
         state.loading = false;
