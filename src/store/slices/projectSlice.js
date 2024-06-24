@@ -18,6 +18,22 @@ export const fetchProjects = createAsyncThunk(
   }
 );
 
+export const fetchProjectsWithParams = createAsyncThunk(
+  "projects/fetchProjectsWithParams",
+  async (params) => {
+    const { page = 1, limit = 10, ...rest } = params;
+    try {
+      const response = await axiosInstance.get('/projects', {
+        params: { page, limit, ...rest }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching paginated projects:', error);
+      throw error;
+    }
+  }
+);
+
 export const createProject = createAsyncThunk(
   "projects/createProject",
   async (projectData,thunkAPI) => {
@@ -32,8 +48,6 @@ export const createProject = createAsyncThunk(
     }
   }
 );
-
-
 
 export const updateProject = createAsyncThunk(
   "projects/updateProject",
@@ -110,6 +124,22 @@ const projectSlice = createSlice({
         state.totalPages = Math.ceil(action.payload.totalCount / state.projectsPerPage);
       })
       .addCase(fetchProjects.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message; 
+      })
+      .addCase(fetchProjectsWithParams.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProjectsWithParams.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.projectList = action.payload.data;
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.currentPage;
+        console.log('state.projectList : ', state.projectList)
+      })
+      .addCase(fetchProjectsWithParams.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message; 
       })

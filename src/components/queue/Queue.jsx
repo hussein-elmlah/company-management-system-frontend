@@ -9,31 +9,62 @@ import 'primeicons/primeicons.css';
 import 'vis-timeline/styles/vis-timeline-graph2d.min.css';
 import './Queue.css';
 import dummyProjects from './dummyProjects/dummyProjects';
+import { fetchProjectsWithParams } from '../../store/slices/projectSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import Pagination from '../../components/pagination/Pagination'; // Ensure the correct import path
 
 const getUserRoleFromLocalStorage = () => {
-  // Replace 'userRole' with the actual key used to store role in local storage
   const user = JSON.parse(localStorage.getItem('user'));
   return user ? user.role : null;
 };
 
 const Queue = () => {
-  const [projects, setProjects] = useState([]);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(5);
   const [selectedVisualization, setSelectedVisualization] = useState('table');
-  const [userRole, setUserRole] = useState(null); // State to store user role
+  const [userRole, setUserRole] = useState(null); 
   const timelineRef = useRef(null);
 
+  const dispatch = useDispatch();
+  const projects = useSelector((state) => state.projects.projectList);
+  const isLoading = useSelector((state) => state.projects.loading);
+  const error = useSelector((state) => state.projects.error);
+  const currentPage = useSelector((state) => state.projects.currentPage);
+  const totalPages = useSelector((state) => state.projects.totalPages);
+  const [pageNumber, setPageNumber] = useState(currentPage);
+  const projectsPerPage = 6;
+
   useEffect(() => {
-    setProjects(dummyProjects); // Replace with actual data fetching logic
     const role = getUserRoleFromLocalStorage();
     setUserRole(role);
-    setSelectedVisualization('timeline');
+    console.log('User role:', role);
   }, []);
 
   useEffect(() => {
+    console.log('handlePageChange with page:', pageNumber);
+    handlePageChange(pageNumber);
+  }, [dispatch, pageNumber]);
+  
+  useEffect(() => {
+    console.log('configuring Visualization');
+    configureVisualization();
+  }, [selectedVisualization]);
+
+  const handlePageChange = (page) => {
+    console.log('Handling page change to:', page);
+    setPageNumber(page);
+    dispatch(fetchProjectsWithParams({ page: page, limit: projectsPerPage }));
+  };
+
+  const configureVisualization = () => {
     if (selectedVisualization === 'timeline' && timelineRef.current) {
-      const items = new DataSet(projects.map((project, index) => ({
+      console.log('Configuring timeline visualization');
+      console.log("projects: ", projects);
+      console.log("dummyProjects: ", dummyProjects);
+      let visualizationProjects = JSON.parse(JSON.stringify(projects)).filter(project => project.expectedStartDate && project.expectedCompletionDate);
+      visualizationProjects = visualizationProjects.concat(dummyProjects);
+      console.log("visualizationProjects: ", visualizationProjects);
+      const items = new DataSet(visualizationProjects.map((project, index) => ({
         id: index,
         content: `<div class="timeline-item">
                     <div class="timeline-item-title">${project.client.fullName}</div>
@@ -41,68 +72,84 @@ const Queue = () => {
                       <div>Client: ${project.client.fullName}</div>
                       <div>Owner: ${project.owner}</div>
                       <div>Type: ${project.type}</div>
-                      <div>Start: ${project.expectedStartDate.substr(0, 10)}</div>
-                      <div>End: ${project.expectedCompletionDate.substr(0, 10)}</div>
+                      <div>Start: ${project.expectedStartDate?.toString().substr(0, 10)}</div>
+                      <div>End: ${project.expectedCompletionDate?.toString().substr(0, 10)}</div>
                     </div>
                   </div>`,
         start: project.expectedStartDate,
         end: project.expectedCompletionDate,
         style: `background-color: ${index % 2 === 0 ? 'rgba(255, 193, 7, 0.8)' : 'rgba(3, 169, 244, 0.8)'}; border-color: ${index % 2 === 0 ? '#FFC107' : '#03A9F4'};`
       })));
-
+  
       const options = {
         width: '100%',
         height: '300px',
-        margin: {
-          item: 20
-        },
+        margin: { item: 20 },
         stack: false,
         showCurrentTime: true,
         start: new Date(),
         end: new Date(new Date().setDate(new Date().getDate() + 14)),
-        zoomMin: 1000 * 60 * 60 * 24, // One day in milliseconds
-        zoomMax: 1000 * 60 * 60 * 24 * 31 * 12, // One year in milliseconds
+        zoomMin: 1000 * 60 * 60 * 24, 
+        zoomMax: 1000 * 60 * 60 * 24 * 31 * 12,
         format: {
-          minorLabels: {
-            day: 'D'
-          },
-          majorLabels: {
-            day: 'MMMM YYYY'
-          }
+          minorLabels: { day: 'D' },
+          majorLabels: { day: 'MMMM YYYY' }
         },
-        timeAxis: {
-          scale: 'day',
-        }
+        timeAxis: { scale: 'day' }
       };
-
+  
       new Timeline(timelineRef.current, items, options);
     }
-  }, [selectedVisualization, projects]);
+  };
+  
 
   const handleVisualizationChange = (e) => {
+    console.log('Changing visualization to:', e.target.value);
     setSelectedVisualization(e.target.value);
   };
 
   const renderTable = () => (
-    <DataTable value={projects} paginator first={first} rows={rows} currentPageReportTemplate="{totalRecords} مشروع">
-      <Column field="client.fullName" header="اسم العميل" sortable style={{ width: '15%' }}></Column>
-      <Column field="owner" header="المالك" sortable style={{ width: '10%' }}></Column>
-      <Column field="type" header="نوع المشروع" sortable style={{ width: '10%' }}></Column>
-      <Column field="dateOfSubmission" header="تاريخ التقديم" sortable style={{ width: '15%' }}
-        body={(rowData) => new Date(rowData.dateOfSubmission).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}>
-      </Column>
-      <Column field="expectedStartDate" header="تاريخ البدء" sortable style={{ width: '15%' }}
-        body={(rowData) => new Date(rowData.expectedStartDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}>
-      </Column>
-      <Column field="expectedCompletionDate" header="تاريخ الانتهاء المتوقع" sortable style={{ width: '15%' }}
-        body={(rowData) => new Date(rowData.expectedCompletionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}>
-      </Column>
-    </DataTable>
+    <div>
+      <DataTable value={projects}>
+        <Column field="client.fullName" header="اسم العميل" sortable style={{ width: '15%' }}></Column>
+        <Column field="owner" header="المالك" sortable style={{ width: '10%' }}></Column>
+        <Column field="type" header="نوع المشروع" sortable style={{ width: '10%' }}></Column>
+        <Column field="dateOfSubmission" header="تاريخ التقديم" sortable style={{ width: '15%' }}
+          body={(rowData) => new Date(rowData.dateOfSubmission).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}>
+        </Column>
+        <Column field="expectedStartDate" header="تاريخ البدء" sortable style={{ width: '15%' }}
+          body={(rowData) => new Date(rowData.expectedStartDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}>
+        </Column>
+        <Column field="expectedCompletionDate" header="تاريخ الانتهاء المتوقع" sortable style={{ width: '15%' }}
+          body={(rowData) => new Date(rowData.expectedCompletionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}>
+        </Column>
+      </DataTable>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
+    </div>
   );
 
-  const renderTimeline = () => (
-    <div ref={timelineRef} style={{ width: '100%', height: '300px' }}></div>
-  );
+
+
+  const removeOldVisualizations = () => {
+      const visElements = document.querySelectorAll('.vis-timeline');
+      if (visElements.length > 1) {
+        for (let i = 0; i < visElements.length - 1; i++) {
+          visElements[i].parentNode.removeChild(visElements[i]);
+        }
+      }
+  }
+
+  const renderTimeline = () => {
+    removeOldVisualizations();
+
+    return (
+      <div ref={timelineRef} style={{ width: '100%', height: '300px' }}></div>
+    );
+  }
 
   const renderChart = () => (
     <LineChart width={600} height={300} data={projects}>
