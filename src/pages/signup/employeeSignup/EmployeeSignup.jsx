@@ -3,7 +3,7 @@
 import './EmployeeSignup.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import UserService from '../../../services/user.services';
+import UserService from '../../../axios/user';
 
 const EmployeeSignupComponent = () => {
 //   const navigate = useNavigate();
