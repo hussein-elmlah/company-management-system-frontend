@@ -35,7 +35,6 @@ const formatDate = (isoDate) => {
 };
 
 const Navbar = () => {
-
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [role, setRole] = useState('');
   const [notifications, setNotifications] = useState([]);
@@ -44,14 +43,12 @@ const Navbar = () => {
 
   useEffect(() => {
     socket.on('branchManager-channel', () => {
-      /**
-       * Reference: setNotifications is a reference to the function itself. It's not being called with (), so it's not executed immediately. 
-       * Instead, it serves as a callback that will be invoked later, once the promise resolves.
-       */
-      const audio = new Audio('notification.wav');
-      audio.play()
       fetchMyNotifications().then((data) => {
-        setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
+        var countOfUnread = data.filter(n => n.isRead == false).length;
+        if (countOfUnread > 0) {
+          new Audio('notification.wav').play()
+        }        
+        setUnreadNotificationsCount(countOfUnread);
         setNotifications(data);
       })
     });
@@ -65,16 +62,6 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-
-  useEffect(() => {
-
-    socket.on('branchManager-channel', () => {
-      fetchMyNotifications().then(setNotifications);
-    });
-
-    fetchMyNotifications().then(setNotifications);
-
-  }, []);
 
   useEffect(() => {
     checkLoggedIn();
@@ -184,10 +171,6 @@ const Navbar = () => {
                   </div>
                   </li>
 
-                  <li className="nav-item">
-                    <button className="btn btn-outline-primary" onClick={logOut}>{t('logout')}</button>
-                  </li>
-
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       {user && <span className='px-1 '>{user.firstName}</span>}
@@ -201,9 +184,7 @@ const Navbar = () => {
                     </ul>
                   </li>
 
-                  <li className="nav-item">
-                    <button className="btn btn-outline-primary" onClick={logOut}>تسجيل خروج</button>
-                  </li>
+                
                 </>
             )}
               </ul>
