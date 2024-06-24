@@ -8,7 +8,6 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'vis-timeline/styles/vis-timeline-graph2d.min.css';
 import './Queue.css';
-import dummyProjects from './dummyProjects/dummyProjects';
 import { fetchProjectsWithParams } from '../../store/slices/projectSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Pagination from '../../components/pagination/Pagination'; // Ensure the correct import path
@@ -32,7 +31,7 @@ const Queue = () => {
   const currentPage = useSelector((state) => state.projects.currentPage);
   const totalPages = useSelector((state) => state.projects.totalPages);
   const [pageNumber, setPageNumber] = useState(currentPage);
-  const projectsPerPage = 6;
+  const projectsPerPage = 10;
 
   useEffect(() => {
     const role = getUserRoleFromLocalStorage();
@@ -53,16 +52,13 @@ const Queue = () => {
   const handlePageChange = (page) => {
     console.log('Handling page change to:', page);
     setPageNumber(page);
-    dispatch(fetchProjectsWithParams({ page: page, limit: projectsPerPage }));
+    dispatch(fetchProjectsWithParams({ page: page, limit: projectsPerPage, timelinestart:'2024-06-01', timelineend:'2024-09-11' }));
   };
 
   const configureVisualization = () => {
     if (selectedVisualization === 'timeline' && timelineRef.current) {
       console.log('Configuring timeline visualization');
-      console.log("projects: ", projects);
-      console.log("dummyProjects: ", dummyProjects);
       let visualizationProjects = JSON.parse(JSON.stringify(projects)).filter(project => project.expectedStartDate && project.expectedCompletionDate);
-      visualizationProjects = visualizationProjects.concat(dummyProjects);
       console.log("visualizationProjects: ", visualizationProjects);
       const items = new DataSet(visualizationProjects.map((project, index) => ({
         id: index,
