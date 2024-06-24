@@ -33,18 +33,21 @@ export const createProject = createAsyncThunk(
   }
 );
 
+
+
 export const updateProject = createAsyncThunk(
   "projects/updateProject",
-  async ({ projectId, updatedFields }) => {
+  async ({ projectId, updatedFields }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.put(`/projects/${projectId}`, updatedFields);
       return response.data;
     } catch (error) {
       console.error(`Error updating project with ID ${projectId}:`, error);
-      throw error;
+      return rejectWithValue(error.message);
     }
   }
 );
+
 
 export const deleteProject = createAsyncThunk(
   "projects/deleteProject",
@@ -111,19 +114,19 @@ const projectSlice = createSlice({
         state.error = action.error.message; 
       })
       .addCase(updateProject.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.error = null;
       })
       .addCase(updateProject.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        const updatedProject = action.payload;
-        const existingProjectIndex = state.projectList.findIndex((p) => p.id === updatedProject.id);
-        if (existingProjectIndex !== -1) {
-          state.projectList[existingProjectIndex] = updatedProject;
+        state.loading = false;
+        const index = state.projects.findIndex((project) => project.id === action.payload.id);
+        if (index !== -1) {
+          state.projects[index] = action.payload;
         }
       })
       .addCase(updateProject.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
+        state.loading = false;
+        state.error = action.payload;
       })
 
 

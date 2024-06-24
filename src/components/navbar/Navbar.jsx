@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
-import { io } from 'socket.io-client';
 import { getMyNotifications, readAllNotifications } from '../../axios/notifications';
-const socket = io('http://127.0.0.1:3001'); // Replace with your server URL
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../locales/LanguageSwitcher';
+import { io } from 'socket.io-client';
+import { fetchUserData, selectUser } from '../../store/slices/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
+const socket = io('http://127.0.0.1:3001');
 
 const fetchMyNotifications = async () => {
   try {
@@ -14,6 +18,7 @@ const fetchMyNotifications = async () => {
     console.error("err:", error);
   }
 }
+
 
 const markAsRead = async () => {
   try {
@@ -30,9 +35,11 @@ const formatDate = (isoDate) => {
 };
 
 const Navbar = () => {
+
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [role, setRole] = useState('');
   const [notifications, setNotifications] = useState([]);
+  const { t } = useTranslation();
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
   useEffect(() => {
@@ -56,6 +63,19 @@ const Navbar = () => {
   }, []);
 
 
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
+  useEffect(() => {
+
+    socket.on('branchManager-channel', () => {
+      fetchMyNotifications().then(setNotifications);
+    });
+
+    fetchMyNotifications().then(setNotifications);
+
+  }, []);
+
   useEffect(() => {
     checkLoggedIn();
   }, []);
@@ -64,6 +84,8 @@ const Navbar = () => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
     if (token) {
+      dispatch(fetchUserData());
+
       try {
         const tokenPayload = token.split('.')[1];
         const decodedPayload = atob(tokenPayload);
@@ -75,8 +97,6 @@ const Navbar = () => {
       }
     }
   };
-
-
 
   const logOut = () => {
     localStorage.removeItem('token');
@@ -96,23 +116,6 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
 
-
-
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/">الرئيسية</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/contact">تواصل معنا</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/services">خدماتنا</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/about">من نحن</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/portfolio">أعمالنا</NavLink>
-            </li> */}
             {isLoggedIn && role === 'client' && (
               <>
                 <li className="nav-item">
@@ -124,22 +127,25 @@ const Navbar = () => {
               </>
             )}
           </ul>
+
           <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <LanguageSwitcher />
+            </li>
             {!isLoggedIn ? (
               <>
                 <Dropdown>
                   <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
-                    انشئ حساب
+                    {t('createAccount')}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={NavLink} to="/signEmp">موظف</Dropdown.Item>
-                    <Dropdown.Item as={NavLink} to="/signUser">عميل</Dropdown.Item>
+                    <Dropdown.Item as={NavLink} to="/signEmp">{t('employee')}</Dropdown.Item>
+                    <Dropdown.Item as={NavLink} to="/signUser">{t('client')}</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </>
             ) : (
               <>
-
                 <li className="nav-item dropdown no-arrow mx-1">
                   <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                     data-toggle="dropdown" aria-haspopup="true" onClick={markAsRead} aria-expanded="false">
@@ -176,26 +182,31 @@ const Navbar = () => {
                     ))}
                     <a className="dropdown-item text-center small text-gray-500" href="#">Show All Notifications</a>
                   </div>
-                </li>
+                  </li>
 
-                <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i className="fa fa-user fa-2x"></i>
-                  </a>
-                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><NavLink className="dropdown-item" to="/profile">Profile</NavLink></li>
-                    <li><NavLink className="dropdown-item" to="/settings">Settings</NavLink></li>
-                    <li><hr className="dropdown-divider" /></li>
-                    <li><button className="dropdown-item" onClick={logOut}>Logout</button></li>
-                  </ul>
-                </li>
+                  <li className="nav-item">
+                    <button className="btn btn-outline-primary" onClick={logOut}>{t('logout')}</button>
+                  </li>
 
-                <li className="nav-item">
-                  <button className="btn btn-outline-primary" onClick={logOut}>تسجيل خروج</button>
-                </li>
-              </>
+                  <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      {user && <span className='px-1 '>{user.firstName}</span>}
+                      <i className="fa fa-user fa-2x"></i>
+                    </a>
+                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                      <li><NavLink className="dropdown-item" to="/profile">{t('profile')}</NavLink></li>
+                      <li><NavLink className="dropdown-item" to="/settings">{t('settings')}</NavLink></li>
+                      <li><hr className="dropdown-divider" /></li>
+                      <li><button className="dropdown-item" onClick={logOut}>{t('logout')}</button></li>
+                    </ul>
+                  </li>
+
+                  <li className="nav-item">
+                    <button className="btn btn-outline-primary" onClick={logOut}>تسجيل خروج</button>
+                  </li>
+                </>
             )}
-          </ul>
+              </ul>
         </div>
       </div>
     </nav>

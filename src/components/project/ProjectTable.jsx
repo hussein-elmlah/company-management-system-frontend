@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { deleteProject } from '../../store/slices/projectSlice';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const ProjectTable = ({ projects }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const handleView = (projectId) => {
     navigate(`/projectdetails/${projectId}`);
@@ -19,27 +21,28 @@ const ProjectTable = ({ projects }) => {
 
   const handleDelete = (projectId) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: t('deleteConfirmationTitle'),
+      text: t('deleteConfirmationText'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: t('deleteConfirmationYes'),
+      cancelButtonText: t('cancel')
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await dispatch(deleteProject(projectId)).unwrap();
           Swal.fire(
-            'Deleted!',
-            'Your project has been deleted.',
+            t('deleteSuccessTitle'),
+            t('deleteSuccessMessage'),
             'success'
           );
         } catch (error) {
           console.error("Error deleting project:", error);
           Swal.fire(
-            'Error!',
-            'Failed to delete the project.',
+            t('deleteErrorTitle'),
+            t('deleteErrorMessage'),
             'error'
           );
         }
@@ -49,30 +52,30 @@ const ProjectTable = ({ projects }) => {
 
   return (
     <div className="table-responsive">
-      <table className="min-w-full bg-white">
-        <thead>
+      <table className="table table-bordered">
+        <thead className="thead-light">
           <tr>
-            <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Name</th>
-            <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Description</th>
-            <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Client</th>
-            <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Actions</th>
+            <th>{t('projectName')}</th>
+            <th>{t('description')}</th>
+            <th>{t('client')}</th>
+            <th>{t('actions')}</th>
           </tr>
         </thead>
-        <tbody className="bg-white">
+        <tbody>
           {projects.map((project) => (
             <tr key={project.id}>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{project.name}</td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{project.description}</td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{project.client?.fullName}</td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                <div className="flex space-x-4">
-                  <button className="text-blue-500 hover:text-blue-700" onClick={() => handleView(project.id)}>
+              <td>{project.name}</td>
+              <td>{project.description}</td>
+              <td>{project.client?.fullName}</td>
+              <td>
+                <div className="d-flex justify-content-between">
+                  <button className="btn btn-link text-primary" onClick={() => handleView(project.id)}>
                     <FaEye />
                   </button>
-                  <button className="text-green-500 hover:text-green-700" onClick={() => handleUpdate(project.id)}>
+                  <button className="btn btn-link text-success" onClick={() => handleUpdate(project.id)}>
                     <FaEdit />
                   </button>
-                  <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(project.id)}>
+                  <button className="btn btn-link text-danger" onClick={() => handleDelete(project.id)}>
                     <FaTrash />
                   </button>
                 </div>

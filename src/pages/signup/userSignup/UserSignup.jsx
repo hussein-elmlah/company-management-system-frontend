@@ -1,35 +1,34 @@
-// import React from 'react';
-// import { useNavigate } from 'react-router-dom';
+ 
+
+
 import './UserSignup.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import UserService from '../../../services/user.services';
+import UserService from '../../../axios/user';
 
 const UserSignupComponent = () => {
-//   const navigate = useNavigate();
-
   const formik = useFormik({
     initialValues: {
       firstName: '',
       lastName: '',
-      username: '',
-      mobileNumber: '',
       email: '',
+      mobileNumber: '',
+      username: '',
       password: '',
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required('يجب ادخال الاسم الاول'),
       lastName: Yup.string().required('يجب ادخال الاسم الاخير'),
-      username: Yup.string().required('يجب ادخال اسم المستخدم'),
-      mobileNumber: Yup.string().required('يجب ادخال رقم الهاتف'),
       email: Yup.string().email('يجب ادخال البريد الالكتروني بشكل صحيح').required('يجب ادخال البريد الالكتروني'),
+      mobileNumber: Yup.string().required('يجب ادخال رقم الهاتف'),
+      username: Yup.string().required('يجب ادخال اسم المستخدم'),
       password: Yup.string().min(8, 'يجب ادخال على الاقل 8 حروف لكلمة السر').required('يجب ادخال كلمة السر'),
     }),
     onSubmit: (values, { resetForm }) => {
       UserService.createUser(values)
         .then((response) => {
           console.log(response.headers);
-          alert('congratulation,you signed up successfully.');
+          alert('congratulation, you signed up successfully. Please verify your email.');
           resetForm();
         })
         .catch((error) => {
@@ -78,38 +77,6 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="usernameInput" className="form-label textf">اسم المستخدم</label>
-            <input
-              type="text"
-              className="form-control"
-              id="usernameInput"
-              {...formik.getFieldProps('username')}
-              placeholder="ادخل اسم المستخدم"
-            />
-            {formik.touched.username && formik.errors.username ? (
-              <div className="form-text text-danger">
-                <small>{formik.errors.username}</small>
-              </div>
-            ) : null}
-          </div>
-
-          <div className="mb-2">
-            <label htmlFor="mobileNumber" className="form-label textf">رقم الهاتف</label>
-            <input
-              type="text"
-              className="form-control"
-              id="mobileNumber"
-              {...formik.getFieldProps('mobileNumber')}
-              placeholder="ادخل رقم الهاتف"
-            />
-            {formik.touched.mobileNumber && formik.errors.mobileNumber ? (
-              <div className="form-text text-danger">
-                <small>{formik.errors.mobileNumber}</small>
-              </div>
-            ) : null}
-          </div>
-
-          <div className="mb-2">
             <label htmlFor="emailInput" className="form-label textf">البريد الالكتروني</label>
             <input
               type="text"
@@ -121,6 +88,38 @@ const UserSignupComponent = () => {
             {formik.touched.email && formik.errors.email ? (
               <div className="form-text text-danger">
                 <small>{formik.errors.email}</small>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mb-2">
+            <label htmlFor="mobileNumberInput" className="form-label textf">رقم الهاتف</label>
+            <input
+              type="text"
+              className="form-control"
+              id="mobileNumberInput"
+              {...formik.getFieldProps('mobileNumber')}
+              placeholder="ادخل رقم الهاتف"
+            />
+            {formik.touched.mobileNumber && formik.errors.mobileNumber ? (
+              <div className="form-text text-danger">
+                <small>{formik.errors.mobileNumber}</small>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mb-2">
+            <label htmlFor="usernameInput" className="form-label textf">اسم المستخدم</label>
+            <input
+              type="text"
+              className="form-control"
+              id="usernameInput"
+              {...formik.getFieldProps('username')}
+              placeholder="ادخل اسم المستخدم"
+            />
+            {formik.touched.username && formik.errors.username ? (
+              <div className="form-text text-danger">
+                <small>{formik.errors.username}</small>
               </div>
             ) : null}
           </div>
