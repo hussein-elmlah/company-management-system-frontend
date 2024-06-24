@@ -1,4 +1,9 @@
-// import React from 'react';
+ 
+
+
+
+
+ 
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -10,26 +15,24 @@ const LoginComponent = () => {
 
   const formik = useFormik({
     initialValues: {
-      username: '',
+      email: '',
       password: '',
     },
     validationSchema: Yup.object({
-      username: Yup.string().required('يجب ادخال اسم المستخدم'),
+      email: Yup.string().email('يجب ادخال البريد الالكتروني بشكل صحيح').required('يجب ادخال البريد الالكتروني'),
       password: Yup.string().min(8, 'يجب ادخال على الاقل 8 حروف لكلمة السر').required('يجب ادخال كلمة السر'),
     }),
     onSubmit: (values) => {
       UserService.login(values)
         .then((response) => {
           console.log('Login successful:', response);
-          localStorage.setItem('token', response.user);
-          navigate('/').then(() => {
-            window.location.reload();
-          });
+          localStorage.setItem('token', response.data.user);
+          navigate('/');
         })
-         .catch((error) => {
-            console.error('Login error:', error);
-            alert('Login failed: ' + (error.response?.data?.message || error.message));
-          });
+        .catch((error) => {
+          console.error('Login error:', error);
+          alert('Login failed: ' + (error.response?.data?.message || error.message));
+        });
     },
   });
 
@@ -37,20 +40,20 @@ const LoginComponent = () => {
     <div className="px-3">
       <div className="loginpage rounded-2">
         <form onSubmit={formik.handleSubmit} className="mt-2 p-4">
-          <label htmlFor="username" className="mb-2"> اسم المستخدم</label>
+          <label htmlFor="email" className="mb-2 tl">البريد الالكتروني</label>
           <input
             type="text"
             className="form-control mb-2"
-            placeholder="ادخل اسم المستخدم"
-            {...formik.getFieldProps('username')}
+            placeholder="ادخل البريد الالكتروني"
+            {...formik.getFieldProps('email')}
           />
-          {formik.touched.username && formik.errors.username ? (
+          {formik.touched.email && formik.errors.email ? (
             <div className="form-text text-danger">
-              <small>{formik.errors.username}</small>
+              <small>{formik.errors.email}</small>
             </div>
           ) : null}
 
-          <label htmlFor="password" className="mb-2">كلمة السر</label>
+          <label htmlFor="password" className="mb-2 tl">كلمة السر</label>
           <input
             type="password"
             className="form-control mb-2"
@@ -65,16 +68,16 @@ const LoginComponent = () => {
 
           <button
             type="submit"
-            className="mb-2 mt-2 rounded-2"
             disabled={!formik.isValid || formik.isSubmitting}
-            className={!formik.isValid || formik.isSubmitting ? 'disabled' : ''}
+            className={!formik.isValid || formik.isSubmitting ? 'disabled mb-2 mt-2 rounded-2 bt' : 'mb-2 mt-2 rounded-2 bt'}
           >
             تسجيل الدخول
           </button>
         </form>
       </div>
       <div className="text-center">
-        <p>ليس لديك حساب ؟ <a href="/signup">انشئ حساب</a></p>
+        <p className="tl">نسيت كلمة السر؟ <a className="tl" href="/forgot-password">استعادة كلمة السر</a></p>
+        <p className="tl">ليس لديك حساب ؟ <a className="tl" href="/signUser">انشئ حساب</a></p>
       </div>
     </div>
   );

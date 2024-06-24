@@ -29,7 +29,7 @@ const EmployeeSignupComponent = () => {
       UserService.createUser(values)
         .then((response) => {
           console.log(response.headers);
-          alert('congratulation,you signed up successfully.');
+          alert('congratulation, you signed up successfully. Please verify your email.');
           resetForm();
         })
         .catch((error) => {

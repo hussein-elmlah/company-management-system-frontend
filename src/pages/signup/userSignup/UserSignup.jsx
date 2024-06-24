@@ -1,35 +1,34 @@
-// import React from 'react';
-// import { useNavigate } from 'react-router-dom';
+ 
+
+
 import './UserSignup.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import UserService from '../../../services/user.services';
 
 const UserSignupComponent = () => {
-//   const navigate = useNavigate();
-
   const formik = useFormik({
     initialValues: {
       firstName: '',
       lastName: '',
-      username: '',
-      mobileNumber: '',
       email: '',
+      mobileNumber: '',
+      username: '',
       password: '',
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required('يجب ادخال الاسم الاول'),
       lastName: Yup.string().required('يجب ادخال الاسم الاخير'),
-      username: Yup.string().required('يجب ادخال اسم المستخدم'),
-      mobileNumber: Yup.string().required('يجب ادخال رقم الهاتف'),
       email: Yup.string().email('يجب ادخال البريد الالكتروني بشكل صحيح').required('يجب ادخال البريد الالكتروني'),
+      mobileNumber: Yup.string().required('يجب ادخال رقم الهاتف'),
+      username: Yup.string().required('يجب ادخال اسم المستخدم'),
       password: Yup.string().min(8, 'يجب ادخال على الاقل 8 حروف لكلمة السر').required('يجب ادخال كلمة السر'),
     }),
     onSubmit: (values, { resetForm }) => {
       UserService.createUser(values)
         .then((response) => {
           console.log(response.headers);
-          alert('congratulation,you signed up successfully.');
+          alert('congratulation, you signed up successfully. Please verify your email.');
           resetForm();
         })
         .catch((error) => {
@@ -43,10 +42,10 @@ const UserSignupComponent = () => {
 
   return (
     <div>
-      <div className="container rounded-2">
+      <div className="rounded-2 co">
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-2">
-            <label htmlFor="firstNameInput" className="form-label">الاسم الاول</label>
+            <label htmlFor="firstNameInput" className="form-label textf">الاسم الاول</label>
             <input
               type="text"
               className="form-control"
@@ -62,7 +61,7 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="lastNameInput" className="form-label">الاسم الاخير</label>
+            <label htmlFor="lastNameInput" className="form-label textf">الاسم الاخير</label>
             <input
               type="text"
               className="form-control"
@@ -78,39 +77,7 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="usernameInput" className="form-label">اسم المستخدم</label>
-            <input
-              type="text"
-              className="form-control"
-              id="usernameInput"
-              {...formik.getFieldProps('username')}
-              placeholder="ادخل اسم المستخدم"
-            />
-            {formik.touched.username && formik.errors.username ? (
-              <div className="form-text text-danger">
-                <small>{formik.errors.username}</small>
-              </div>
-            ) : null}
-          </div>
-
-          <div className="mb-2">
-            <label htmlFor="mobileNumber" className="form-label">رقم الهاتف</label>
-            <input
-              type="text"
-              className="form-control"
-              id="mobileNumber"
-              {...formik.getFieldProps('mobileNumber')}
-              placeholder="ادخل رقم الهاتف"
-            />
-            {formik.touched.mobileNumber && formik.errors.mobileNumber ? (
-              <div className="form-text text-danger">
-                <small>{formik.errors.mobileNumber}</small>
-              </div>
-            ) : null}
-          </div>
-
-          <div className="mb-2">
-            <label htmlFor="emailInput" className="form-label">البريد الالكتروني</label>
+            <label htmlFor="emailInput" className="form-label textf">البريد الالكتروني</label>
             <input
               type="text"
               className="form-control"
@@ -126,7 +93,39 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="passwordInput" className="form-label">كلمة السر</label>
+            <label htmlFor="mobileNumberInput" className="form-label textf">رقم الهاتف</label>
+            <input
+              type="text"
+              className="form-control"
+              id="mobileNumberInput"
+              {...formik.getFieldProps('mobileNumber')}
+              placeholder="ادخل رقم الهاتف"
+            />
+            {formik.touched.mobileNumber && formik.errors.mobileNumber ? (
+              <div className="form-text text-danger">
+                <small>{formik.errors.mobileNumber}</small>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mb-2">
+            <label htmlFor="usernameInput" className="form-label textf">اسم المستخدم</label>
+            <input
+              type="text"
+              className="form-control"
+              id="usernameInput"
+              {...formik.getFieldProps('username')}
+              placeholder="ادخل اسم المستخدم"
+            />
+            {formik.touched.username && formik.errors.username ? (
+              <div className="form-text text-danger">
+                <small>{formik.errors.username}</small>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mb-2">
+            <label htmlFor="passwordInput" className="form-label textf">كلمة السر</label>
             <input
               type="password"
               className="form-control"
@@ -143,7 +142,7 @@ const UserSignupComponent = () => {
 
           <button
             type="submit"
-            className="mb-2 mt-2 rounded-2"
+            className="mb-2 mt-2 rounded-2 btext"
             disabled={!formik.isValid || formik.isSubmitting}
           >
             انشئ حساب
@@ -151,7 +150,7 @@ const UserSignupComponent = () => {
         </form>
       </div>
       <div className="text-center">
-        <p>هل لديك حساب بالفعل ؟ <a href="/login">تسجيل دخول</a></p>
+        <p className="textf">هل لديك حساب بالفعل ؟ <a className="textf" href="/login">تسجيل دخول</a></p>
       </div>
     </div>
   );
