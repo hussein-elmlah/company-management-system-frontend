@@ -10,9 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const socket = io('http://127.0.0.1:3001');
 
-const fetchMyNotifications = async () => {
+const fetchMyNotifications = async (id) => {
   try {
-    const myNotifications = await getMyNotifications();
+    const myNotifications = await getMyNotifications(id);
     return myNotifications.data;
   } catch (error) {
     console.error("err:", error);
@@ -20,9 +20,9 @@ const fetchMyNotifications = async () => {
 }
 
 
-const markAsRead = async () => {
+const markAsRead = async (id) => {
   try {
-    await readAllNotifications();
+    await readAllNotifications(id);
     return true;
   } catch (error) {
     console.error("err:", error);
@@ -40,28 +40,36 @@ const Navbar = () => {
   const [notifications, setNotifications] = useState([]);
   const { t } = useTranslation();
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
-
-  useEffect(() => {
-    socket.on('branchManager-channel', () => {
-      fetchMyNotifications().then((data) => {
-        var countOfUnread = data.filter(n => n.isRead == false).length;
-        if (countOfUnread > 0) {
-          new Audio('notification.wav').play()
-        }        
-        setUnreadNotificationsCount(countOfUnread);
-        setNotifications(data);
-      })
-    });
-
-    fetchMyNotifications().then((data) => {
-      setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
-      setNotifications(data);
-    })
-  }, []);
-
-
+  
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+
+  useEffect(() => {
+    if (user && user._id) {
+      const handleNotification = () => {
+        fetchMyNotifications(user._id).then((data) => {
+          const countOfUnread = data.filter(n => !n.isRead).length;
+          if (countOfUnread > 0) {
+            new Audio('notification.wav').play();
+          }
+          setUnreadNotificationsCount(countOfUnread);
+          setNotifications(data);
+        });
+      };
+
+      socket.on('branchManager-channel', handleNotification);
+
+      fetchMyNotifications(user._id).then((data) => {
+        setUnreadNotificationsCount(data.filter(n => !n.isRead).length);
+        setNotifications(data);
+      });
+
+      return () => {
+        socket.off('branchManager-channel', handleNotification);
+      };
+    }
+  }, [user]);
+
 
   useEffect(() => {
     checkLoggedIn();
@@ -134,8 +142,9 @@ const Navbar = () => {
             ) : (
               <>
                 <li className="nav-item dropdown no-arrow mx-1">
+                {user && user._id && (
                   <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" onClick={markAsRead} aria-expanded="false">
+                    data-toggle="dropdown" aria-haspopup="true" onClick={() => markAsRead(user._id)} aria-expanded="false">
                     <i className="fas fa-bell fa-2x"></i>
 
                     <span className="badge badge-danger badge-counter">
@@ -144,6 +153,7 @@ const Navbar = () => {
                       ) : (<></>)}
                     </span>
                   </a>
+                  )}
 
                   <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                     aria-labelledby="alertsDropdown" style={{ 'max-height': '250px', width: '300px', 'overflow-y': 'auto' }}>
