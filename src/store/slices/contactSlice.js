@@ -3,9 +3,13 @@ import { axiosInstance } from "../../axios";
 
 export const sendContactMessage = createAsyncThunk(
   'contact/sendContactMessage',
-  async (formData) => {
-    const response = await axiosInstance.post('/contactus', formData);
-    return response.data;
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('/contactus', formData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -26,7 +30,7 @@ const contactSlice = createSlice({
       })
       .addCase(sendContactMessage.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       });
   }
 });

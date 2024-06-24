@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 import { sendContactMessage } from '../../store/slices/contactSlice';
 
 const ContactUsForm = () => {
@@ -11,6 +12,7 @@ const ContactUsForm = () => {
   });
 
   const dispatch = useDispatch();
+  const { status, error } = useSelector((state) => state.contact);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,9 +25,23 @@ const ContactUsForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(sendContactMessage(formData));
-    setFormData({ name: '', email: '', subject: '', message: '' });
   };
-
+  useEffect(() => {
+    if (status === 'succeeded') {
+      Swal.fire({
+        icon: 'success',
+        title: 'تم الإرسال!',
+        text: 'تم إرسال رسالتك بنجاح.',
+      });
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } else if (status === 'failed' && error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'خطأ!',
+        text: 'حدث خطأ أثناء إرسال رسالتك. حاول مرة أخرى.',
+      });
+    }
+  }, [status, error]);
   return (
     <div className="contact mt-5">
       <div className="container">
