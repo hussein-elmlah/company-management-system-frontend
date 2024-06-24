@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../locales/LanguageSwitcher';
 import { io } from 'socket.io-client';
 import { getMyNotifications } from '../../axios/notifications';
+import { fetchUserData, selectUser } from '../../store/slices/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 const socket = io('http://127.0.0.1:3001'); 
 
 const fetchMyNotifications = async () => {
@@ -23,6 +26,9 @@ const Navbar = () => {
   const [role, setRole] = useState('');  
   const [notifications, setNotifications] = useState([]);
 
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
     useEffect(() => {     
 
       socket.on('branchManager-channel', () => {
@@ -37,11 +43,12 @@ const Navbar = () => {
     checkLoggedIn();
   }, []);
 
-
   const checkLoggedIn = () => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
     if (token) {
+      dispatch(fetchUserData());
+
       try {
         const tokenPayload = token.split('.')[1];
         const decodedPayload = atob(tokenPayload);
@@ -71,7 +78,6 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-
             {/* <li className="nav-item">
               <NavLink className="nav-link" to="/">الرئيسية</NavLink>
             </li>
@@ -139,6 +145,7 @@ const Navbar = () => {
                 </li>
                 <li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    { user && <span className='px-1 '>{user.firstName}</span> }
                     <i className="fa fa-user"></i>
                   </a>
                   <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">

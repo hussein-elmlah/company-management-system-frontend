@@ -2,7 +2,7 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useParams, useNavigate } from 'react-router-dom';
-import UserService from '../../services/user.services';
+import UserService from '../../axios/user';
 import './Login.css';
 
 const ResetPassword = () => {

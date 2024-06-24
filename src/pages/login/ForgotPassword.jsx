@@ -1,7 +1,7 @@
  
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import UserService from '../../services/user.services';
+import UserService from '../../axios/user';
 import './Login.css';
 
 const ForgotPassword = () => {

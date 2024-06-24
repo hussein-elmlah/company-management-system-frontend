@@ -1,6 +1,6 @@
 import  { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import UserService from '../../services/user.services';
+import UserService from '../../axios/user';
 
 const VerifyEmailComponent = () => {
   const [searchParams] = useSearchParams();
