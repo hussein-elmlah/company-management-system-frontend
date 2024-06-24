@@ -9,16 +9,24 @@
       width: 90%;
     }
   }
-  label,
+  /* label,
   p,
   a {
     font-size: 20px;
     font-weight: bold;
     text-transform: capitalize;
     color: black;
-    /* text-decoration: none; */
+     
+  } */
+
+  .tl {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: black;
+     
   }
-  button {
+   .bt {
     padding: 10px 20px 10px 20px;
     /* border-radius: 15px; */
     transition: all 0.4s ease-in-out;
@@ -26,7 +34,7 @@
     color: white;
     width: 100%;
   }
-  button:hover:not(.disabled) {
+  .bt:hover:not(.disabled) {
     background-color: white;
     color: rgb(0, 34, 66);
     border-color: rgb(0, 34, 66);

@@ -14,15 +14,44 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     }
   };
 
-  return (
+  const renderPaginationButtons = () => {
+    const maxVisiblePages = 5;
+    const halfMaxVisiblePages = Math.floor(maxVisiblePages / 2);
+
+    let startPage = Math.max(1, currentPage - halfMaxVisiblePages);
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    const pages = [];
+    for (let page = startPage; page <= endPage; page++) {
+      pages.push(
+        <button
+          key={page}
+          className={`join-item btn ${page === currentPage ? 'text-success h5' : ''}`}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </button>
+      );
+    }
+
+    return (
+      <>
+        <button className="join-item btn" onClick={handlePrev} disabled={currentPage === 1}>«</button>
+        {pages}
+        <button className="join-item btn" onClick={handleNext} disabled={currentPage === totalPages}>»</button>
+      </>
+    );
+  };
+
+  return totalPages > 1 ? (
     <div className="join pb-5 text-center">
-      <button className="join-item btn" onClick={handlePrev} disabled={currentPage === 1}>«</button>
-      {[...Array(totalPages).keys()].map(page => (
-        <button key={page} className="join-item btn" onClick={() => onPageChange(page + 1)}>{page + 1}</button>
-      ))}
-      <button className="join-item btn" onClick={handleNext} disabled={currentPage === totalPages}>»</button>
+      {renderPaginationButtons()}
     </div>
-  );
+  ) : null;
 };
 
 Pagination.propTypes = {
