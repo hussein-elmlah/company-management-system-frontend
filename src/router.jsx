@@ -18,6 +18,7 @@ import ResetPassword from "./pages/login/ResetPassword";
 
 import AcceptancePage from "./pages/projectAcceptance/AcceptancePage";
 import VerifyEmail from './pages/login/VerifyEmail';
+import AssignProject from "./components/project/AssignProject";
 
  
 
@@ -82,6 +83,9 @@ const router = createBrowserRouter([
       },{
         path: '/projectdetails/:projectId',
         element: <PrivateRoute element={<ProjectDetails/>} />
+      },{
+        path: '/projects/:projectId/assign',
+        element: <PrivateRoute element={<AssignProject/>} />
       },
       {
         path: "/queue",

@@ -2,8 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosInstance } from "../../axios";
 
 export const fetchEmployees = createAsyncThunk('employees/fetchEmployees', async () => {
-  const response = await axiosInstance.get('/api/users/allUsers');
+  const response = await axiosInstance.get('/users/allUsers');
   return response.data.users;
+  
 });
 
 const employeesSlice = createSlice({

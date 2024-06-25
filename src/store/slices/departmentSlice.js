@@ -3,7 +3,9 @@ import { axiosInstance } from "../../axios";
 
 export const fetchDepartments = createAsyncThunk('departments/fetchDepartments', async () => {
   const response = await axiosInstance.get('/departments');
-  return response.data;
+  console.log("hiiiiiiiiiiii",response.data);
+
+  return response.data.data;
 });
 
 const departmentsSlice = createSlice({
