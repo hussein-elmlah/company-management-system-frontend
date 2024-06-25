@@ -114,10 +114,10 @@ const Navbar = () => {
             {isLoggedIn && role === 'client' && (
               <>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/addclientproject">اضافة مشروع</NavLink>
+                  <NavLink className="nav-link" to="/createproject">اضافة مشروع</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/viewclientprojects">رؤية المشاريع</NavLink>
+                  <NavLink className="nav-link" to="/projects">رؤية المشاريع</NavLink>
                 </li>
               </>
             )}
