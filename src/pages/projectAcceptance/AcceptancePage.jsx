@@ -95,7 +95,7 @@ const ProjectAcceptance = () => {
                 </div>
               </div>
             </div>
-            <button className="btn btn-success" onClick={handleAccept}>Accept Project</button>
+            <button className="btn btn-success" onClick={handleAccept}>Accept Project</button> &nbsp;
             <button className="btn btn-danger" onClick={handleReject}>Reject Project</button>
           </div>
         </div>

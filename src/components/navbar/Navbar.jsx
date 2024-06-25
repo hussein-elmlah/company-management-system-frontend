@@ -161,8 +161,12 @@ const Navbar = () => {
                       Branch Manager Notifications Center
                     </h6>
                     {notifications.map((e, i) => (
-                      <a style={{ backgroundColor: e.isRead ? '' : '#eaecf4' }}
-                        className="dropdown-item d-flex align-items-center" key={i} href={e.redirectURL}>
+                      <NavLink
+                      key={i}
+                      to={`/acceptance/${e.project}`}
+                      className="dropdown-item d-flex align-items-center"
+                      style={{ backgroundColor: e.isRead ? '' : '#eaecf4', cursor: 'pointer' }}
+                    >
                         <div className="mr-3">
                           <div className="icon-circle">
                             <i className="fa-solid fa-bullhorn"></i>
@@ -175,7 +179,7 @@ const Navbar = () => {
                             <span class="badge badge-success">New!!</span>
                           ) : (<></>)}
                         </div>
-                      </a>
+                      </NavLink>
                     ))}
                     <a className="dropdown-item text-center small text-gray-500" href="#">Show All Notifications</a>
                   </div>
