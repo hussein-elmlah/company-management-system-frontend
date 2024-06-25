@@ -174,7 +174,7 @@ const Navbar = () => {
                         </div>
                         <div>
                           <div className="small text-gray-500">{formatDate(e.createdAt)}</div>
-                          <span className="font-weight-bold">{e.message}</span> &nbsp; &nbsp;
+                          <div style={{'white-space':'pre'}} className="font-weight-bold">{e.message}</div> &nbsp; &nbsp;
                           {e.isRead == false ? (
                             <span class="badge badge-success">New!!</span>
                           ) : (<></>)}

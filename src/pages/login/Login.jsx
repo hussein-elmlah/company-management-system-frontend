@@ -75,11 +75,10 @@ const LoginComponent = () => {
             تسجيل الدخول
           </button>
         </form>
+        <p className="tl">ليس لديك حساب ؟ <NavLink to={`/signUser`} className="tl" > انشئ حساب </NavLink> </p>
+        <p className="tl">نسيت كلمة السر؟ <NavLink to={`/forgot-password`} className="tl" > استعادة كلمة السر </NavLink> </p>
       </div>
       <div className="text-center">
-        <p className="tl">نسيت كلمة السر؟ <NavLink to={`/forgot-password`} className="tl" > استعادة كلمة السر </NavLink> </p>
-        <p className="tl">ليس لديك حساب ؟ <NavLink to={`/signUser`} className="tl" > انشئ حساب </NavLink> </p>
-              
       </div>
     </div>
   );

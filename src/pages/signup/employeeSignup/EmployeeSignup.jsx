@@ -27,6 +27,7 @@ const EmployeeSignupComponent = () => {
       password: Yup.string().min(8, 'يجب ادخال على الاقل 8 حروف لكلمة السر').required('يجب ادخال كلمة السر'),
     }),
     onSubmit: (values, { resetForm }) => {
+      values.type = 'employee';
       UserService.createUser(values)
         .then((response) => {
           console.log(response.headers);
@@ -35,6 +36,7 @@ const EmployeeSignupComponent = () => {
         })
         .catch((error) => {
           console.error('Signup error:', error);
+          alert('Signup error - check you data');
         });
     },
   });
@@ -147,10 +149,10 @@ const EmployeeSignupComponent = () => {
             انشئ حساب
           </button>
         </form>
-      </div>
-      <div className="text-center">
         <p className="text">هل لديك حساب بالفعل ؟ <NavLink to={`/login`} className="text" > تسجيل دخول </NavLink> </p>
       </div>
+      {/* <div className="text-center"> */}
+      {/* </div> */}
     </div>
   );
 };

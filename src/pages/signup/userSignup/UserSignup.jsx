@@ -149,10 +149,10 @@ const UserSignupComponent = () => {
             انشئ حساب
           </button>
         </form>
-      </div>
-      <div className="text-center">
         <p className="textf">هل لديك حساب بالفعل ؟ <NavLink to={`/login`} className="textf" > تسجيل دخول </NavLink> </p>
       </div>
+      {/* <div className="text-center"> */}
+      {/* </div> */}
     </div>
   );
 };
