@@ -3,6 +3,7 @@
 import './EmployeeSignup.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { NavLink } from 'react-router-dom';
 import UserService from '../../../axios/user';
 
 const EmployeeSignupComponent = () => {
@@ -148,7 +149,7 @@ const EmployeeSignupComponent = () => {
         </form>
       </div>
       <div className="text-center">
-        <p className="text">هل لديك حساب بالفعل ؟ <a className="text" href="/login">تسجيل دخول</a></p>
+        <p className="text">هل لديك حساب بالفعل ؟ <NavLink to={`/login`} className="text" > تسجيل دخول </NavLink> </p>
       </div>
     </div>
   );
