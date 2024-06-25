@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { store } from './store/store';
-import Test from './components/Test';
+import "./styles/style.css";
 function App() {
 
   return (

@@ -1,9 +1,11 @@
-import React, {useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
+import { useTranslation } from 'react-i18next';
 import { sendContactMessage } from '../../store/slices/contactSlice';
 
 const ContactUsForm = () => {
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,27 +28,29 @@ const ContactUsForm = () => {
     e.preventDefault();
     dispatch(sendContactMessage(formData));
   };
+
   useEffect(() => {
     if (status === 'succeeded') {
       Swal.fire({
         icon: 'success',
-        title: 'تم الإرسال!',
-        text: 'تم إرسال رسالتك بنجاح.',
+        title: t('Sent!'),
+        text: t('Your message has been sent successfully.'),
       });
       setFormData({ name: '', email: '', subject: '', message: '' });
     } else if (status === 'failed' && error) {
       Swal.fire({
         icon: 'error',
-        title: 'خطأ!',
-        text: 'حدث خطأ أثناء إرسال رسالتك. حاول مرة أخرى.',
+        title: t('Error!'),
+        text: t('An error occurred while sending your message. Please try again.'),
       });
     }
-  }, [status, error]);
+  }, [status, error, t]);
+
   return (
-    <div className="contact mt-5">
+    <div className={`contact mt-5 ${i18n.language === 'ar' ? 'rtl' : 'ltr'}`}>
       <div className="container">
         <div className="section-header text-center mb-5">
-          <h2 className="mb-2">اتصل بنا</h2>
+          <h2 className="mb-2">{t('Contact Us')}</h2>
         </div>
         <div className="row">
           <div className="col-lg-6 col-md-12 py-1 px-5">
@@ -56,7 +60,7 @@ const ContactUsForm = () => {
                   type="text"
                   name="name"
                   className="form-control"
-                  placeholder="الاسم"
+                  placeholder={t('Name')}
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -67,7 +71,7 @@ const ContactUsForm = () => {
                   type="email"
                   name="email"
                   className="form-control"
-                  placeholder="البريد الالكتروني"
+                  placeholder={t('Email')}
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -78,7 +82,7 @@ const ContactUsForm = () => {
                   type="text"
                   name="subject"
                   className="form-control"
-                  placeholder="الموضوع"
+                  placeholder={t('Subject')}
                   value={formData.subject}
                   onChange={handleChange}
                   required
@@ -89,7 +93,7 @@ const ContactUsForm = () => {
                   name="message"
                   className="form-control"
                   rows="5"
-                  placeholder="الرسالة"
+                  placeholder={t('Message')}
                   value={formData.message}
                   onChange={handleChange}
                   required
@@ -97,7 +101,7 @@ const ContactUsForm = () => {
               </div>
               <div className="text-center">
                 <button type="submit" className="btn btn-primary">
-                  ارسال الرسالة
+                  {t('Send Message')}
                 </button>
               </div>
             </form>
@@ -106,23 +110,23 @@ const ContactUsForm = () => {
             <div className="contact-info px-2">
               <div className="contact-item">
                 <i className="fa fa-map-marker" aria-hidden="true"></i>
-                <h4>العنوان</h4>
-                <p>عنوان الشركة</p>
+                <h4>{t('Address')}</h4>
+                <p>{t('Company Address')}</p>
               </div>
               <div className="contact-item">
                 <i className="fa fa-phone" aria-hidden="true"></i>
-                <h4>الهاتف</h4>
+                <h4>{t('Phone')}</h4>
                 <p>+1234567890</p>
               </div>
               <div className="contact-item">
                 <i className="fa fa-envelope" aria-hidden="true"></i>
-                <h4>البريد الإلكتروني</h4>
+                <h4>{t('Email')}</h4>
                 <p>info@example.com</p>
               </div>
               <div className="contact-item">
                 <i className="fa fa-clock-o" aria-hidden="true"></i>
-                <h4>ساعات العمل</h4>
-                <p>من الأحد إلى الخميس, 9:00 صباحًا - 5:00 مساءً</p>
+                <h4>{t('Business Hours')}</h4>
+                <p>{t('Sunday to Thursday, 9:00 AM - 5:00 PM')}</p>
               </div>
             </div>
           </div>

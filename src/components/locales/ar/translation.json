@@ -50,7 +50,22 @@
     "client": "العميل",
     "actions": "الإجراءات",
     "allProjects": "جميع المشاريع",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "Contact Us": "اتصل بنا",
+    "Name": "الاسم",
+    "Subject": "الموضوع",
+    "Message": "الرسالة",
+    "Send Message": "ارسال الرسالة",
+    "Sent!": "تم الإرسال!",
+    "Your message has been sent successfully.": "تم إرسال رسالتك بنجاح.",
+    "Error!": "خطأ!",
+    "An error occurred while sending your message. Please try again.": "حدث خطأ أثناء إرسال رسالتك. حاول مرة أخرى.",
+    "Address": "العنوان",
+    "Company Address": "عنوان الشركة",
+    "Phone": "الهاتف",
+    "Email": "البريد الإلكتروني",
+    "Business Hours": "ساعات العمل",
+    "Sunday to Thursday, 9:00 AM - 5:00 PM": "من الأحد إلى الخميس, 9:00 صباحًا - 5:00 مساءً"
 
   }
   
