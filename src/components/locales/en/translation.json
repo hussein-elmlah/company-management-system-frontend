@@ -77,6 +77,29 @@
   "mobileNumberRequired": "Mobile number is required",
   "emailRequired": "Email is required",
   "emailInvalid": "Please enter a valid email address",
-  "signupSuccess": "Congratulations, you signed up successfully!"
+  "signupSuccess": "Congratulations, you signed up successfully!",
+  "about": "4TH.PYRAMID Company for design and engineering consultancy, based in the Kingdom of Saudi Arabia, has designed many structures, buildings, and bridges and supervised them. They are distributed throughout Egypt, the Arabian Gulf region, and Africa. Our ambition to innovate systems has enhanced Saudi Arabia's reputation for achieving remarkable feats in structural engineering. For 20 years, we have continued to complete economic and superior designs. We ensure that our structural engineers work closely with clients and collaborators and stay informed so they can innovate in response to challenges and constraints. Areas of expertise (structural design and supervision) 1- Traditional buildings. 2- Bridges. 3- Tunnels. 4- Factories. 5- Hospitals. Building materials: 1- Reinforced concrete. 2- Prestressed concrete. 3- Structural steel. 4- Wall bearing systems. Additionally, Saudi Arabia has designed to repair and strengthen many structures. The systems used are concrete casing, steel cladding, and FRP wrapping and strengthening. We work with architects, civil engineers, and owners to achieve architectural requirements in the best possible way and at the lowest cost.",
+  "ourProjects": "Our Projects",
+  "yearsOfExperience": "Years of Experience",
+  "ongoingProjects": "Ongoing Projects",
+  "numberOfEmployees": "Number of Employees",
+  "engineeringConsultations": "Engineering consultations in the preparation of executive drawing plans",
+  "executiveWorks": "Executive works and engineering project management",
+  "architecturalDesign": "Architectural design office",
+  "contractManagement": "Contract and tender management in one engineering office",
+  "interiorExteriorDesign": "Interior and exterior design works in an engineering office",
+  "structuralDesignConsultations": "Engineering consultations in structural design",
+  "projectPlansPreparation": "Preparation of plans for various projects in one engineering office",
+  "allEngineeringPlans": "An engineering office for all engineering plans",
+  "threeDWorks": "Engineering consultations for all three-dimensional works",
+  "quantitySurvey": "Engineering consultations for quantity survey works",
+  "municipalityServices": "Engineering office for Baladi site services and building permit issuance",
+  "urbanPlanning": "Engineering consultations for urban planning",
+  "projectConstructionManagement": "Engineering office for construction and project management services",
+  "projectManagement": "Engineering consultations for project management",
+  "differentProjectPlans": "Engineering consultations for all different project plans",
+  "decorDesign": "Engineering office for decor design",
+  "technicalSpecifications": "Engineering consultations for the preparation of technical specifications"
+
   }
   
