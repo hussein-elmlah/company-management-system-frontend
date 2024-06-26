@@ -10,9 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const socket = io('http://127.0.0.1:3001');
 
-const fetchMyNotifications = async () => {
+const fetchMyNotifications = async (id) => {
   try {
-    const myNotifications = await getMyNotifications();
+    const myNotifications = await getMyNotifications(id);
     return myNotifications.data;
   } catch (error) {
     console.error("err:", error);
@@ -20,9 +20,9 @@ const fetchMyNotifications = async () => {
 }
 
 
-const markAsRead = async () => {
+const markAsRead = async (id) => {
   try {
-    await readAllNotifications();
+    await readAllNotifications(id);
     return true;
   } catch (error) {
     console.error("err:", error);
@@ -35,46 +35,41 @@ const formatDate = (isoDate) => {
 };
 
 const Navbar = () => {
-
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [role, setRole] = useState('');
   const [notifications, setNotifications] = useState([]);
   const { t } = useTranslation();
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
-
-  useEffect(() => {
-    socket.on('branchManager-channel', () => {
-      /**
-       * Reference: setNotifications is a reference to the function itself. It's not being called with (), so it's not executed immediately. 
-       * Instead, it serves as a callback that will be invoked later, once the promise resolves.
-       */
-      const audio = new Audio('notification.wav');
-      audio.play()
-      fetchMyNotifications().then((data) => {
-        setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
-        setNotifications(data);
-      })
-    });
-
-    fetchMyNotifications().then((data) => {
-      setUnreadNotificationsCount(data.filter(n => n.isRead == false).length);
-      setNotifications(data);
-    })
-  }, []);
-
-
+  
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
 
   useEffect(() => {
+    if (user && user._id) {
+      const handleNotification = () => {
+        fetchMyNotifications(user._id).then((data) => {
+          const countOfUnread = data.filter(n => !n.isRead).length;
+          if (countOfUnread > 0) {
+            new Audio('notification.wav').play();
+          }
+          setUnreadNotificationsCount(countOfUnread);
+          setNotifications(data);
+        });
+      };
 
-    socket.on('branchManager-channel', () => {
-      fetchMyNotifications().then(setNotifications);
-    });
+      socket.on('branchManager-channel', handleNotification);
 
-    fetchMyNotifications().then(setNotifications);
+      fetchMyNotifications(user._id).then((data) => {
+        setUnreadNotificationsCount(data.filter(n => !n.isRead).length);
+        setNotifications(data);
+      });
 
-  }, []);
+      return () => {
+        socket.off('branchManager-channel', handleNotification);
+      };
+    }
+  }, [user]);
+
 
   useEffect(() => {
     checkLoggedIn();
@@ -119,10 +114,10 @@ const Navbar = () => {
             {isLoggedIn && role === 'client' && (
               <>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/addclientproject">اضافة مشروع</NavLink>
+                  <NavLink className="nav-link" to="/createproject">اضافة مشروع</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/viewclientprojects">رؤية المشاريع</NavLink>
+                  <NavLink className="nav-link" to="/projects">رؤية المشاريع</NavLink>
                 </li>
               </>
             )}
@@ -147,8 +142,9 @@ const Navbar = () => {
             ) : (
               <>
                 <li className="nav-item dropdown no-arrow mx-1">
+                {user && user._id && (
                   <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" onClick={markAsRead} aria-expanded="false">
+                    data-toggle="dropdown" aria-haspopup="true" onClick={() => markAsRead(user._id)} aria-expanded="false">
                     <i className="fas fa-bell fa-2x"></i>
 
                     <span className="badge badge-danger badge-counter">
@@ -157,6 +153,7 @@ const Navbar = () => {
                       ) : (<></>)}
                     </span>
                   </a>
+                  )}
 
                   <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                     aria-labelledby="alertsDropdown" style={{ 'max-height': '250px', width: '300px', 'overflow-y': 'auto' }}>
@@ -164,8 +161,12 @@ const Navbar = () => {
                       Branch Manager Notifications Center
                     </h6>
                     {notifications.map((e, i) => (
-                      <a style={{ backgroundColor: e.isRead ? '' : '#eaecf4' }}
-                        className="dropdown-item d-flex align-items-center" key={i} href={e.redirectURL}>
+                      <NavLink
+                      key={i}
+                      to={`/acceptance/${e.project}`}
+                      className="dropdown-item d-flex align-items-center"
+                      style={{ backgroundColor: e.isRead ? '' : '#eaecf4', cursor: 'pointer' }}
+                    >
                         <div className="mr-3">
                           <div className="icon-circle">
                             <i className="fa-solid fa-bullhorn"></i>
@@ -173,19 +174,15 @@ const Navbar = () => {
                         </div>
                         <div>
                           <div className="small text-gray-500">{formatDate(e.createdAt)}</div>
-                          <span className="font-weight-bold">{e.message}</span> &nbsp; &nbsp;
+                          <div style={{'white-space':'pre'}} className="font-weight-bold">{e.message}</div> &nbsp; &nbsp;
                           {e.isRead == false ? (
                             <span class="badge badge-success">New!!</span>
                           ) : (<></>)}
                         </div>
-                      </a>
+                      </NavLink>
                     ))}
                     <a className="dropdown-item text-center small text-gray-500" href="#">Show All Notifications</a>
                   </div>
-                  </li>
-
-                  <li className="nav-item">
-                    <button className="btn btn-outline-primary" onClick={logOut}>{t('logout')}</button>
                   </li>
 
                   <li className="nav-item dropdown">
@@ -201,9 +198,7 @@ const Navbar = () => {
                     </ul>
                   </li>
 
-                  <li className="nav-item">
-                    <button className="btn btn-outline-primary" onClick={logOut}>تسجيل خروج</button>
-                  </li>
+                
                 </>
             )}
               </ul>

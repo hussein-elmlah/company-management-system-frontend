@@ -9,6 +9,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import UserService from '../../axios/user';
 import './Login.css';
+import { NavLink } from 'react-router-dom';
 
 const LoginComponent = () => {
   const navigate = useNavigate();
@@ -74,10 +75,10 @@ const LoginComponent = () => {
             تسجيل الدخول
           </button>
         </form>
+        <p className="tl">ليس لديك حساب ؟ <NavLink to={`/signUser`} className="tl" > انشئ حساب </NavLink> </p>
+        <p className="tl">نسيت كلمة السر؟ <NavLink to={`/forgot-password`} className="tl" > استعادة كلمة السر </NavLink> </p>
       </div>
       <div className="text-center">
-        <p className="tl">نسيت كلمة السر؟ <a className="tl" href="/forgot-password">استعادة كلمة السر</a></p>
-        <p className="tl">ليس لديك حساب ؟ <a className="tl" href="/signUser">انشئ حساب</a></p>
       </div>
     </div>
   );
