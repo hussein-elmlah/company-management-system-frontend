@@ -59,6 +59,7 @@
   "passwordPlaceholder": "Enter password",
   "loginButton": "Login",
   "noAccountMessage": "Don't have an account? ",
+  "forgotPasswordMessage": "Forgot password? ",
   "createAccountLink": "Create one",
   "firstNameLabel": "First Name",
   "firstNamePlaceholder": "Enter first name",

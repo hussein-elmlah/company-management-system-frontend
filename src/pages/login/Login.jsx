@@ -1,12 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import UserService from '../../axios/user';
 import './Login.css';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const LoginComponent = () => {
-  const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation hook
 
   const formik = useFormik({
     initialValues: {
@@ -14,8 +15,8 @@ const LoginComponent = () => {
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('يجب ادخال البريد الالكتروني بشكل صحيح').required('يجب ادخال البريد الالكتروني'),
-      password: Yup.string().min(8, 'يجب ادخال على الاقل 8 حروف لكلمة السر').required('يجب ادخال كلمة السر'),
+      email: Yup.string().email(t('emailInvalid')).required(t('emailRequired')), // Use translated strings for validation
+      password: Yup.string().min(8, t('passwordMinLength')).required(t('passwordRequired')), // Use translated strings for validation
     }),
     onSubmit: (values) => {
       UserService.login(values)
@@ -26,7 +27,7 @@ const LoginComponent = () => {
         })
         .catch((error) => {
           console.error('Login error:', error);
-          alert('Login failed: ' + (error.response?.data?.message || error.message));
+          alert(t('loginFailed') + (error.response?.data?.message || error.message)); // Use translated string for alert
         });
     },
   });
@@ -35,11 +36,11 @@ const LoginComponent = () => {
     <div className="px-3">
       <div className="loginpage rounded-2">
         <form onSubmit={formik.handleSubmit} className="mt-2 p-4">
-          <label htmlFor="email" className="mb-2 tl">البريد الالكتروني</label>
+          <label htmlFor="email" className="mb-2 tl">{t('emailLabel')}</label>
           <input
             type="text"
             className="form-control mb-2"
-            placeholder="ادخل البريد الالكتروني"
+            placeholder={t('emailPlaceholder')}
             {...formik.getFieldProps('email')}
           />
           {formik.touched.email && formik.errors.email ? (
@@ -48,11 +49,11 @@ const LoginComponent = () => {
             </div>
           ) : null}
 
-          <label htmlFor="password" className="mb-2 tl">كلمة السر</label>
+          <label htmlFor="password" className="mb-2 tl">{t('passwordLabel')}</label>
           <input
             type="password"
             className="form-control mb-2"
-            placeholder="ادخل كلمة السر"
+            placeholder={t('passwordPlaceholder')}
             {...formik.getFieldProps('password')}
           />
           {formik.touched.password && formik.errors.password ? (
@@ -63,16 +64,16 @@ const LoginComponent = () => {
 
           <button
             type="submit"
-            disabled={!formik.isValid}
-            className={!formik.isValid ? 'disabled mb-2 mt-2 rounded-2 bt' : 'mb-2 mt-2 rounded-2 bt'}
+            disabled={!formik.isValid || formik.isSubmitting}
+            className={!formik.isValid || formik.isSubmitting ? 'disabled mb-2 mt-2 rounded-2 bt' : 'mb-2 mt-2 rounded-2 bt'}
           >
-            تسجيل الدخول
+            {t('loginButton')}
           </button>
         </form>
-        <p className="tl">ليس لديك حساب ؟ <NavLink to={`/signUser`} className="tl" > انشئ حساب </NavLink> </p>
-        <p className="tl">نسيت كلمة السر؟ <NavLink to={`/forgot-password`} className="tl" > استعادة كلمة السر </NavLink> </p>
-      </div>
-      <div className="text-center">
+        <div className='px-4'>
+          <p className="tl">{t('noAccountMessage')} <NavLink to={`/signUser`} className="tl">{t('create Account')}</NavLink></p>
+          <p className="tl">{t('forgotPasswordMessage')} <NavLink to={`/forgot-password`} className="tl">{t('change Password')}</NavLink></p>
+        </div>
       </div>
     </div>
   );
