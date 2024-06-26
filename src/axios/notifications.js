@@ -24,3 +24,7 @@ export const readAllNotifications = (userId) => {
     }
   );
 };
+
+export const tellClientAboutStatus = (bodyData) => {
+  return axiosInstance.post(`/project-notification/send-notification`, bodyData);
+};

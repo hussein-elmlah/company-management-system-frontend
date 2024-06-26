@@ -5,10 +5,16 @@ import { FaProjectDiagram, FaUser, FaPhone, FaInfoCircle, FaCalendarAlt } from '
 import { useTranslation } from 'react-i18next';
 import { updateProject, fetchProjectById } from '../../store/slices/projectSlice';
 import axiosInstance from '../../axios/config';
+import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
+import { tellClientAboutStatus } from '../../axios/notifications';
+
+const socket = io('http://127.0.0.1:3001');
 
 const ProjectAcceptance = () => {
   const { id } = useParams(); 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { selectedProject: project, loading, error } = useSelector(state => state.projects);
   const { t } = useTranslation();
 
@@ -20,17 +26,31 @@ const ProjectAcceptance = () => {
     try {
       await dispatch(updateProject({ projectId: id, updatedFields: { projectStatus: 'accepted' } }));
       dispatch(fetchProjectById(id));
+      const res = await axiosInstance.post("project-notification/send-notification",
+          {
+            option: 'receiver',
+            data: { "project_id": id, "message": "Your project is accepted" },
+          }
+        )
       alert('Project accepted');
+      navigate('/projects');
     } catch (error) {
       console.error('Error accepting project:', error);
     }
   };
-
+  
   const handleReject = async () => {
     try {
       await dispatch(updateProject({ projectId: id, updatedFields: { projectStatus: 'rejected' } }));
       dispatch(fetchProjectById(id));
+      const res = await axiosInstance.post("project-notification/send-notification",
+        {
+          option: 'receiver',
+          data: { "project_id": id, "message": "Your project is rejected" },
+        }
+      )
       alert('Project rejected');
+      navigate('/projects');
     } catch (error) {
       console.error('Error rejecting project:', error);
     }
