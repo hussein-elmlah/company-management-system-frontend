@@ -90,14 +90,16 @@ const Navbar = () => {
       };
 
       socket.current.on('branchManager-channel', handleNotification);
-
+      socket.current.on(`${user._id}-channel`, handleNotification);
+      
       fetchMyNotifications(user._id).then((data) => {
         setUnreadNotificationsCount(data.filter(n => !n.isRead).length);
         setNotifications(data);
       });
-
+      
       return () => {
         socket.current.off('branchManager-channel', handleNotification);
+        socket.current.off(`${user._id}-channel`, handleNotification);
       };
     }
   }, [user]);
@@ -190,7 +192,7 @@ const Navbar = () => {
                     {notifications.map((e, i) => (
                       <NavLink
                       key={i}
-                      to={`/acceptance/${e.project}`}
+                      to={`${e.redirectURL}`}
                       className="dropdown-item d-flex align-items-center"
                       style={{ backgroundColor: e.isRead ? '' : '#eaecf4', cursor: 'pointer' }}
                     >
