@@ -48,7 +48,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return totalPages > 1 ? (
-    <div className="join pb-5 text-center">
+    <div className="join text-center">
       {renderPaginationButtons()}
     </div>
   ) : null;
