@@ -80,15 +80,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/forgot-password",
-        element: <PrivateRoute element={<ForgotPassword />} />,
+        element: <ForgotPassword />
       },
       {
         path: "/reset-password/:token",
-        element: <PrivateRoute element={<ResetPassword />} />,
+        element: <ResetPassword />
       },
       {
         path: "/verify-email",
-        element: <PrivateRoute element={<VerifyEmail />} />,
+        element: <VerifyEmail />
       },
       {
         path: "/projects",
