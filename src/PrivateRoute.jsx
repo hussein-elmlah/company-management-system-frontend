@@ -1,11 +1,25 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from './store/slices/userSlice';
 
-const PrivateRoute = ({ element }) => {
+const PrivateRoute = ({ element, allowedRoles = [] }) => {
   const token = localStorage.getItem('token');
+  const user = useSelector(selectUser);
 
-  return element; // until handling token in login. then replace it with next line.
-  // return token ? element : <Navigate to="/login" replace />;
+  console.log('User from private :', user);
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  console.log('user role is :', user.role);
+  
+  if (!allowedRoles.length || (user && allowedRoles.includes(user.role))) {
+    return element;
+  }
+
+  return <Navigate to="/" replace />;
 };
 
 export default PrivateRoute;
