@@ -35,6 +35,9 @@ const Queue = () => {
   const [departments, setDepartments] = useState([]);
   const timelineRef = useRef(null);
 
+  const [searchWord, setSearchWord] = useState("");
+  const [searchField, setSearchField] = useState("name");
+
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.projects.projectList);
   const isLoading = useSelector((state) => state.projects.loading);
@@ -64,6 +67,8 @@ const Queue = () => {
     typeFilter,
     programFilter,
     departmentFilter,
+    searchWord,
+    searchField,
   ]);
 
   useEffect(() => {
@@ -84,6 +89,7 @@ const Queue = () => {
       ...(typeFilter && { type: typeFilter }),
       ...(programFilter && { program: programFilter }),
       ...(departmentFilter && { department: departmentFilter }),
+      ...(searchWord && searchField && { [searchField]: searchWord }),
     };
     dispatch(fetchProjectsWithParams(params));
   };
@@ -184,19 +190,25 @@ const Queue = () => {
       <table className="table table-striped table-bordered">
         <thead>
           <tr>
-            <th scope="col">اسم العميل</th>
-            <th scope="col">المالك</th>
-            <th scope="col">نوع المشروع</th>
-            <th scope="col">تاريخ التقديم</th>
-            <th scope="col">تاريخ البدء</th>
-            <th scope="col">تاريخ الانتهاء المتوقع</th>
+            <th scope="col">project name</th>
+            <th scope="col">location</th>
+            <th scope="col">client name</th>
+            <th scope="col">client number</th>
+            <th scope="col">owner</th>
+            <th scope="col">project type</th>
+            <th scope="col">date Of Submission</th>
+            <th scope="col">expected Start Date</th>
+            <th scope="col">expected Completion Date</th>
           </tr>
         </thead>
         <tbody>
           {projects.map((project, index) => (
             <tr key={index}>
-              <td>{project.client.fullName}</td>
-              <td>{project.owner}</td>
+              <td>{project.name}</td>
+              <td>{project.location}</td>
+              <td>{project.client?.fullName}</td>
+              <td>{project.client?.mobileNumber}</td>
+              <td>{project.owner?.fullName}</td>
               <td>{project.type}</td>
               <td>
                 {new Date(project.dateOfSubmission).toLocaleDateString(
@@ -271,6 +283,28 @@ const Queue = () => {
                   <option value="chart">Chart</option>
                 )}
               </select>
+            </div>
+            <div>
+              <div className="mb-3 py-2 border-bottom">
+                <label className="me-1">Search By:</label>
+                <select
+                  className="me-4 rounded border-1 p-1"
+                  value={searchField}
+                  onChange={(e) => setSearchField(e.target.value)}
+                >
+                  <option value="name">Name</option>
+                  <option value="location">Location</option>
+                  <option value="client.fullName">Client</option>
+                  <option value="owner.fullName">Owner</option>
+                </select>
+                <input
+                  type="text"
+                  value={searchWord}
+                  onChange={(e) => setSearchWord(e.target.value)}
+                  placeholder="Search..."
+                  className="me-4 rounded border-1 p-1"
+                />
+              </div>
             </div>
             <div className="mb-1 py-2 border-bottom">
               <div>
