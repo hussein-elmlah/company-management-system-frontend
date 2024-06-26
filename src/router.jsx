@@ -21,6 +21,10 @@ import UpdateUserRole from "./pages/projectAcceptance/UpdateUserRole";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserData, selectUser } from "./store/slices/userSlice";
 import { QueueSpinner } from "./components/reusables/LoadingSpinner";
+import Checkout from "./components/payment/Checkout";
+import Success from "./components/payment/Sucess";
+import { Cancel } from "@mui/icons-material";
+import AssignProject from "./components/project/AssignProject";
 
 const UserLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -126,6 +130,21 @@ const router = createBrowserRouter([
       {
         path: "/queue",
         element: <PrivateRoute element={<Queue />} allowedRoles={employees} />,
+      },
+      {
+        path: '/projects/:projectId/assign',
+        element: <PrivateRoute element={<AssignProject/>} />
+      },
+      {
+        path: "/payment",
+        element:<Checkout /> ,
+      },
+      {
+        path: "/success",
+        element:<Success /> ,
+      },      {
+        path: "/cancel",
+        element:<Cancel /> ,
       },
 
       {

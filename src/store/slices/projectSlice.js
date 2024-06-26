@@ -89,6 +89,19 @@ export const fetchProjectById = createAsyncThunk(
   }
 );
 
+export const assignProject = createAsyncThunk(
+  'projects/assignProject',
+  async ({ projectId, assignmentData }, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await axiosInstance.put(`/projects/${projectId}/assign`, assignmentData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   projects: [],
   projectList: [],
@@ -204,6 +217,18 @@ const projectSlice = createSlice({
       .addCase(deleteProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(assignProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(assignProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.assignments = action.payload;
+      })
+      .addCase(assignProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
