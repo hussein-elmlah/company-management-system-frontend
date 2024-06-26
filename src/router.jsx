@@ -27,7 +27,7 @@ function UserLayout() {
     <div className="m-0 p-0">
      
     <Navbar />
-      <div className="container my-0" style={{ paddingTop: "85px", minHeight: "calc(100vh - 104px)" }}>
+      <div className="container" style={{ paddingTop: "85px" , paddingBottom: "55px" }}>
         <Outlet />
       </div>
       <Footer />
