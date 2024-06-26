@@ -164,12 +164,9 @@ const EmployeeSignupComponent = () => {
             {t("createAccountButton")}
           </button>
         </form>
-        <p className="text">
-          {t("alreadyHaveAccount")}{" "}
-          <NavLink to={`/login`} className="text">
-            {t("loginLink")}
-          </NavLink>
-        </p>
+        <div className="text-center">
+        <p className="textf">{t('haveAccountMessage')} <a className="textf" href="/login">{t('loginLink')}</a></p>
+      </div>
       </div>
     </div>
   );
