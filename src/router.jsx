@@ -88,7 +88,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/verify-email",
-        element: <PrivateRoute element={<VerifyEmail />}  allowedRoles={[...employees,'client']} />,
+        element: <PrivateRoute element={<VerifyEmail />} />,
       },
       {
         path: "/projects",
