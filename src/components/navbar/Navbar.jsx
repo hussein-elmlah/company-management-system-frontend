@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { getMyNotifications, readAllNotifications } from '../../axios/notifications';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +35,7 @@ const formatDate = (isoDate) => {
 };
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [role, setRole] = useState('');
   const { t } = useTranslation();
@@ -100,6 +101,7 @@ const Navbar = () => {
   const logOut = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(!!localStorage.getItem('token'));
+    navigate('/login');
   };
 
   return (
