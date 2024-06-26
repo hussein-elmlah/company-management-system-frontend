@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './Home.css';
 import ContactUsForm from '../../components/contactUs/ContactUsForm';
+import '../../i18n';
 
 const MainComponent = () => {
   const { t } = useTranslation();
