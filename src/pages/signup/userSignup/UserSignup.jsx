@@ -3,7 +3,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 // import { NavLink } from 'react-router-dom';
-import UserService from '../../../services/user.services';
+import UserService from '../../../axios/user';
 import { useTranslation } from 'react-i18next'; 
 import './UserSignup.css';
 
