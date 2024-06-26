@@ -4,10 +4,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from './store/slices/userSlice';
 
 const PrivateRoute = ({ element, allowedRoles = [] }) => {
-  const token = localStorage.getItem('token');
   const user = useSelector(selectUser);
-
-  console.log('User from private :', user);
 
   if (!user) {
     return <Navigate to="/login" replace />;

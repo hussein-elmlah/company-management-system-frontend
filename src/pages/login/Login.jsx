@@ -4,10 +4,14 @@ import * as Yup from 'yup';
 import UserService from '../../axios/user';
 import './Login.css';
 import { NavLink } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
+import { useTranslation } from 'react-i18next';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const LoginComponent = () => {
-  const { t } = useTranslation(); // Initialize useTranslation hook
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  if(!!localStorage.getItem("token"))   return <Navigate to="/" replace />;
 
   const formik = useFormik({
     initialValues: {
@@ -15,8 +19,8 @@ const LoginComponent = () => {
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email(t('emailInvalid')).required(t('emailRequired')), // Use translated strings for validation
-      password: Yup.string().min(8, t('passwordMinLength')).required(t('passwordRequired')), // Use translated strings for validation
+      email: Yup.string().email(t('emailInvalid')).required(t('emailRequired')),
+      password: Yup.string().min(8, t('passwordMinLength')).required(t('passwordRequired')),
     }),
     onSubmit: (values) => {
       UserService.login(values)
@@ -27,7 +31,7 @@ const LoginComponent = () => {
         })
         .catch((error) => {
           console.error('Login error:', error);
-          alert(t('loginFailed') + (error.response?.data?.message || error.message)); // Use translated string for alert
+          alert(t('loginFailed') + (error.response?.data?.message || error.message));
         });
     },
   });
