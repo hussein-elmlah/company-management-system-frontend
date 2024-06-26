@@ -144,7 +144,7 @@ const UserSignupComponent = () => {
           <button
             type="submit"
             className="mb-2 mt-2 rounded-2 btext"
-            disabled={!formik.isValid || formik.isSubmitting}
+            disabled={!formik.isValid}
           >
             انشئ حساب
           </button>

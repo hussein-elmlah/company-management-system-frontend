@@ -69,8 +69,8 @@ const LoginComponent = () => {
 
           <button
             type="submit"
-            disabled={!formik.isValid || formik.isSubmitting}
-            className={!formik.isValid || formik.isSubmitting ? 'disabled mb-2 mt-2 rounded-2 bt' : 'mb-2 mt-2 rounded-2 bt'}
+            disabled={!formik.isValid}
+            className={!formik.isValid ? 'disabled mb-2 mt-2 rounded-2 bt' : 'mb-2 mt-2 rounded-2 bt'}
           >
             تسجيل الدخول
           </button>

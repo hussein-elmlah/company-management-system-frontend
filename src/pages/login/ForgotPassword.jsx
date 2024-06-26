@@ -48,7 +48,7 @@ const ForgotPassword = () => {
           <button
             type="submit"
             className="mb-2 mt-2 btn btn-primary"
-            disabled={!formik.isValid || formik.isSubmitting}
+            disabled={!formik.isValid}
           >
             ارسال رابط استعادة كلمة المرور
           </button>

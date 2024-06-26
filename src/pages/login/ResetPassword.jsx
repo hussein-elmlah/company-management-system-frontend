@@ -54,7 +54,7 @@ const ResetPassword = () => {
           <button
             type="submit"
             className="mb-2 mt-2 btn btn-primary"
-            disabled={!formik.isValid || formik.isSubmitting}
+            disabled={!formik.isValid}
           >
             إعادة تعيين كلمة السر
           </button>
