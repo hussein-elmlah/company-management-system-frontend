@@ -129,7 +129,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top ltr">
       <div className="container">
         <NavLink className="navbar-brand" to="/">
           <img src="./src/assets/images/navlogo.png" className='p-0 m-0 w-10' alt="logo" />
@@ -158,9 +158,12 @@ const Navbar = () => {
             </li>
             {!isLoggedIn ? (
               <>
+                <li className="nav-item">
+                  <NavLink className="btn btn-outline-primary" to="/login">{t('login')}</NavLink>
+                </li>
                 <Dropdown>
                   <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
-                    {t('createAccount')}
+                    {t('register')}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item as={NavLink} to="/signEmp">{t('employee')}</Dropdown.Item>
@@ -220,8 +223,7 @@ const Navbar = () => {
                       <i className="fa fa-user fa-2x"></i>
                     </a>
                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                      <li><NavLink className="dropdown-item" to="/profile">{t('profile')}</NavLink></li>
-                      <li><NavLink className="dropdown-item" to="/settings">{t('settings')}</NavLink></li>
+                      {/* <li><NavLink className="dropdown-item" to="/profile">{t('profile')}</NavLink></li> */}
                       <li><hr className="dropdown-divider" /></li>
                       <li><button className="dropdown-item" onClick={logOut}>{t('logout')}</button></li>
                     </ul>
