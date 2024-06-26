@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { getMyNotifications, readAllNotifications } from '../../axios/notifications';
@@ -7,9 +7,6 @@ import LanguageSwitcher from '../locales/LanguageSwitcher';
 import { io } from 'socket.io-client';
 import { fetchUserData, selectUser } from '../../store/slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
-
-const socket = io('http://127.0.0.1:3001');
 
 const fetchMyNotifications = async (id) => {
   try {
@@ -35,6 +32,31 @@ const formatDate = (isoDate) => {
 };
 
 const Navbar = () => {
+
+  const socket = useRef(null);
+
+  useEffect(() => {
+    // Establish the socket connection only once
+    socket.current = io('http://127.0.0.1:3001');
+
+    // Clean up the socket connection when the component unmounts
+    return () => {
+      socket.current.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (socket.current) {
+      // socket.current.on('message', (message) => {
+      //   console.log('New message:', message);
+      // });
+
+      return () => {
+        socket.current.off('message');
+      };
+    }
+  }, []);
+
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [role, setRole] = useState('');
@@ -67,7 +89,7 @@ const Navbar = () => {
         });
       };
 
-      socket.on('branchManager-channel', handleNotification);
+      socket.current.on('branchManager-channel', handleNotification);
 
       fetchMyNotifications(user._id).then((data) => {
         setUnreadNotificationsCount(data.filter(n => !n.isRead).length);
@@ -75,7 +97,7 @@ const Navbar = () => {
       });
 
       return () => {
-        socket.off('branchManager-channel', handleNotification);
+        socket.current.off('branchManager-channel', handleNotification);
       };
     }
   }, [user]);

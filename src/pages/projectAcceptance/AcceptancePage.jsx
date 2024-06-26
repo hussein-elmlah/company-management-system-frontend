@@ -12,8 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { tellClientAboutStatus } from '../../axios/notifications';
 
-const socket = io('http://127.0.0.1:3001');
-
 const ProjectAcceptance = () => {
   const { id } = useParams(); 
   const dispatch = useDispatch();
