@@ -36,7 +36,7 @@ const EmployeeSignupComponent = () => {
         })
         .catch((error) => {
           console.error('Signup error:', error);
-          alert('Signup error - check you data');
+          alert('Signup error !! check your email or username');
         });
     },
   });
@@ -144,15 +144,13 @@ const EmployeeSignupComponent = () => {
           <button
             type="submit"
             className="mb-2 mt-2 rounded-2 butext"
-            disabled={!formik.isValid || formik.isSubmitting}
+            disabled={!formik.isValid}
           >
             انشئ حساب
           </button>
         </form>
         <p className="text">هل لديك حساب بالفعل ؟ <NavLink to={`/login`} className="text" > تسجيل دخول </NavLink> </p>
       </div>
-      {/* <div className="text-center"> */}
-      {/* </div> */}
     </div>
   );
 };
