@@ -57,7 +57,7 @@ const ProjectAcceptance = () => {
       const res = await axiosInstance.post("project-notification/send-notification",
           {
             option: 'receiver',
-            data: { "project_id": id, "message": "Your project is accepted" },
+            data: { "project_id": id, "message": "Your project is accepted", "redirectURL": "/projects"},
           }
         )
       navigate('/projects');
