@@ -116,7 +116,7 @@ const Navbar = () => {
     if (!!localStorage.getItem("token")) {
       dispatch(fetchUserData());
       try {
-        const tokenPayload = token.split(".")[1];
+        const tokenPayload = localStorage.getItem("token").split(".")[1];
         const decodedPayload = atob(tokenPayload);
         const payload = JSON.parse(decodedPayload);
         setRole(payload.role);
@@ -156,16 +156,35 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+            {isLoggedIn && (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/">
+                    {t("home")}
+                  </NavLink>
+                </li>
+              </>
+            )}
+            {isLoggedIn && role === "branchManager" && (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/queue">
+                    {t("projects")}
+                  </NavLink>
+                </li>
+              </>
+            )}
+
             {isLoggedIn && role === "client" && (
               <>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/createproject">
-                    اضافة مشروع
+                    {t("add project")}
                   </NavLink>
                 </li>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/projects">
-                    رؤية المشاريع
+                    {t("my projects")}
                   </NavLink>
                 </li>
               </>
@@ -176,7 +195,9 @@ const Navbar = () => {
             {!isLoggedIn ? (
               <>
                 <li className="nav-item">
-                  <NavLink className="btn btn-outline-primary" to="/login">{t("login")}</NavLink>
+                  <NavLink className="btn btn-outline-primary" to="/login">
+                    {t("login")}
+                  </NavLink>
                 </li>
 
                 <Dropdown>

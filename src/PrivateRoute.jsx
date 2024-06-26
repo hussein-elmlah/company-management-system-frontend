@@ -10,7 +10,7 @@ const PrivateRoute = ({ element, allowedRoles = [] }) => {
     return <Navigate to="/login" replace />;
   }
 
-  console.log('user role is :', user.role);
+  // console.log('user role is :', user.role);
   
   if (!allowedRoles.length || (user && allowedRoles.includes(user.role))) {
     return element;

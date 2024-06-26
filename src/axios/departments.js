@@ -7,7 +7,7 @@ export const createDepartment = function (departmentData) {
 export const getAllDepartments = async function (departmentData) {
   const response = await axiosInstance.get("/departments", departmentData);
   const departments = response.data.data;
-  console.log('departments', departments);
+  // console.log('departments', departments);
   return departments;
 };
 

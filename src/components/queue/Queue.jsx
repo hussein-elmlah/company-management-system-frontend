@@ -158,12 +158,12 @@ const Queue = () => {
         visualizationProjects.map((project, index) => ({
           id: index,
           content: `<div class="timeline-item">
-                    <div class="timeline-item-title">${
-                      project.client.fullName
-                    }</div>
+                    <div class="timeline-item-title">
+                      project: ${project.name}
+                    </div>
                     <div class="timeline-item-details">
-                      <div>Client: ${project.client.fullName}</div>
-                      <div>Owner: ${project.owner}</div>
+                      <div>Client: ${project.client?.fullName}</div>
+                      <div>Owner: ${project.owner?.fullName}</div>
                       <div>Type: ${project.type}</div>
                       <div>Start: ${project.expectedStartDate
                         ?.toString()
