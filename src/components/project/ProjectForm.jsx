@@ -24,6 +24,10 @@ const ProjectForm = () => {
     basement: false,
     groundAnnex: false,
     description: '',
+    client: {
+      fullName: '',
+      mobileNumber: '',
+    },
   });
   const [errors, setErrors] = useState({});
 
@@ -44,6 +48,7 @@ const ProjectForm = () => {
       dispatch(createProject(formData))
         .then(() => {
           console.log('Project created successfully!');
+          alert('Project created successfully');
           setFormData({
             name: '',
             location: '',
@@ -60,6 +65,10 @@ const ProjectForm = () => {
             basement: false,
             groundAnnex: false,
             description: '',
+            client: {
+              fullName: '',
+              mobileNumber: '',
+            },
           });
           setErrors({});
         })
@@ -210,6 +219,7 @@ const ProjectForm = () => {
           <input
             type="checkbox"
             id="basement"
+            style={{'margin-left': '30px'}}
             name="basement"
             checked={formData.basement}
             onChange={handleChange}
@@ -223,6 +233,7 @@ const ProjectForm = () => {
           <input
             type="checkbox"
             id="groundAnnex"
+            style={{'margin-left': '30px'}}
             name="groundAnnex"
             checked={formData.groundAnnex}
             onChange={handleChange}
@@ -238,6 +249,28 @@ const ProjectForm = () => {
           onChange={handleChange}
           errors={errors.description}
           placeholder={t('enterProjectDescription')}
+        />
+
+        <FormInput
+          id="fullName"
+          label={t('full-name')}
+          type="text"
+          name="fullName"
+          defaultValue={formData.client.fullName}
+          onChange={handleChange}
+          errors={errors.fullName}
+          placeholder={t('enterYourFullName')}
+        />
+
+        <FormInput
+          id="mobileNumber"
+          label={t('mobile-number')}
+          type="text"
+          name="mobileNumber"
+          defaultValue={formData.client.mobileNumber}
+          onChange={handleChange}
+          errors={errors.mobileNumber}
+          placeholder={t('enterYourMobileNumber')}
         />
       </div>
       <button

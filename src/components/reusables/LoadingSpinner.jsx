@@ -1,4 +1,5 @@
 import React from 'react';
+import { ClipLoader } from "react-spinners";
 
 const LoadingSpinner = () => {
   return (
@@ -15,5 +16,19 @@ const Spinner = ({ color }) => {
     </div>
   );
 };
+
+export const QueueSpinner = ({ isLoading }) => (
+  <div className="sweet-loading text-center">
+    <ClipLoader
+      color={"#123abc"}
+      css={`
+        display: block;
+        margin: 0 auto;
+        border-color: red;
+      `}
+      size={150}
+    />
+  </div>
+);
 
 export default LoadingSpinner;

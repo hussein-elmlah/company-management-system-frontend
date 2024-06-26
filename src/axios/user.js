@@ -24,6 +24,20 @@ export const getUserData = async function () {
   return response.data;
 };
 
+export const updateUser = async function (userId, updatedFields) {
+  const response = await axiosInstance.put(`/users/${userId}`, updatedFields);
+  return response.data;
+};
+
+export const getDepartments = async function () {
+  const response = await axiosInstance.get("/departments");
+  return response.data;
+};
+export const getUserById = async function (id) {
+  const response = await axiosInstance.get(`/users/${id}`);
+  return response.data;
+};
+
 const UserService = {
   createUser,
   login,
@@ -31,6 +45,9 @@ const UserService = {
   resetPassword,
   verifyEmail,
   getUserData,
+  updateUser,
+  getDepartments,
+  getUserById ,
 };
 
 export default UserService;
