@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Outlet, createBrowserRouter } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import Navbar from "./components/navbar/Navbar";
@@ -5,7 +6,6 @@ import Footer from "./components/footer/Footer";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import Home from "./pages/Home/Home";
 import EmployeeSignup from "./pages/signup/employeeSignup/EmployeeSignup";
-import Project from "./components/project/Project";
 import ProjectForm from "./components/project/ProjectForm";
 import ProjectList from "./components/project/ProjectList";
 import UpdateProjectForm from "./components/project/UpdateProjectForm";
@@ -15,25 +15,48 @@ import Queue from "./components/queue/Queue";
 import Login from "./pages/login/Login";
 import ForgotPassword from "./pages/login/ForgotPassword";
 import ResetPassword from "./pages/login/ResetPassword";
-
 import AcceptancePage from "./pages/projectAcceptance/AcceptancePage";
-import VerifyEmail from './pages/login/VerifyEmail';
-import UpdateUserRole from './pages/projectAcceptance/UpdateUserRole'
+import VerifyEmail from "./pages/login/VerifyEmail";
+import UpdateUserRole from "./pages/projectAcceptance/UpdateUserRole";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUserData, selectUser } from "./store/slices/userSlice";
+import { QueueSpinner } from "./components/reusables/LoadingSpinner";
 
- 
+const UserLayout = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
 
-function UserLayout() {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token && !user) {
+      dispatch(fetchUserData())
+        .then(() => setIsLoading(false))
+        .catch(() => setIsLoading(false));
+    } else {
+      setIsLoading(false);
+    }
+  }, [dispatch, user]);
+
+  console.log("Fetched user from router: ", user);
+
+  if (isLoading) {
+    return <QueueSpinner isLoading={isLoading} />;
+  }
+
   return (
     <div className="m-0 p-0">
-     
-    <Navbar />
-      <div className="container" style={{ paddingTop: "85px" , paddingBottom: "55px" }}>
+      <Navbar />
+      <div className="container" style={{ paddingTop: "85px", paddingBottom: "55px" }}>
         <Outlet />
       </div>
       <Footer />
     </div>
   );
-}
+};
+
+const employees = ["junior", "senior", "branchManager", "companyOwner"];
 
 const router = createBrowserRouter([
   {
@@ -41,58 +64,70 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <PrivateRoute element={<Home />} />
-      },   
+        element: <Home />,
+      },
       {
         path: "/signEmp",
-        element: <PrivateRoute element={<EmployeeSignup />} />
-      }, 
+        element: <EmployeeSignup />,
+      },
       {
         path: "/signUser",
-        element: <PrivateRoute element={<UserSignup />} />
+        element: <UserSignup />,
       },
       {
         path: "/login",
-        element: <PrivateRoute element={<Login />} />
+        element: <Login />,
       },
       {
         path: "/forgot-password",
-        element: <PrivateRoute element={<ForgotPassword/>} />
+        element: <PrivateRoute element={<ForgotPassword />}  allowedRoles={[...employees,'client']} />,
       },
       {
         path: "/reset-password/:token",
-        element: <PrivateRoute element={<ResetPassword/>} />
+        element: <PrivateRoute element={<ResetPassword />}  allowedRoles={[...employees,'client']} />,
       },
       {
         path: "/verify-email",
-        element: <PrivateRoute element={<VerifyEmail/>} />
-      },
-      {
-        path: "/acceptance/:id",
-        element: <PrivateRoute element={<AcceptancePage />} />
-      },
-      {
-        path: "/updaterole/:userId",
-        element: <PrivateRoute element={<UpdateUserRole />} />
+        element: <PrivateRoute element={<VerifyEmail />}  allowedRoles={[...employees,'client']} />,
       },
       {
         path: "/projects",
-        element: <PrivateRoute element={<ProjectList/>} />
-      },{
+        element: <PrivateRoute element={<ProjectList />}  allowedRoles={[...employees,'client']} />,
+      },
+      {
         path: "/createproject",
-        element: <PrivateRoute element={<ProjectForm/>} />
-      },{
-        path: '/projects/:projectId',
-        element: <PrivateRoute element={<UpdateProjectForm/>} />
-      },{
-        path: '/projectdetails/:projectId',
-        element: <PrivateRoute element={<ProjectDetails/>} />
+        element: <PrivateRoute element={<ProjectForm />}  allowedRoles={[...employees,'client']} />,
+      },
+      {
+        path: "/projectdetails/:projectId",
+        element: <PrivateRoute element={<ProjectDetails />}  allowedRoles={[...employees,'client']} />,
+      },
+      {
+        path: "/acceptance/:id",
+        element: (
+          <PrivateRoute element={<AcceptancePage />} allowedRoles={employees} />
+        ),
+      },
+      {
+        path: "/updaterole/:userId",
+        element: (
+          <PrivateRoute element={<UpdateUserRole />} allowedRoles={employees} />
+        ),
+      },
+      {
+        path: "/projects/:projectId",
+        element: (
+          <PrivateRoute
+            element={<UpdateProjectForm />}
+            allowedRoles={employees}
+          />
+        ),
       },
       {
         path: "/queue",
-        element: <Queue />
+        element: <PrivateRoute element={<Queue />} allowedRoles={employees} />,
       },
-       
+
       {
         path: "*",
         element: <NotFoundPage />,
