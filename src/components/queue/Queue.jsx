@@ -1,12 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
 import { Timeline, DataSet } from "vis-timeline/standalone";
 import "vis-timeline/styles/vis-timeline-graph2d.min.css";
 import "./Queue.css";
@@ -14,12 +6,11 @@ import { fetchProjectsWithParams } from "../../store/slices/projectSlice";
 import { getAllDepartments } from "../../axios/departments";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/pagination/Pagination";
+import { debounce } from "../../utilities/debounce";
+import { QueueSpinner } from "../reusables/LoadingSpinner"; // Adjust the path as per your project structure
 
 const Queue = () => {
-  const [first, setFirst] = useState(0);
-  const [rows, setRows] = useState(5);
   const [selectedVisualization, setSelectedVisualization] = useState("table");
-  const [userRole, setUserRole] = useState(null);
   const [timelineStart, setTimelineStart] = useState(
     new Date().toISOString().split("T")[0]
   );
@@ -35,25 +26,24 @@ const Queue = () => {
   const [departments, setDepartments] = useState([]);
   const timelineRef = useRef(null);
 
+  const [searchWord, setSearchWord] = useState("");
+  const [searchField, setSearchField] = useState("name");
+
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.projects.projectList);
-  const isLoading = useSelector((state) => state.projects.loading);
+  let isLoading = useSelector((state) => state.projects.loading);
   const error = useSelector((state) => state.projects.error);
   const currentPage = useSelector((state) => state.projects.currentPage);
   const totalPages = useSelector((state) => state.projects.totalPages);
   const [pageNumber, setPageNumber] = useState(currentPage);
-  const projectsPerPage = 10;
+  const projectsPerPage = 5;
+  let limit = projectsPerPage;
 
   useEffect(() => {
     getAllDepartments().then(setDepartments).catch(console.error);
   }, []);
 
   useEffect(() => {
-    console.log("component did mounted");
-  }, []);
-
-  useEffect(() => {
-    console.log("useEffect");
     handlePageChange(pageNumber);
   }, [
     dispatch,
@@ -64,37 +54,95 @@ const Queue = () => {
     typeFilter,
     programFilter,
     departmentFilter,
+    searchField,
   ]);
 
   useEffect(() => {
-    console.log("configuring Visualization");
+    if (selectedVisualization === "table") {
+      limit = projectsPerPage;
+    } else limit = 101;
+    handlePageChange(pageNumber);
+  }, [selectedVisualization]);
+
+  useEffect(() => {
     configureVisualization();
     setSelectedVisualization(selectedVisualization);
-  }, [selectedVisualization, projects]);
+  }, [projects]);
 
   const handlePageChange = (page) => {
-    console.log("Handling page change to:", page);
     setPageNumber(page);
     const params = {
       page,
-      limit: projectsPerPage,
+      limit,
       ...(isAnyTime
         ? {}
         : { timeline_start: timelineStart, timeline_end: timelineEnd }),
       ...(typeFilter && { type: typeFilter }),
       ...(programFilter && { program: programFilter }),
       ...(departmentFilter && { department: departmentFilter }),
+      ...(searchWord && searchField && { [searchField]: searchWord }),
     };
     dispatch(fetchProjectsWithParams(params));
   };
 
+  const handleVisualizationChange = (e) => {
+    setSelectedVisualization(e.target.value);
+    if (e.target.value === "timeline") {
+      setIsAnyTime(false);
+    }
+  };
+
+  const handleTimelineStartChange = (e) => {
+    setTimelineStart(e.target.value);
+  };
+
+  const handleTimelineEndChange = (e) => {
+    setTimelineEnd(e.target.value);
+  };
+
+  const handleAnyTimeChange = (e) => {
+    setIsAnyTime(e.target.checked);
+  };
+
+  const handleTypeFilterChange = (e) => {
+    setTypeFilter(e.target.value);
+  };
+
+  const handleProgramFilterChange = (e) => {
+    setProgramFilter(e.target.value);
+  };
+
+  const handleDepartmentFilterChange = (e) => {
+    setDepartmentFilter(e.target.value);
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchWord(value);
+    debounceDispatch(value);
+  };
+
+  const debounceDispatch = useRef(
+    debounce((value) => {
+      const params = {
+        page: pageNumber,
+        limit,
+        ...(isAnyTime
+          ? {}
+          : { timeline_start: timelineStart, timeline_end: timelineEnd }),
+        ...(typeFilter && { type: typeFilter }),
+        ...(programFilter && { program: programFilter }),
+        ...(departmentFilter && { department: departmentFilter }),
+        ...(searchField && { [searchField]: value }),
+      };
+      dispatch(fetchProjectsWithParams(params));
+    }, 500)
+  ).current;
+
   const configureVisualization = () => {
     if (selectedVisualization === "timeline" && timelineRef.current) {
-      console.log("Configuring timeline visualization");
       let visualizationProjects = JSON.parse(JSON.stringify(projects)).filter(
         (project) => project.expectedStartDate && project.expectedCompletionDate
       );
-      console.log("visualizationProjects: ", visualizationProjects);
       const items = new DataSet(
         visualizationProjects.map((project, index) => ({
           id: index,
@@ -145,81 +193,53 @@ const Queue = () => {
     }
   };
 
-  const handleVisualizationChange = (e) => {
-    console.log("Changing visualization to:", e.target.value);
-    setSelectedVisualization(e.target.value);
-    if (e.target.value === "timeline") {
-      setIsAnyTime(false);
-    }
-  };
-
-  const handleTimelineStartChange = (e) => {
-    console.log("Changing timelineStart to:", e.target.value);
-    setTimelineStart(e.target.value);
-  };
-
-  const handleTimelineEndChange = (e) => {
-    console.log("Changing timelineEnd to:", e.target.value);
-    setTimelineEnd(e.target.value);
-  };
-
-  const handleAnyTimeChange = (e) => {
-    setIsAnyTime(e.target.checked);
-  };
-
-  const handleTypeFilterChange = (e) => {
-    setTypeFilter(e.target.value);
-  };
-
-  const handleProgramFilterChange = (e) => {
-    setProgramFilter(e.target.value);
-  };
-
-  const handleDepartmentFilterChange = (e) => {
-    setDepartmentFilter(e.target.value);
-  };
-
   const renderTable = () => (
     <div>
-      <table className="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">اسم العميل</th>
-            <th scope="col">المالك</th>
-            <th scope="col">نوع المشروع</th>
-            <th scope="col">تاريخ التقديم</th>
-            <th scope="col">تاريخ البدء</th>
-            <th scope="col">تاريخ الانتهاء المتوقع</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projects.map((project, index) => (
-            <tr key={index}>
-              <td>{project.client.fullName}</td>
-              <td>{project.owner}</td>
-              <td>{project.type}</td>
-              <td>
-                {new Date(project.dateOfSubmission).toLocaleDateString(
-                  "en-US",
-                  { year: "numeric", month: "short", day: "numeric" }
-                )}
-              </td>
-              <td>
-                {new Date(project.expectedStartDate).toLocaleDateString(
-                  "en-US",
-                  { year: "numeric", month: "short", day: "numeric" }
-                )}
-              </td>
-              <td>
-                {new Date(project.expectedCompletionDate).toLocaleDateString(
-                  "en-US",
-                  { year: "numeric", month: "short", day: "numeric" }
-                )}
-              </td>
+      {isLoading && <QueueSpinner isLoading={isLoading} />}
+      {!isLoading && (
+        <table className="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">project name</th>
+              <th scope="col">location</th>
+              <th scope="col">client name</th>
+              <th scope="col">client number</th>
+              <th scope="col">owner</th>
+              <th scope="col">project type</th>
+              <th scope="col">expected Start Date</th>
+              <th scope="col">expected Completion Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {projects.map((project, index) => (
+              <tr key={index}>
+                <td>{project.name}</td>
+                <td>{project.location}</td>
+                <td>{project.client?.fullName}</td>
+                <td>{project.client?.mobileNumber}</td>
+                <td>{project.owner?.fullName}</td>
+                <td>{project.type}</td>
+                <td>
+                  {new Date(project.expectedStartDate).toLocaleDateString(
+                    "en-US",
+                    { year: "numeric", month: "short", day: "numeric" }
+                  )}
+                </td>
+                <td>
+                  {new Date(project.expectedCompletionDate).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    }
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -236,26 +256,30 @@ const Queue = () => {
       }
     }
   };
-
   const renderTimeline = () => {
     removeOldVisualizations();
     return (
-      <div ref={timelineRef} style={{ width: "100%", height: "300px" }}></div>
+      <div>
+        {isLoading && <QueueSpinner isLoading={isLoading} />}
+        {!isLoading && (
+          <div>
+            {projects.length > 100 && (
+              <div className="alert alert-warning" role="alert">
+                There are more than 100 projects. <br/>Only 100 projects can be displayed. <br/>Please change filters for better results.
+              </div>
+            )}
+            <div
+              ref={timelineRef}
+              style={{ width: "100%", height: "300px" }}
+            ></div>
+          </div>
+        )}
+      </div>
     );
-  };
-
-  const renderChart = () => (
-    <LineChart width={600} height={300} data={projects}>
-      <Line type="monotone" dataKey="landArea" stroke="#8884d8" />
-      <CartesianGrid stroke="#ccc" />
-      <XAxis dataKey="client.fullName" />
-      <YAxis />
-      <Tooltip />
-    </LineChart>
-  );
+  };  
 
   return (
-    <div className="queue container mt-3">
+    <div className="queue container my-3">
       <div className="card p-3">
         <div>
           <div className="px-1">
@@ -267,10 +291,29 @@ const Queue = () => {
               >
                 <option value="timeline">Timeline</option>
                 <option value="table">Table</option>
-                {userRole === "branchManager" && (
-                  <option value="chart">Chart</option>
-                )}
               </select>
+            </div>
+            <div>
+              <div className="mb-3 py-2 border-bottom">
+                <label className="me-1">Search By:</label>
+                <select
+                  className="me-4 rounded border-1 p-1"
+                  value={searchField}
+                  onChange={(e) => setSearchField(e.target.value)}
+                >
+                  <option value="name">Name</option>
+                  <option value="location">Location</option>
+                  <option value="client.fullName">Client</option>
+                  <option value="owner.fullName">Owner</option>
+                </select>
+                <input
+                  type="text"
+                  value={searchWord}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  placeholder="Search..."
+                  className="me-4 rounded border-1 p-1"
+                />
+              </div>
             </div>
             <div className="mb-1 py-2 border-bottom">
               <div>
@@ -342,9 +385,6 @@ const Queue = () => {
           <div>
             {selectedVisualization === "table" && renderTable()}
             {selectedVisualization === "timeline" && renderTimeline()}
-            {selectedVisualization === "chart" &&
-              userRole === "branchManager" &&
-              renderChart()}
           </div>
         </div>
       </div>
