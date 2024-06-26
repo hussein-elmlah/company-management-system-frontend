@@ -1,8 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './Home.css';
 import ContactUsForm from '../../components/contactUs/ContactUsForm';
 
 const MainComponent = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="main pt-2 mt-5">
       <div className="about mt-2" id='about'>
@@ -10,23 +13,7 @@ const MainComponent = () => {
           <div className="row aboutdiv">
             <div className="col-md-6 col-sm-12 p-4">
               <p className="fs-6">
-                قامت شركة 4TH.PYRAMID للتصميم والاستشارات الهندسية ، بالمملكة
-                العربية السعودية ، بتصميم العديد من الهياكل والمباني والجسور
-                والإشراف عليها. يتم توزيعها في جميع أنحاء مصر ومنطقة الخليج
-                العربي وأفريقيا. لقد أدى طموحنا في ابتكار الأنظمة إلى تعزيز
-                سمعة المملكة العربية السعودية لتحقيق إنجازات ملحوظة في مجال
-                الهندسة الإنشائية. على مدار 20 عامًا ، واصلنا إكمال التصميمات
-                الاقتصادية والمتفوقة. نحن نضمن عمل مهندسينا الإنشائيين عن كثب
-                مع العملاء والمتعاونين والبقاء على اطلاع حتى يتمكنوا من
-                الابتكار استجابة للتحديات والقيود. مجالات الخبرة (التصميم
-                الإنشائي والإشراف) 1- الأبنية التقليدية. 2- الجسور. 3-
-                الأنفاق. 4- المصانع. 5- المستشفيات. مواد البناء: 1- الخرسانة
-                المسلحة. 2- الخرسانة سابقة الإجهاد. 3- الفولاذ الإنشائي. 4-
-                أنظمة تحمل الجدار. بالإضافة إلى ذلك ، صممت المملكة العربية
-                السعودية لإصلاح وتقوية العديد من الهياكل. الأنظمة المستخدمة هي
-                الغلاف الخرساني والغطــاء الفولاذي وتغليف وتقوية FRP. نعمل مع
-                المهندسين المعماريين ,والمدنيين والملاك للوصول إلى المتطلبات
-                المعمارية بأفضل طريقة ممكنة وبأقل تكلفة.
+                {t('about')}
               </p>
             </div>
             <div className="col-md-6 col-sm-12">
@@ -47,19 +34,19 @@ const MainComponent = () => {
           <div className="row">
             <div className="col-md-3">
               <h1>512</h1>
-              <h4>مشاريعنا</h4>
+              <h4>{t('ourProjects')}</h4>
             </div>
             <div className="col-md-3">
               <h1>20</h1>
-              <h4>سنة خبرة</h4>
+              <h4>{t('yearsOfExperience')}</h4>
             </div>
             <div className="col-md-3">
               <h1>24</h1>
-              <h4>مشاريع جارية</h4>
+              <h4>{t('ongoingProjects')}</h4>
             </div>
             <div className="col-md-3">
               <h1>46</h1>
-              <h4>عدد الموظفين</h4>
+              <h4>{t('numberOfEmployees')}</h4>
             </div>
           </div>
         </div>
@@ -67,96 +54,76 @@ const MainComponent = () => {
 
       <div className="container text-center mt-5">
         <div className="section-header my-5">
-          <h2 className="mb-2">خدماتنا</h2>
+          <h2 className="mb-2">{t('services')}</h2>
         </div>
         <div className="services row">
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-calendar-check" aria-hidden="true"></i>
-            <p>استشارات هندسية فى إعداد مخططات الرسومات التنفيذية</p>
+            <p>{t('engineeringConsultations')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-briefcase" aria-hidden="true"></i>
-            <p>اعمال تنفيذية و هندسية ادارة المشاريع</p>
+            <p>{t('executiveWorks')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-building" aria-hidden="true"></i>
-            <p>مكتب هندسي للتصميم المعماري</p>
+            <p>{t('architecturalDesign')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cog" aria-hidden="true"></i>
-            <p>إدارة العقود والمناقصات فى مكتب هندسي واحد</p>
+            <p>{t('contractManagement')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-clock" aria-hidden="true"></i>
-            <p>مكتب هندسي اعمال و تصميم الديكور الداخلي والخارجي</p>
+            <p>{t('interiorExteriorDesign')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية فى التصميم الانشائي</p>
+            <p>{t('structuralDesignConsultations')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>إعداد مخططات لمشاريع مختلفة فى مكتب هندسي واحد</p>
+            <p>{t('projectPlansPreparation')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>مكتب هندسي لكافة مخططات هندسية</p>
+            <p>{t('allEngineeringPlans')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية فى كل اعمال ثلاثة الابعاد</p>
+            <p>{t('threeDWorks')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية لاعمال حصر الكميات</p>
+            <p>{t('quantitySurvey')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>مكتب هندسي لخدمات موقع بلدي وإصدار رخصة بناء</p>
+            <p>{t('municipalityServices')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية للتخطيط العمراني</p>
+            <p>{t('urbanPlanning')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>مكتب هندسي لخدمات بناء و ادارة المشاريع</p>
+            <p>{t('projectConstructionManagement')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية لإدارة المشاريع</p>
+            <p>{t('projectManagement')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية لكافة مشاريع التخطيط</p>
+            <p>{t('differentProjectPlans')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية لإدارة المشروع</p>
+            <p>{t('decorDesign')}</p>
           </div>
           <div className="single-service col-lg-4 col-md-6">
             <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>مكتب هندسي لمشاريع البناء و الادارة</p>
-          </div>
-          <div className="single-service col-lg-4 col-md-6">
-            <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>مكتب هندسي لمشاريع التخطيط العمراني</p>
-          </div>
-          <div className="single-service col-lg-4 col-md-6">
-            <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية لإدارة المشاريع</p>
-          </div>
-          <div className="single-service col-lg-4 col-md-6">
-            <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية لجميع المشاريع المختلفة</p>
-          </div>
-          <div className="single-service col-lg-4 col-md-6">
-            <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>مكتب هندسي لتصميم الديكور</p>
-          </div>
-          <div className="single-service col-lg-4 col-md-6">
-            <i className="fa fa-cubes" aria-hidden="true"></i>
-            <p>استشارات هندسية لإعداد المواصفات الفنية</p>
+            <p>{t('technicalSpecifications')}</p>
           </div>
         </div>
       </div>
@@ -165,7 +132,7 @@ const MainComponent = () => {
         <div className="container">
           <div className="row">
             <div className="section-header text-center mb-5">
-              <h2 className="mb-2">معرض الأعمال</h2>
+              <h2 className="mb-2">{t('معرض الأعمال')}</h2>
             </div>
             <div className="col-lg-4 col-md-6">
               <div className="portfolio-item">
@@ -175,7 +142,7 @@ const MainComponent = () => {
                   alt="Portfolio 1"
                 />
                 <div className="portfolio-overlay">
-                  <h4>Project Title</h4>
+                  <h4>{t('Project Title')}</h4>
                 </div>
               </div>
             </div>
@@ -187,7 +154,7 @@ const MainComponent = () => {
                   alt="Portfolio 2"
                 />
                 <div className="portfolio-overlay">
-                  <h4>Project Title</h4>
+                  <h4>{t('Project Title')}</h4>
                 </div>
               </div>
             </div>
@@ -199,7 +166,7 @@ const MainComponent = () => {
                   alt="Portfolio 3"
                 />
                 <div className="portfolio-overlay">
-                  <h4>Project Title</h4>
+                  <h4>{t('Project Title')}</h4>
                 </div>
               </div>
             </div>
