@@ -28,7 +28,7 @@ const LoginComponent = () => {
         .then((response) => {
           console.log('Login successful:', response);
           localStorage.setItem('token', response.data.user);
-          navigate('/');
+          navigate('/?isAuth=true');
         })
         .catch((error) => {
           console.error('Login error:', error);

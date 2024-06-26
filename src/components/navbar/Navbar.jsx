@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { getMyNotifications, readAllNotifications } from '../../axios/notifications';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import LanguageSwitcher from '../locales/LanguageSwitcher';
 import { io } from 'socket.io-client';
 import { fetchUserData, selectUser } from '../../store/slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+
 
 const socket = io('http://127.0.0.1:3001');
 
@@ -18,7 +19,6 @@ const fetchMyNotifications = async (id) => {
     console.error("err:", error);
   }
 }
-
 
 const markAsRead = async (id) => {
   try {
@@ -37,10 +37,19 @@ const formatDate = (isoDate) => {
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [role, setRole] = useState('');
-  const [notifications, setNotifications] = useState([]);
   const { t } = useTranslation();
+  const [notifications, setNotifications] = useState([]);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
-  
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const data = queryParams.get('isAuth');
+
+  if (data) {
+    console.log("isAuth=true");
+  }else{
+    console.log("isAuth=");
+  }
+
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
 
@@ -70,17 +79,12 @@ const Navbar = () => {
     }
   }, [user]);
 
-
+  
   useEffect(() => {
-    checkLoggedIn();
-  }, []);
-
-  const checkLoggedIn = () => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-    if (token) {
+    console.log("token: ", !!localStorage.getItem('token'));
+    setIsLoggedIn(!!localStorage.getItem('token'));
+    if (!!localStorage.getItem('token')) {
       dispatch(fetchUserData());
-
       try {
         const tokenPayload = token.split('.')[1];
         const decodedPayload = atob(tokenPayload);
@@ -91,12 +95,11 @@ const Navbar = () => {
         setRole('');
       }
     }
-  };
+  }, [!!localStorage.getItem('token')]);
 
   const logOut = () => {
     localStorage.removeItem('token');
-    checkLoggedIn();
-    window.location.reload();
+    setIsLoggedIn(!!localStorage.getItem('token'));
   };
 
   return (
@@ -158,7 +161,7 @@ const Navbar = () => {
                   <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                     aria-labelledby="alertsDropdown" style={{ 'max-height': '250px', width: '300px', 'overflow-y': 'auto' }}>
                     <h6 className="dropdown-header">
-                      Branch Manager Notifications Center
+                      Notifications Center
                     </h6>
                     {notifications.map((e, i) => (
                       <NavLink
