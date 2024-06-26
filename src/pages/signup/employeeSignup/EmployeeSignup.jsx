@@ -8,7 +8,7 @@ import UserService from "../../../axios/user";
 import { useTranslation } from 'react-i18next'; 
 
 const EmployeeSignupComponent = () => {
-  const { t } = useTranslation(); // Use t function for translations
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
