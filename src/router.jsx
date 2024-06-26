@@ -24,7 +24,6 @@ import { QueueSpinner } from "./components/reusables/LoadingSpinner";
 import Checkout from "./components/payment/Checkout";
 import Success from "./components/payment/Sucess";
 import { Cancel } from "@mui/icons-material";
-import VerifyEmail from './pages/login/VerifyEmail';
 import AssignProject from "./components/project/AssignProject";
 
 const UserLayout = () => {

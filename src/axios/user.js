@@ -1,5 +1,11 @@
 import axiosInstance from "./config";
 
+export const createEmpUser = function (userData) {
+  userData.type = "employee";
+  console.log(userData);
+  return axiosInstance.post("/users/register", userData);
+};
+
 export const createUser = function (userData) {
   return axiosInstance.post("/users/register", userData);
 };
@@ -40,6 +46,7 @@ export const getUserById = async function (id) {
 
 const UserService = {
   createUser,
+  createEmpUser,
   login,
   requestPasswordReset,
   resetPassword,
