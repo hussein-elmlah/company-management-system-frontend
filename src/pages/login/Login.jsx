@@ -1,27 +1,24 @@
- 
-
-
-
-
- 
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import UserService from '../../axios/user';
+import { useTranslation } from 'react-i18next'; 
 import './Login.css';
 import { NavLink } from 'react-router-dom';
 
 const LoginComponent = () => {
+  const { t } = useTranslation(); 
+
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      username: '',
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('يجب ادخال البريد الالكتروني بشكل صحيح').required('يجب ادخال البريد الالكتروني'),
-      password: Yup.string().min(8, 'يجب ادخال على الاقل 8 حروف لكلمة السر').required('يجب ادخال كلمة السر'),
+      username: Yup.string().required(t('usernameRequired')), 
+      password: Yup.string().min(8, t('passwordMinLength')).required(t('passwordRequired')),
     }),
     onSubmit: (values) => {
       UserService.login(values)
@@ -41,24 +38,24 @@ const LoginComponent = () => {
     <div className="px-3">
       <div className="loginpage rounded-2">
         <form onSubmit={formik.handleSubmit} className="mt-2 p-4">
-          <label htmlFor="email" className="mb-2 tl">البريد الالكتروني</label>
+          <label htmlFor="username" className="mb-2 tl">{t('usernameLabel')}</label>
           <input
             type="text"
             className="form-control mb-2"
-            placeholder="ادخل البريد الالكتروني"
-            {...formik.getFieldProps('email')}
+            placeholder={t('usernamePlaceholder')}
+            {...formik.getFieldProps('username')}
           />
-          {formik.touched.email && formik.errors.email ? (
+          {formik.touched.username && formik.errors.username ? (
             <div className="form-text text-danger">
-              <small>{formik.errors.email}</small>
+              <small>{formik.errors.username}</small>
             </div>
           ) : null}
 
-          <label htmlFor="password" className="mb-2 tl">كلمة السر</label>
+          <label htmlFor="password" className="mb-2 tl">{t('passwordLabel')}</label>
           <input
             type="password"
             className="form-control mb-2"
-            placeholder="ادخل كلمة السر"
+            placeholder={t('passwordPlaceholder')}
             {...formik.getFieldProps('password')}
           />
           {formik.touched.password && formik.errors.password ? (
@@ -72,13 +69,14 @@ const LoginComponent = () => {
             disabled={!formik.isValid}
             className={!formik.isValid ? 'disabled mb-2 mt-2 rounded-2 bt' : 'mb-2 mt-2 rounded-2 bt'}
           >
-            تسجيل الدخول
+            {t('loginButton')}
           </button>
         </form>
         <p className="tl">ليس لديك حساب ؟ <NavLink to={`/signUser`} className="tl" > انشئ حساب </NavLink> </p>
         <p className="tl">نسيت كلمة السر؟ <NavLink to={`/forgot-password`} className="tl" > استعادة كلمة السر </NavLink> </p>
       </div>
       <div className="text-center">
+        <p className="tl">{t('noAccountMessage')} <a className="tl" href="/signUser">{t('createAccountLink')}</a></p>
       </div>
     </div>
   );
