@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import UserService from '../../../axios/user';
 import { useTranslation } from 'react-i18next'; 
 import './UserSignup.css';
+import '../../../i18n';
 
 const UserSignupComponent = () => {
   const { t } = useTranslation(); 

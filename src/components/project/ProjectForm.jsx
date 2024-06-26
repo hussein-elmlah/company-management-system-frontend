@@ -4,6 +4,7 @@ import { createProject } from '../../store/slices/projectSlice';
 import FormInput from './FormInput';
 import { validateForm } from './validateForm';
 import { useTranslation } from 'react-i18next';
+import '../../i18n';
 const ProjectForm = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
