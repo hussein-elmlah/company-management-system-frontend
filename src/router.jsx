@@ -18,6 +18,7 @@ import ResetPassword from "./pages/login/ResetPassword";
 
 import AcceptancePage from "./pages/projectAcceptance/AcceptancePage";
 import VerifyEmail from './pages/login/VerifyEmail';
+import UpdateUserRole from './pages/projectAcceptance/UpdateUserRole'
 
  
 
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: "/acceptance/:id",
         element: <PrivateRoute element={<AcceptancePage />} />
+      },
+      {
+        path: "/updaterole/:userId",
+        element: <PrivateRoute element={<UpdateUserRole />} />
       },
       {
         path: "/projects",
