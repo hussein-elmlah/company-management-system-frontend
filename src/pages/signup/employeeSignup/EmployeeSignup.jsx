@@ -1,58 +1,63 @@
 // import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
-import './EmployeeSignup.css';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { NavLink } from 'react-router-dom';
-import UserService from '../../../axios/user';
+import "./EmployeeSignup.css";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { NavLink } from "react-router-dom";
+import UserService from "../../../axios/user";
+import { useTranslation } from 'react-i18next'; 
 
 const EmployeeSignupComponent = () => {
-//   const navigate = useNavigate();
+  const { t } = useTranslation(); // Use t function for translations
 
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      username: '',
-      mobileNumber: '',
-      email: '',
-      password: '',
+      firstName: "",
+      lastName: "",
+      username: "",
+      mobileNumber: "",
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required('يجب ادخال الاسم الاول'),
-      lastName: Yup.string().required('يجب ادخال الاسم الاخير'),
-      username: Yup.string().required('يجب ادخال اسم المستخدم'),
-      mobileNumber: Yup.string().required('يجب ادخال رقم الهاتف'),
-      email: Yup.string().email('يجب ادخال البريد الالكتروني بشكل صحيح').required('يجب ادخال البريد الالكتروني'),
-      password: Yup.string().min(8, 'يجب ادخال على الاقل 8 حروف لكلمة السر').required('يجب ادخال كلمة السر'),
+      firstName: Yup.string().required(t("firstNameRequired")),
+      lastName: Yup.string().required(t("lastNameRequired")),
+      username: Yup.string().required(t("usernameRequired")),
+      mobileNumber: Yup.string().required(t("mobileNumberRequired")),
+      email: Yup.string().email(t("emailInvalid")).required(t("emailRequired")),
+      password: Yup.string()
+        .min(8, t("passwordMinLength"))
+        .required(t("passwordRequired")),
     }),
     onSubmit: (values, { resetForm }) => {
-      values.type = 'employee';
+      values.type = "employee";
       UserService.createUser(values)
         .then((response) => {
           console.log(response.headers);
-          alert('congratulation, you signed up successfully. Please verify your email.');
+          alert(t("signupSuccess"));
           resetForm();
         })
         .catch((error) => {
-          console.error('Signup error:', error);
-          alert('Signup error !! check your email or username');
+          console.error("Signup error:", error);
+          alert(t("signupError"));
         });
     },
   });
 
   return (
     <div>
-      <div className=" rounded-2 con">
+      <div className="rounded-2 con">
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-2">
-            <label htmlFor="firstNameInput" className="form-label text">الاسم الاول</label>
+            <label htmlFor="firstNameInput" className="form-label text">
+              {t("firstNameLabel")}
+            </label>
             <input
               type="text"
               className="form-control"
               id="firstNameInput"
-              {...formik.getFieldProps('firstName')}
-              placeholder="ادخل الاسم الاول"
+              {...formik.getFieldProps("firstName")}
+              placeholder={t("firstNamePlaceholder")}
             />
             {formik.touched.firstName && formik.errors.firstName ? (
               <div className="form-text text-danger">
@@ -62,13 +67,15 @@ const EmployeeSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="lastNameInput" className="form-label text">الاسم الاخير</label>
+            <label htmlFor="lastNameInput" className="form-label text">
+              {t("lastNameLabel")}
+            </label>
             <input
               type="text"
               className="form-control"
               id="lastNameInput"
-              {...formik.getFieldProps('lastName')}
-              placeholder="ادخل الاسم الاخير"
+              {...formik.getFieldProps("lastName")}
+              placeholder={t("lastNamePlaceholder")}
             />
             {formik.touched.lastName && formik.errors.lastName ? (
               <div className="form-text text-danger">
@@ -78,13 +85,15 @@ const EmployeeSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="usernameInput" className="form-label text">اسم المستخدم</label>
+            <label htmlFor="usernameInput" className="form-label text">
+              {t("usernameLabel")}
+            </label>
             <input
               type="text"
               className="form-control"
               id="usernameInput"
-              {...formik.getFieldProps('username')}
-              placeholder="ادخل اسم المستخدم"
+              {...formik.getFieldProps("username")}
+              placeholder={t("usernamePlaceholder")}
             />
             {formik.touched.username && formik.errors.username ? (
               <div className="form-text text-danger">
@@ -94,13 +103,15 @@ const EmployeeSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="mobileNumber" className="form-label text">رقم الهاتف</label>
+            <label htmlFor="mobileNumber" className="form-label text">
+              {t("mobileNumberLabel")}
+            </label>
             <input
               type="text"
               className="form-control"
               id="mobileNumber"
-              {...formik.getFieldProps('mobileNumber')}
-              placeholder="ادخل رقم الهاتف"
+              {...formik.getFieldProps("mobileNumber")}
+              placeholder={t("mobileNumberPlaceholder")}
             />
             {formik.touched.mobileNumber && formik.errors.mobileNumber ? (
               <div className="form-text text-danger">
@@ -110,13 +121,15 @@ const EmployeeSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="emailInput" className="form-label text">البريد الالكتروني</label>
+            <label htmlFor="emailInput" className="form-label text">
+              {t("emailLabel")}
+            </label>
             <input
               type="text"
               className="form-control"
               id="emailInput"
-              {...formik.getFieldProps('email')}
-              placeholder="ادخل البريد الالكتروني"
+              {...formik.getFieldProps("email")}
+              placeholder={t("emailPlaceholder")}
             />
             {formik.touched.email && formik.errors.email ? (
               <div className="form-text text-danger">
@@ -126,13 +139,15 @@ const EmployeeSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="passwordInput" className="form-label text">كلمة السر</label>
+            <label htmlFor="passwordInput" className="form-label text">
+              {t("passwordLabel")}
+            </label>
             <input
               type="password"
               className="form-control"
               id="passwordInput"
-              {...formik.getFieldProps('password')}
-              placeholder="ادخل كلمة السر"
+              {...formik.getFieldProps("password")}
+              placeholder={t("passwordPlaceholder")}
             />
             {formik.touched.password && formik.errors.password ? (
               <div className="form-text text-danger">
@@ -146,10 +161,15 @@ const EmployeeSignupComponent = () => {
             className="mb-2 mt-2 rounded-2 butext"
             disabled={!formik.isValid}
           >
-            انشئ حساب
+            {t("createAccountButton")}
           </button>
         </form>
-        <p className="text">هل لديك حساب بالفعل ؟ <NavLink to={`/login`} className="text" > تسجيل دخول </NavLink> </p>
+        <p className="text">
+          {t("alreadyHaveAccount")}{" "}
+          <NavLink to={`/login`} className="text">
+            {t("loginLink")}
+          </NavLink>
+        </p>
       </div>
     </div>
   );
