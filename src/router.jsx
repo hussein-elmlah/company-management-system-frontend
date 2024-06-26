@@ -80,11 +80,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/forgot-password",
-        element: <PrivateRoute element={<ForgotPassword />}  allowedRoles={[...employees,'client']} />,
+        element: <PrivateRoute element={<ForgotPassword />} />,
       },
       {
         path: "/reset-password/:token",
-        element: <PrivateRoute element={<ResetPassword />}  allowedRoles={[...employees,'client']} />,
+        element: <PrivateRoute element={<ResetPassword />} />,
       },
       {
         path: "/verify-email",

@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 const NotFoundPage = () => {
   return (
     <section className="flex items-center h-screen p-16 bg-gray-50 dark:bg-gray-700">
-      <div className="container flex flex-col items-center ">
-        <div className="flex flex-col gap-6 max-w-md text-center">
+      <div className="container flex flex-col items-center pt-5">
+        <div className="flex flex-col gap-6 max-w-md text-center pt-5">
           <h2 className="font-extrabold text-9xl text-gray-600 dark:text-gray-100">
             <span className="sr-only">Error</span>404
           </h2>
