@@ -14,6 +14,7 @@ import { fetchProjectsWithParams } from "../../store/slices/projectSlice";
 import { getAllDepartments } from "../../axios/departments";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/pagination/Pagination";
+import { debounce } from "../../utilities/debounce";
 
 const Queue = () => {
   const [first, setFirst] = useState(0);
@@ -37,6 +38,7 @@ const Queue = () => {
 
   const [searchWord, setSearchWord] = useState("");
   const [searchField, setSearchField] = useState("name");
+  const [previousSearchWord, setPreviousSearchWord] = useState("");
 
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.projects.projectList);
@@ -67,7 +69,6 @@ const Queue = () => {
     typeFilter,
     programFilter,
     departmentFilter,
-    searchWord,
     searchField,
   ]);
 
@@ -93,6 +94,60 @@ const Queue = () => {
     };
     dispatch(fetchProjectsWithParams(params));
   };
+
+  const handleVisualizationChange = (e) => {
+    console.log("Changing visualization to:", e.target.value);
+    setSelectedVisualization(e.target.value);
+    if (e.target.value === "timeline") {
+      setIsAnyTime(false);
+    }
+  };
+
+  const handleTimelineStartChange = (e) => {
+    console.log("Changing timelineStart to:", e.target.value);
+    setTimelineStart(e.target.value);
+  };
+
+  const handleTimelineEndChange = (e) => {
+    console.log("Changing timelineEnd to:", e.target.value);
+    setTimelineEnd(e.target.value);
+  };
+
+  const handleAnyTimeChange = (e) => {
+    setIsAnyTime(e.target.checked);
+  };
+
+  const handleTypeFilterChange = (e) => {
+    setTypeFilter(e.target.value);
+  };
+
+  const handleProgramFilterChange = (e) => {
+    setProgramFilter(e.target.value);
+  };
+
+  const handleDepartmentFilterChange = (e) => {
+    setDepartmentFilter(e.target.value);
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchWord(value);
+    debounceDispatch(value);
+  };
+
+  const debounceDispatch = useRef(debounce((value) => {
+    const params = {
+      page: pageNumber,
+      limit: projectsPerPage,
+      ...(isAnyTime
+        ? {}
+        : { timeline_start: timelineStart, timeline_end: timelineEnd }),
+      ...(typeFilter && { type: typeFilter }),
+      ...(programFilter && { program: programFilter }),
+      ...(departmentFilter && { department: departmentFilter }),
+      ...(searchField && { [searchField]: value }),
+    };
+    dispatch(fetchProjectsWithParams(params));
+  }, 500)).current;
 
   const configureVisualization = () => {
     if (selectedVisualization === "timeline" && timelineRef.current) {
@@ -151,40 +206,6 @@ const Queue = () => {
     }
   };
 
-  const handleVisualizationChange = (e) => {
-    console.log("Changing visualization to:", e.target.value);
-    setSelectedVisualization(e.target.value);
-    if (e.target.value === "timeline") {
-      setIsAnyTime(false);
-    }
-  };
-
-  const handleTimelineStartChange = (e) => {
-    console.log("Changing timelineStart to:", e.target.value);
-    setTimelineStart(e.target.value);
-  };
-
-  const handleTimelineEndChange = (e) => {
-    console.log("Changing timelineEnd to:", e.target.value);
-    setTimelineEnd(e.target.value);
-  };
-
-  const handleAnyTimeChange = (e) => {
-    setIsAnyTime(e.target.checked);
-  };
-
-  const handleTypeFilterChange = (e) => {
-    setTypeFilter(e.target.value);
-  };
-
-  const handleProgramFilterChange = (e) => {
-    setProgramFilter(e.target.value);
-  };
-
-  const handleDepartmentFilterChange = (e) => {
-    setDepartmentFilter(e.target.value);
-  };
-
   const renderTable = () => (
     <div>
       <table className="table table-striped table-bordered">
@@ -196,7 +217,6 @@ const Queue = () => {
             <th scope="col">client number</th>
             <th scope="col">owner</th>
             <th scope="col">project type</th>
-            <th scope="col">date Of Submission</th>
             <th scope="col">expected Start Date</th>
             <th scope="col">expected Completion Date</th>
           </tr>
@@ -210,12 +230,6 @@ const Queue = () => {
               <td>{project.client?.mobileNumber}</td>
               <td>{project.owner?.fullName}</td>
               <td>{project.type}</td>
-              <td>
-                {new Date(project.dateOfSubmission).toLocaleDateString(
-                  "en-US",
-                  { year: "numeric", month: "short", day: "numeric" }
-                )}
-              </td>
               <td>
                 {new Date(project.expectedStartDate).toLocaleDateString(
                   "en-US",
@@ -300,7 +314,7 @@ const Queue = () => {
                 <input
                   type="text"
                   value={searchWord}
-                  onChange={(e) => setSearchWord(e.target.value)}
+                  onChange={(e) => handleSearchChange( e.target.value)}
                   placeholder="Search..."
                   className="me-4 rounded border-1 p-1"
                 />
