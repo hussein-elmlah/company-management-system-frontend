@@ -7,7 +7,7 @@ import { getAllDepartments } from "../../axios/departments";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/pagination/Pagination";
 import { debounce } from "../../utilities/debounce";
-import { QueueSpinner } from "../reusables/LoadingSpinner"; // Adjust the path as per your project structure
+import { QueueSpinner } from "../reusables/LoadingSpinner";
 
 const Queue = () => {
   const [selectedVisualization, setSelectedVisualization] = useState("table");
@@ -20,6 +20,7 @@ const Queue = () => {
       .split("T")[0]
   );
   const [isAnyTime, setIsAnyTime] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [programFilter, setProgramFilter] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
@@ -51,6 +52,7 @@ const Queue = () => {
     timelineStart,
     timelineEnd,
     isAnyTime,
+    statusFilter,
     typeFilter,
     programFilter,
     departmentFilter,
@@ -61,6 +63,9 @@ const Queue = () => {
     if (selectedVisualization === "table") {
       limit = projectsPerPage;
     } else limit = 101;
+    if(selectedVisualization === "timeline") {
+      setStatusFilter("accepted");
+    }
     handlePageChange(pageNumber);
   }, [selectedVisualization]);
 
@@ -77,6 +82,7 @@ const Queue = () => {
       ...(isAnyTime
         ? {}
         : { timeline_start: timelineStart, timeline_end: timelineEnd }),
+      ...(statusFilter && { projectStatus: statusFilter }),
       ...(typeFilter && { type: typeFilter }),
       ...(programFilter && { program: programFilter }),
       ...(departmentFilter && { department: departmentFilter }),
@@ -107,6 +113,10 @@ const Queue = () => {
   const handleTypeFilterChange = (e) => {
     setTypeFilter(e.target.value);
   };
+  
+  const handleStatusFilterChange = (e) => {
+    setStatusFilter(e.target.value);
+  };
 
   const handleProgramFilterChange = (e) => {
     setProgramFilter(e.target.value);
@@ -129,6 +139,7 @@ const Queue = () => {
         ...(isAnyTime
           ? {}
           : { timeline_start: timelineStart, timeline_end: timelineEnd }),
+        ...(statusFilter && { projectStatus: statusFilter }),
         ...(typeFilter && { type: typeFilter }),
         ...(programFilter && { program: programFilter }),
         ...(departmentFilter && { department: departmentFilter }),
@@ -201,6 +212,7 @@ const Queue = () => {
           <thead>
             <tr>
               <th scope="col">project name</th>
+              <th scope="col">status</th>
               <th scope="col">location</th>
               <th scope="col">client name</th>
               <th scope="col">client number</th>
@@ -214,6 +226,7 @@ const Queue = () => {
             {projects.map((project, index) => (
               <tr key={index}>
                 <td>{project.name}</td>
+                <td>{project.projectStatus}</td>
                 <td>{project.location}</td>
                 <td>{project.client?.fullName}</td>
                 <td>{project.client?.mobileNumber}</td>
@@ -368,7 +381,7 @@ const Queue = () => {
                 <option value="revit">revit</option>
               </select>
 
-              <label className="me-1">Project Type:</label>
+              <label className="me-1">Type:</label>
               <select
                 value={typeFilter}
                 onChange={handleTypeFilterChange}
@@ -380,6 +393,20 @@ const Queue = () => {
                 <option value="commercial">commercial</option>
                 <option value="administrative">administrative</option>
               </select>
+
+              <label className="me-1">Status:</label>
+              <select
+                value={statusFilter}
+                onChange={handleStatusFilterChange}
+                className="me-4 rounded border-1 p-1"
+                disabled={selectedVisualization === "timeline"}
+              >
+                <option value="">All</option>
+                <option value="accepted">accepted</option>
+                <option value="pending">pending</option>
+                <option value="rejected">rejected</option>
+              </select>
+
             </div>
           </div>
           <div>
