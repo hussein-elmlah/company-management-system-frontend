@@ -1,12 +1,13 @@
- 
-
-
-import './UserSignup.css';
+import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import UserService from '../../../axios/user';
+// import UserService from '../../../services/user.services';
+import { useTranslation } from 'react-i18next'; 
+import './UserSignup.css';
 
 const UserSignupComponent = () => {
+  const { t } = useTranslation(); 
+
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -17,18 +18,18 @@ const UserSignupComponent = () => {
       password: '',
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required('يجب ادخال الاسم الاول'),
-      lastName: Yup.string().required('يجب ادخال الاسم الاخير'),
-      email: Yup.string().email('يجب ادخال البريد الالكتروني بشكل صحيح').required('يجب ادخال البريد الالكتروني'),
-      mobileNumber: Yup.string().required('يجب ادخال رقم الهاتف'),
-      username: Yup.string().required('يجب ادخال اسم المستخدم'),
-      password: Yup.string().min(8, 'يجب ادخال على الاقل 8 حروف لكلمة السر').required('يجب ادخال كلمة السر'),
+      firstName: Yup.string().required(t('firstNameRequired')),
+      lastName: Yup.string().required(t('lastNameRequired')),
+      username: Yup.string().required(t('usernameRequired')),
+      mobileNumber: Yup.string().required(t('mobileNumberRequired')),
+      email: Yup.string().email(t('emailInvalid')).required(t('emailRequired')),
+      password: Yup.string().min(8, t('passwordMinLength')).required(t('passwordRequired')),
     }),
     onSubmit: (values, { resetForm }) => {
       UserService.createUser(values)
         .then((response) => {
           console.log(response.headers);
-          alert('congratulation, you signed up successfully. Please verify your email.');
+          alert(t('signupSuccess'));
           resetForm();
         })
         .catch((error) => {
@@ -45,13 +46,13 @@ const UserSignupComponent = () => {
       <div className="rounded-2 co">
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-2">
-            <label htmlFor="firstNameInput" className="form-label textf">الاسم الاول</label>
+            <label htmlFor="firstNameInput" className="form-label textf">{t('firstNameLabel')}</label>
             <input
               type="text"
               className="form-control"
               id="firstNameInput"
               {...formik.getFieldProps('firstName')}
-              placeholder="ادخل الاسم الاول"
+              placeholder={t('firstNamePlaceholder')}
             />
             {formik.touched.firstName && formik.errors.firstName ? (
               <div className="form-text text-danger">
@@ -61,13 +62,13 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="lastNameInput" className="form-label textf">الاسم الاخير</label>
+            <label htmlFor="lastNameInput" className="form-label textf">{t('lastNameLabel')}</label>
             <input
               type="text"
               className="form-control"
               id="lastNameInput"
               {...formik.getFieldProps('lastName')}
-              placeholder="ادخل الاسم الاخير"
+              placeholder={t('lastNamePlaceholder')}
             />
             {formik.touched.lastName && formik.errors.lastName ? (
               <div className="form-text text-danger">
@@ -77,13 +78,13 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="emailInput" className="form-label textf">البريد الالكتروني</label>
+            <label htmlFor="usernameInput" className="form-label textf">{t('usernameLabel')}</label>
             <input
               type="text"
               className="form-control"
-              id="emailInput"
-              {...formik.getFieldProps('email')}
-              placeholder="ادخل البريد الالكتروني"
+              id="usernameInput"
+              {...formik.getFieldProps('username')}
+              placeholder={t('usernamePlaceholder')}
             />
             {formik.touched.email && formik.errors.email ? (
               <div className="form-text text-danger">
@@ -93,13 +94,13 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="mobileNumberInput" className="form-label textf">رقم الهاتف</label>
+            <label htmlFor="mobileNumber" className="form-label textf">{t('mobileNumberLabel')}</label>
             <input
               type="text"
               className="form-control"
               id="mobileNumberInput"
               {...formik.getFieldProps('mobileNumber')}
-              placeholder="ادخل رقم الهاتف"
+              placeholder={t('mobileNumberPlaceholder')}
             />
             {formik.touched.mobileNumber && formik.errors.mobileNumber ? (
               <div className="form-text text-danger">
@@ -109,13 +110,13 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="usernameInput" className="form-label textf">اسم المستخدم</label>
+            <label htmlFor="emailInput" className="form-label textf">{t('emailLabel')}</label>
             <input
               type="text"
               className="form-control"
-              id="usernameInput"
-              {...formik.getFieldProps('username')}
-              placeholder="ادخل اسم المستخدم"
+              id="emailInput"
+              {...formik.getFieldProps('email')}
+              placeholder={t('emailPlaceholder')}
             />
             {formik.touched.username && formik.errors.username ? (
               <div className="form-text text-danger">
@@ -125,13 +126,13 @@ const UserSignupComponent = () => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="passwordInput" className="form-label textf">كلمة السر</label>
+            <label htmlFor="passwordInput" className="form-label textf">{t('passwordLabel')}</label>
             <input
               type="password"
               className="form-control"
               id="passwordInput"
               {...formik.getFieldProps('password')}
-              placeholder="ادخل كلمة السر"
+              placeholder={t('passwordPlaceholder')}
             />
             {formik.touched.password && formik.errors.password ? (
               <div className="form-text text-danger">
@@ -145,12 +146,12 @@ const UserSignupComponent = () => {
             className="mb-2 mt-2 rounded-2 btext"
             disabled={!formik.isValid || formik.isSubmitting}
           >
-            انشئ حساب
+            {t('createAccountButton')}
           </button>
         </form>
       </div>
       <div className="text-center">
-        <p className="textf">هل لديك حساب بالفعل ؟ <a className="textf" href="/login">تسجيل دخول</a></p>
+        <p className="textf">{t('haveAccountMessage')} <a className="textf" href="/login">{t('loginLink')}</a></p>
       </div>
     </div>
   );
