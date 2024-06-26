@@ -1,8 +1,8 @@
 import axiosInstance from "./config";
 
-export const getMyNotifications = () => {
+export const getMyNotifications = (userId) => {
   return axiosInstance.get(
-    "/project-notification/user/6676b8039dec5a7d4fd7ad90",
+    `/project-notification/user/${userId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -11,9 +11,9 @@ export const getMyNotifications = () => {
   );
 };
 
-export const readAllNotifications = () => {
+export const readAllNotifications = (userId) => {
   return axiosInstance.put(
-    "/project-notification/user/markasread/6676b8039dec5a7d4fd7ad90",
+    `/project-notification/user/markasread/${userId}`,
     {
       isRead: true
     },
@@ -23,4 +23,8 @@ export const readAllNotifications = () => {
       },
     }
   );
+};
+
+export const tellClientAboutStatus = (bodyData) => {
+  return axiosInstance.post(`/project-notification/send-notification`, bodyData);
 };

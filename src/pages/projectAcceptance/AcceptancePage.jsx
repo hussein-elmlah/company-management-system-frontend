@@ -8,10 +8,16 @@ import { FaProjectDiagram, FaUser, FaPhone, FaInfoCircle, FaCalendarAlt } from '
 import { useTranslation } from 'react-i18next';
 import { updateProject, fetchProjectById } from '../../store/slices/projectSlice';
 import axiosInstance from '../../axios/config';
+import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
+import { tellClientAboutStatus } from '../../axios/notifications';
+
+const socket = io('http://127.0.0.1:3001');
 
 const ProjectAcceptance = () => {
   const { id } = useParams(); 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { selectedProject: project, loading, error } = useSelector(state => state.projects);
   const { t } = useTranslation();
   const [ownerName, setOwnerName] = useState('');
@@ -50,19 +56,33 @@ const ProjectAcceptance = () => {
       dispatch(fetchProjectById(id));
       setAlertMessage('Project accepted successfully.');
       setAlertType('success');
+      const res = await axiosInstance.post("project-notification/send-notification",
+          {
+            option: 'receiver',
+            data: { "project_id": id, "message": "Your project is accepted" },
+          }
+        )
+      navigate('/projects');
     } catch (error) {
       console.error('Error accepting project:', error);
       setAlertMessage('Error accepting project.');
       setAlertType('danger');
     }
   };
-
+  
   const handleReject = async () => {
     try {
       await dispatch(updateProject({ projectId: id, updatedFields: { projectStatus: 'rejected' } }));
       dispatch(fetchProjectById(id));
       setAlertMessage('Project rejected successfully.');
       setAlertType('success');
+      const res = await axiosInstance.post("project-notification/send-notification",
+        {
+          option: 'receiver',
+          data: { "project_id": id, "message": "Your project is rejected" },
+        }
+      )
+      navigate('/projects');
     } catch (error) {
       console.error('Error rejecting project:', error);
       setAlertMessage('Error rejecting project.');
@@ -171,6 +191,8 @@ const ProjectAcceptance = () => {
                 onChange={(e) => setExpectedCompletionDate(e.target.value)} 
               />
             </div>
+            <button className="btn btn-success" onClick={handleAccept}>Accept Project</button> &nbsp;
+            <button className="btn btn-danger" onClick={handleReject}>Reject Project</button>
           </div>
           <form onSubmit={handleSubmit}>
             <button type="submit" className="btn btn-primary mb-3">Update Dates</button>
