@@ -1,36 +1,49 @@
- 
-
-
-import   { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { FaProjectDiagram, FaUser, FaPhone, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';
-import { updateProject, fetchProjectById } from '../../store/slices/projectSlice';
-import axiosInstance from '../../axios/config';
-import { useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
-import { tellClientAboutStatus } from '../../axios/notifications';
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import {
+  FaProjectDiagram,
+  FaUser,
+  FaPhone,
+  FaInfoCircle,
+  FaCalendarAlt,
+} from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import {
+  updateProject,
+  fetchProjectById,
+} from "../../store/slices/projectSlice";
+import axiosInstance from "../../axios/config";
+import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
+import { tellClientAboutStatus } from "../../axios/notifications";
 
 const ProjectAcceptance = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { selectedProject: project, loading, error } = useSelector(state => state.projects);
+  const {
+    selectedProject: project,
+    loading,
+    error,
+  } = useSelector((state) => state.projects);
   const { t } = useTranslation();
-  const [ownerName, setOwnerName] = useState('');
-  const [expectedStartDate, setExpectedStartDate] = useState('');
-  const [expectedCompletionDate, setExpectedCompletionDate] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertType, setAlertType] = useState('');
+  const [ownerName, setOwnerName] = useState("");
+  const [expectedStartDate, setExpectedStartDate] = useState("");
+  const [expectedCompletionDate, setExpectedCompletionDate] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("");
+  const [amount, setAmount] = useState("");
 
   useEffect(() => {
     const fetchOwnerName = async (ownerId) => {
       try {
         const response = await axiosInstance.get(`/users/${ownerId}`);
-        setOwnerName(response.data.user.firstName + ' ' + response.data.user.lastName);
+        setOwnerName(
+          response.data.user.firstName + " " + response.data.user.lastName
+        );
       } catch (error) {
-        console.error('Error fetching owner name:', error);
+        console.error("Error fetching owner name:", error);
       }
     };
 
@@ -39,8 +52,15 @@ const ProjectAcceptance = () => {
     }
 
     if (project) {
-      setExpectedStartDate(project.expectedStartDate ? project.expectedStartDate.split('T')[0] : '');
-      setExpectedCompletionDate(project.expectedCompletionDate ? project.expectedCompletionDate.split('T')[0] : '');
+      setExpectedStartDate(
+        project.expectedStartDate ? project.expectedStartDate.split("T")[0] : ""
+      );
+      setExpectedCompletionDate(
+        project.expectedCompletionDate
+          ? project.expectedCompletionDate.split("T")[0]
+          : ""
+      );
+      setAmount(project.amount || "");
     }
   }, [project]);
 
@@ -50,7 +70,12 @@ const ProjectAcceptance = () => {
 
   const handleAccept = async () => {
     try {
-      await dispatch(updateProject({ projectId: id, updatedFields: { projectStatus: 'accepted' } }));
+      await dispatch(
+        updateProject({
+          projectId: id,
+          updatedFields: { projectStatus: "accepted" },
+        })
+      );
       dispatch(fetchProjectById(id));
       setAlertMessage('Project accepted successfully.');
       setAlertType('success');
@@ -62,49 +87,65 @@ const ProjectAcceptance = () => {
         )
       navigate('/projects');
     } catch (error) {
-      console.error('Error accepting project:', error);
-      setAlertMessage('Error accepting project.');
-      setAlertType('danger');
+      console.error("Error accepting project:", error);
+      setAlertMessage("Error accepting project.");
+      setAlertType("danger");
     }
   };
-  
+
   const handleReject = async () => {
     try {
-      await dispatch(updateProject({ projectId: id, updatedFields: { projectStatus: 'rejected' } }));
+      await dispatch(
+        updateProject({
+          projectId: id,
+          updatedFields: { projectStatus: "rejected" },
+        })
+      );
       dispatch(fetchProjectById(id));
-      setAlertMessage('Project rejected successfully.');
-      setAlertType('success');
-      const res = await axiosInstance.post("project-notification/send-notification",
+      setAlertMessage("Project rejected successfully.");
+      setAlertType("success");
+      const res = await axiosInstance.post(
+        "project-notification/send-notification",
         {
           option: 'receiver',
           data: {"type": "client", "id": id, "message": "Your project is rejected", "redirectURL": "/projects"},
         }
-      )
-      navigate('/projects');
+      );
+      navigate("/projects");
     } catch (error) {
-      console.error('Error rejecting project:', error);
-      setAlertMessage('Error rejecting project.');
-      setAlertType('danger');
+      console.error("Error rejecting project:", error);
+      setAlertMessage("Error rejecting project.");
+      setAlertType("danger");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const numericAmount = parseFloat(amount);
+    if (isNaN(numericAmount) || numericAmount < 0) {
+      setAlertMessage("Amount must be a positive number with up to 2 decimal places.");
+      setAlertType("danger");
+      return;
+    }
+    setAmount((Math.round(numericAmount * 100) / 100 ));
     try {
-      await dispatch(updateProject({ 
-        projectId: id, 
-        updatedFields: { 
-          expectedStartDate, 
-          expectedCompletionDate 
-        } 
-      }));
+      await dispatch(
+        updateProject({
+          projectId: id,
+          updatedFields: {
+            expectedStartDate,
+            expectedCompletionDate,
+            amount,
+          },
+        })
+      );
       dispatch(fetchProjectById(id));
-      setAlertMessage('Project dates updated successfully.');
-      setAlertType('success');
+      setAlertMessage("Project dates and amount updated successfully.");
+      setAlertType("success");
     } catch (error) {
-      console.error('Error updating project dates:', error);
-      setAlertMessage('Error updating project dates.');
-      setAlertType('danger');
+      console.error("Error updating project dates and amount:", error);
+      setAlertMessage("Error updating project dates and amount.");
+      setAlertType("danger");
     }
   };
 
@@ -115,9 +156,17 @@ const ProjectAcceptance = () => {
   return (
     <div className="container mt-4">
       {alertMessage && (
-        <div className={`alert alert-${alertType} alert-dismissible fade show`} role="alert">
+        <div
+          className={`alert alert-${alertType} alert-dismissible fade show`}
+          role="alert"
+        >
           {alertMessage}
-          <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+          <button
+            type="button"
+            className="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -131,11 +180,11 @@ const ProjectAcceptance = () => {
           <hr />
           <div className="row mb-3">
             <div className="col-md-6">
-              <p className="text-muted mb-1">{t('projectNumber')}</p>
+              <p className="text-muted mb-1">{t("projectNumber")}</p>
               <p>{project.number}</p>
             </div>
             <div className="col-md-6">
-              <p className="text-muted mb-1">{t('projectStatus')}</p>
+              <p className="text-muted mb-1">{t("projectStatus")}</p>
               <p>{project.projectStatus}</p>
             </div>
           </div>
@@ -143,14 +192,14 @@ const ProjectAcceptance = () => {
             <div className="col-md-6">
               <div className="d-flex align-items-center">
                 <FaUser className="text-muted mr-2" />
-                <p className="text-muted mb-1">{t('ownerName')}</p>
+                <p className="text-muted mb-1">{t("ownerName")}</p>
               </div>
               <p>{ownerName}</p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center">
                 <FaPhone className="text-muted mr-2" />
-                <p className="text-muted mb-1">{t('ownerMobile')}</p>
+                <p className="text-muted mb-1">{t("ownerMobile")}</p>
               </div>
               <p>{project.client?.mobileNumber}</p>
             </div>
@@ -158,7 +207,7 @@ const ProjectAcceptance = () => {
           <div className="mb-3">
             <div className="d-flex align-items-center">
               <FaInfoCircle className="text-muted mr-2" />
-              <p className="text-muted mb-1">{t('description')}</p>
+              <p className="text-muted mb-1">{t("description")}</p>
             </div>
             <p>{project.description}</p>
           </div>
@@ -166,37 +215,68 @@ const ProjectAcceptance = () => {
             <div className="col-md-6">
               <div className="d-flex align-items-center">
                 <FaCalendarAlt className="text-muted mr-2" />
-                <p className="text-muted small mb-0">{t('expectedStartDate')}: {expectedStartDate ? new Date(expectedStartDate).toLocaleDateString() : 'N/A'}</p>
+                <p className="text-muted small mb-0">
+                  {t("expectedStartDate")}:{" "}
+                  {expectedStartDate
+                    ? new Date(expectedStartDate).toLocaleDateString()
+                    : "N/A"}
+                </p>
               </div>
               <br />
-              <input 
-                type="date" 
-                id="expectedStartDate" 
-                className="form-control" 
-                value={expectedStartDate} 
-                onChange={(e) => setExpectedStartDate(e.target.value)} 
+              <input
+                type="date"
+                id="expectedStartDate"
+                className="form-control"
+                value={expectedStartDate}
+                onChange={(e) => setExpectedStartDate(e.target.value)}
               />
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center">
                 <FaCalendarAlt className="text-muted mr-2" />
-                <p className="text-muted small mb-0">{t('expectedCompletionDate')}: {expectedCompletionDate ? new Date(expectedCompletionDate).toLocaleDateString() : 'N/A'}</p>
+                <p className="text-muted small mb-0">
+                  {t("expectedCompletionDate")}:{" "}
+                  {expectedCompletionDate
+                    ? new Date(expectedCompletionDate).toLocaleDateString()
+                    : "N/A"}
+                </p>
               </div>
               <br />
-              <input 
-                type="date" 
-                id="expectedCompletionDate" 
-                className="form-control" 
-                value={expectedCompletionDate} 
-                onChange={(e) => setExpectedCompletionDate(e.target.value)} 
+              <input
+                type="date"
+                id="expectedCompletionDate"
+                className="form-control"
+                value={expectedCompletionDate}
+                onChange={(e) => setExpectedCompletionDate(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <label htmlFor="projectAmount" className="form-label">
+                {t("projectAmount")}
+              </label>
+              <input
+                type="number"
+                id="projectAmount"
+                className="form-control"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
               />
             </div>
           </div>
           <form onSubmit={handleSubmit}>
-            <button type="submit" className="btn btn-primary mb-3">Update Dates</button>
+            <button type="submit" className="btn btn-primary mb-3">
+              Update Dates
+            </button>
           </form>
-          <button className="btn btn-success mr-2" onClick={handleAccept}>Accept Project</button> &nbsp;
-          <button className="btn btn-danger" onClick={handleReject}>Reject Project</button>
+          <button className="btn btn-success mr-2" onClick={handleAccept}>
+            Accept Project
+          </button>{" "}
+          &nbsp;
+          <button className="btn btn-danger" onClick={handleReject}>
+            Reject Project
+          </button>
         </div>
       </div>
     </div>
@@ -204,4 +284,3 @@ const ProjectAcceptance = () => {
 };
 
 export default ProjectAcceptance;
-

@@ -45,7 +45,7 @@ const UserLayout = () => {
     }
   }, [dispatch, user]);
 
-  console.log("Fetched user from router: ", user);
+  // console.log("Fetched user from router: ", user);
 
   if (isLoading) {
     return <QueueSpinner isLoading={isLoading} />;
