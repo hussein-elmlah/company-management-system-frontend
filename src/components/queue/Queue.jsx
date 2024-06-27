@@ -8,8 +8,18 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/pagination/Pagination";
 import { debounce } from "../../utilities/debounce";
 import { QueueSpinner } from "../reusables/LoadingSpinner";
+import { FaTasks } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+
 
 const Queue = () => {
+  const navigate = useNavigate();
+
+  function handleAssign (projectId) {
+    navigate(`/projects/${projectId}/assign`)
+  };
+
   const [selectedVisualization, setSelectedVisualization] = useState("table");
   const [timelineStart, setTimelineStart] = useState(
     new Date().toISOString().split("T")[0]
@@ -220,6 +230,7 @@ const Queue = () => {
               <th scope="col">project type</th>
               <th scope="col">expected Start Date</th>
               <th scope="col">expected Completion Date</th>
+              <th scope="col">Assign</th>
             </tr>
           </thead>
           <tbody>
@@ -247,6 +258,11 @@ const Queue = () => {
                       day: "numeric",
                     }
                   )}
+                </td>
+                <td>
+                  <button className="btn btn-link text-danger" onClick={() => handleAssign(project.id)}>
+                    <FaTasks />
+                  </button>
                 </td>
               </tr>
             ))}
