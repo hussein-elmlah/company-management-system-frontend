@@ -26,6 +26,7 @@ import { Cancel } from "@mui/icons-material";
 import AssignProject from "./components/project/AssignProject";
 import AssignProjectToEmployees from "./pages/Project/AssignProject";
 import PrivateRoute from "./PrivateRoute";
+import UserProfile from "./pages/UserProfile/UserProfile";
 
 const UserLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -94,6 +95,10 @@ const router = createBrowserRouter([
       {
         path: "/verify-email",
         element: <VerifyEmail />
+      },
+      {
+        path: "/profile",
+        element: <PrivateRoute element={<UserProfile />}  allowedRoles={[...employees,'client']} />,
       },
       {
         path: "/projects",
