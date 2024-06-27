@@ -62,8 +62,8 @@ const ProjectTable = ({ projects }) => {
             <th>{t('description')}</th>
             <th>{t('ownerName')}</th>
             <th>{t('owner-mobile-number')}</th>
-            <th>{t('expectedStartDate')}</th>
-            <th>{t('expectedEndDate')}</th>
+            <th>{t('Start Date')}</th>
+            <th>{t('Completion Date')}</th>
             <th>{t('actions')}</th>
           </tr>
         </thead>
@@ -77,8 +77,8 @@ const ProjectTable = ({ projects }) => {
               <td>{project.description}</td>
               <td>{project.owner?.fullName}</td>
               <td>{project.owner?.mobileNumber}</td>
-              <td>{project.expectedStartDate}</td>
-              <td>{project.expectedEndDate}</td>
+              <td>{project.expectedStartDate.substring(0,10)}</td>
+              <td>{project.expectedCompletionDate.substring(0,10)}</td>
               <td>
                 <div className="d-flex justify-content-between">
                   <button className="btn btn-link text-primary" onClick={() => handleView(project.id)}>
