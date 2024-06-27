@@ -165,7 +165,10 @@ const EmployeeSignupComponent = () => {
           </button>
         </form>
         <div className="text-center">
-        <p className="textf">{t('haveAccountMessage')} <a className="textf" href="/login">{t('loginLink')}</a></p>
+        <p className="textf">
+          {t('haveAccountMessage')} 
+          <NavLink to={`/login`} className="textf">{t('loginLink')}</NavLink>
+        </p>
       </div>
       </div>
     </div>
