@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { getMyNotifications, readAllNotifications } from '../../axios/notifications';
