@@ -1,43 +1,73 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createProject } from '../../store/slices/projectSlice';
-import FormInput from './FormInput';
-import { validateForm } from './validateForm';
-import { useTranslation } from 'react-i18next';
-import '../../i18n';
+import React, { useState } from "react";
+import { createProject } from "../../store/slices/projectSlice";
+import FormInput from "./FormInput";
+import { validateForm } from "./validateForm";
+import { useTranslation } from "react-i18next";
+import "../../i18n";
+import { selectUser } from "../../store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const ProjectForm = () => {
   const { t } = useTranslation();
+  const user = useSelector(selectUser);
+  // console.log("user from project form: ", user);
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.projects);
   const [formData, setFormData] = useState({
-    name: '',
-    location: '',
-    owner: '',
-    plotNumber: '',
-    planNumber: '',
-    landPerimeter: '',
-    landArea: '',
-    program: '',
-    type: '',
-    numberOfFloors: '',
-    buildingArea: '',
-    totalBuildingArea: '',
-    basement: false,
-    groundAnnex: false,
-    description: '',
-    client: {
-      fullName: '',
-      mobileNumber: '',
+    name: "",
+    location: "",
+    owner: {
+      fullName: "",
+      mobileNumber: "",
     },
+    plotNumber: "",
+    planNumber: "",
+    landPerimeter: "",
+    landArea: "",
+    program: "",
+    type: "",
+    numberOfFloors: "",
+    buildingArea: "",
+    totalBuildingArea: "",
+    annex: {
+      upper: false,
+      land: false,
+    },
+    description: "",
+    client: {
+      user: user._id,
+      fullName: user.username,
+      mobileNumber: user.mobileNumber,
+    },
+    fileLinkOriginal: "",
   });
+  const [file, setFile] = useState(null); // State to store the selected file
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({
-      ...formData,
-      [e.target.name]: value,
-    });
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === "checkbox" ? checked : value;
+
+    if (name.includes(".")) {
+      const [parent, child] = name.split(".");
+      setFormData({
+        ...formData,
+        [parent]: {
+          ...formData[parent],
+          [child]: inputValue,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: inputValue,
+      });
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
   };
 
   const handleSubmit = (e) => {
@@ -46,239 +76,263 @@ const ProjectForm = () => {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
+      const formDataWithFile = { ...formData };
+
+      if (file) {
+        formDataWithFile.fileLinkOriginal = file.name;
+      }
+
       dispatch(createProject(formData))
         .then(() => {
-          console.log('Project created successfully!');
-          alert('Project created successfully');
+          console.log("Project created successfully!");
+          alert("Project created successfully");
           setFormData({
-            name: '',
-            location: '',
-            owner: '',
-            plotNumber: '',
-            planNumber: '',
-            landPerimeter: '',
-            landArea: '',
-            program: '',
-            type: '',
-            numberOfFloors: '',
-            buildingArea: '',
-            totalBuildingArea: '',
-            basement: false,
-            groundAnnex: false,
-            description: '',
-            client: {
-              fullName: '',
-              mobileNumber: '',
+            name: "",
+            location: "",
+            owner: {
+              fullName: "",
+              mobileNumber: "",
             },
+            plotNumber: "",
+            planNumber: "",
+            landPerimeter: "",
+            landArea: "",
+            program: "",
+            type: "",
+            numberOfFloors: "",
+            buildingArea: "",
+            totalBuildingArea: "",
+            annex: {
+              upper: false,
+              land: false,
+            },
+            description: "",
+            client: {
+              user: user._id,
+              fullName: user.username,
+              mobileNumber: user.mobileNumber,
+            },
+            fileLinkOriginal: "",
           });
+          setFile(null); // Reset selected file
+          console.log("formDataWithFile:", formDataWithFile);
           setErrors({});
         })
         .catch((error) => {
-          if (error.response && error.response.data && error.response.data.errors) {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.errors
+          ) {
             setErrors(error.response.data.errors);
           } else {
-            console.error('Error creating project:', error);
+            console.error("Error creating project:", error);
           }
         });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="container mt-4 p-4 bg-white shadow rounded">
-<div className="row g-3">
+    <form
+      onSubmit={handleSubmit}
+      className="container mt-4 p-4 bg-white shadow rounded"
+    >
+      <div className="row g-3">
         <FormInput
           id="name"
-          label={t('projectName')}
+          label={t("projectName")}
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
           errors={errors.name}
-          placeholder={t('enterProjectName')}
+          placeholder={t("enterProjectName")}
         />
         <FormInput
           id="location"
-          label={t('projectLocation')}
+          label={t("projectLocation")}
           type="text"
           name="location"
           value={formData.location}
           onChange={handleChange}
           errors={errors.location}
-          placeholder={t('enterProjectLocation')}
+          placeholder={t("enterProjectLocation")}
         />
         <FormInput
-          id="owner"
-          label={t('ownerName')}
+          id="owner.fullName"
+          label={t("ownerName")}
           type="text"
-          name="owner"
-          value={formData.owner}
+          name="owner.fullName"
+          value={formData.owner.fullName}
           onChange={handleChange}
-          errors={errors.owner}
-          placeholder={t('enterOwnerName')}
+          errors={errors.owner && errors.owner.fullName}
+          placeholder={t("enterOwnerName")}
+        />
+        <FormInput
+          id="owner.mobileNumber"
+          label={t("owner-mobile-number")}
+          type="text"
+          name="owner.mobileNumber"
+          value={formData.owner.mobileNumber}
+          onChange={handleChange}
+          errors={errors.owner && errors.owner.mobileNumber}
+          placeholder={t("enterOwnerMobileNumber")}
         />
         <FormInput
           id="plotNumber"
-          label={t('plotNumber')}
+          label={t("plotNumber")}
           type="text"
           name="plotNumber"
           value={formData.plotNumber}
           onChange={handleChange}
           errors={errors.plotNumber}
-          placeholder={t('enterPlotNumber')}
+          placeholder={t("enterPlotNumber")}
         />
         <FormInput
           id="planNumber"
-          label={t('planNumber')}
+          label={t("planNumber")}
           type="text"
           name="planNumber"
           value={formData.planNumber}
           onChange={handleChange}
           errors={errors.planNumber}
-          placeholder={t('enterPlanNumber')}
+          placeholder={t("enterPlanNumber")}
         />
         <FormInput
           id="landPerimeter"
-          label={t('landPerimeter')}
+          label={t("landPerimeter")}
           type="text"
           name="landPerimeter"
           value={formData.landPerimeter}
           onChange={handleChange}
           errors={errors.landPerimeter}
-          placeholder={t('enterLandPerimeter')}
+          placeholder={t("enterLandPerimeter")}
         />
         <FormInput
           id="landArea"
-          label={t('landArea')}
+          label={t("landArea")}
           type="text"
           name="landArea"
           value={formData.landArea}
           onChange={handleChange}
           errors={errors.landArea}
-          placeholder={t('enterLandArea')}
+          placeholder={t("enterLandArea")}
         />
         <FormInput
           id="program"
-          label={t('programType')}
+          label={t("programType")}
           type="select"
           name="program"
           value={formData.program}
           onChange={handleChange}
           errors={errors.program}
           options={[
-            { value: 'autocad', label: t('autocad') },
-            { value: 'revit', label: t('revit') },
+            { value: "autocad", label: t("autocad") },
+            { value: "revit", label: t("revit") },
           ]}
         />
         <FormInput
           id="type"
-          label={t('projectType')}
+          label={t("projectType")}
           type="select"
           name="type"
           value={formData.type}
           onChange={handleChange}
           errors={errors.type}
           options={[
-            { value: 'villa', label: t('villa') },
-            { value: 'residential', label: t('residential') },
-            { value: 'commercial', label: t('commercial') },
+            { value: "villa", label: t("villa") },
+            { value: "residential", label: t("residential") },
+            { value: "commercial", label: t("commercial") },
           ]}
         />
         <FormInput
           id="numberOfFloors"
-          label={t('numberOfFloors')}
+          label={t("numberOfFloors")}
           type="number"
           name="numberOfFloors"
           value={formData.numberOfFloors}
           onChange={handleChange}
           errors={errors.numberOfFloors}
-          placeholder={t('enterNumberOfFloors')}
+          placeholder={t("enterNumberOfFloors")}
         />
         <FormInput
           id="buildingArea"
-          label={t('buildingArea')}
+          label={t("buildingArea")}
           type="text"
           name="buildingArea"
           value={formData.buildingArea}
           onChange={handleChange}
           errors={errors.buildingArea}
-          placeholder={t('enterBuildingArea')}
+          placeholder={t("enterBuildingArea")}
         />
         <FormInput
           id="totalBuildingArea"
-          label={t('totalBuildingArea')}
+          label={t("totalBuildingArea")}
           type="text"
           name="totalBuildingArea"
           value={formData.totalBuildingArea}
           onChange={handleChange}
           errors={errors.totalBuildingArea}
-          placeholder={t('enterTotalBuildingArea')}
+          placeholder={t("enterTotalBuildingArea")}
         />
         <div className="mb-3 form-check">
-          <label className="form-check-label" htmlFor="basement">
-            {t('basement')}
+          <label className="form-check-label" htmlFor="annex.upper">
+            {t("upperAnnex")}
           </label>
           <input
             type="checkbox"
-            id="basement"
-            style={{'margin-left': '30px'}}
-            name="basement"
-            checked={formData.basement}
+            id="annex.upper"
+            name="annex.upper"
+            checked={formData.annex.upper}
             onChange={handleChange}
-            className="form-check-input"
+            className="form-check-input mx-2"
           />
         </div>
         <div className="mb-3 form-check">
-          <label className="form-check-label" htmlFor="groundAnnex">
-            {t('groundAnnex')}
+          <label className="form-check-label" htmlFor="annex.land">
+            {t("groundAnnex")}
           </label>
           <input
             type="checkbox"
-            id="groundAnnex"
-            style={{'margin-left': '30px'}}
-            name="groundAnnex"
-            checked={formData.groundAnnex}
+            id="annex.land"
+            name="annex.land"
+            checked={formData.annex.land}
             onChange={handleChange}
-            className="form-check-input"
+            className="form-check-input mx-2"
           />
         </div>
         <FormInput
           id="description"
-          label={t('description')}
+          label={t("description")}
           type="textarea"
           name="description"
           value={formData.description}
           onChange={handleChange}
           errors={errors.description}
-          placeholder={t('enterProjectDescription')}
+          placeholder={t("enterProjectDescription")}
         />
 
-        <FormInput
-          id="fullName"
-          label={t('full-name')}
-          type="text"
-          name="fullName"
-          defaultValue={formData.client.fullName}
-          onChange={handleChange}
-          errors={errors.fullName}
-          placeholder={t('enterYourFullName')}
+      {/* File input */}
+      {/* <div className="mb-3">
+        <label htmlFor="file" className="form-label">
+          {t("selectFile")}
+        </label>
+        <input
+          type="file"
+          className="form-control"
+          id="file"
+          onChange={handleFileChange}
+          accept=".rar,.zip,.daa,.iso"
         />
+        {errors.fileLinkOriginal && (
+          <div className="text-danger">{errors.fileLinkOriginal}</div>
+        )}
+      </div> */}
 
-        <FormInput
-          id="mobileNumber"
-          label={t('mobile-number')}
-          type="text"
-          name="mobileNumber"
-          defaultValue={formData.client.mobileNumber}
-          onChange={handleChange}
-          errors={errors.mobileNumber}
-          placeholder={t('enterYourMobileNumber')}
-        />
       </div>
-      <button
-        type="submit"
-        className="btn btn-primary mt-3"
-      >
-        {t('createProject')}
+
+      <button type="submit" className="btn btn-primary mt-3">
+        {t("createProject")}
       </button>
     </form>
   );

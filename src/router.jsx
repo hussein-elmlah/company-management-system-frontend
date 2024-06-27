@@ -124,7 +124,7 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute
             element={<UpdateProjectForm />}
-            allowedRoles={employees}
+            allowedRoles={[...employees,'client']}
           />
         ),
       },
