@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-import { fetchUserData, selectUser } from "../../store/slices/userSlice";
-import { useSelector } from "react-redux";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import {
@@ -10,6 +8,8 @@ import {
 } from "../../axios/notifications";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../locales/LanguageSwitcher";
+import { fetchUserData, selectUser } from '../../store/slices/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const fetchMyNotifications = async (id) => {
   try {
@@ -40,7 +40,7 @@ const formatDate = (isoDate) => {
 
 const Navbar = () => {
   const socket = useRef(null);
-
+  
   useEffect(() => {
     // Establish the socket connection only once
     socket.current = io("http://127.0.0.1:3001");
@@ -71,6 +71,7 @@ const Navbar = () => {
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
   const location = useLocation();
 
+  const dispatch = useDispatch();
   let user = useSelector(selectUser);
   // console.log("user from navbar: ", user);
 
@@ -107,6 +108,7 @@ const Navbar = () => {
     setIsLoggedIn(!!localStorage.getItem("token"));
     if (!!localStorage.getItem("token")) {
       try {
+        dispatch(fetchUserData());
         const tokenPayload = localStorage.getItem("token").split(".")[1];
         const decodedPayload = atob(tokenPayload);
         const payload = JSON.parse(decodedPayload);

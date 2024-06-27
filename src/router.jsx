@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, createBrowserRouter } from "react-router-dom";
-import PrivateRoute from "./PrivateRoute";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
@@ -26,6 +25,7 @@ import Success from "./components/payment/Sucess";
 import { Cancel } from "@mui/icons-material";
 import AssignProject from "./components/project/AssignProject";
 import AssignProjectToEmployees from "./pages/Project/AssignProject";
+import PrivateRoute from "./PrivateRoute";
 
 const UserLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +44,7 @@ const UserLayout = () => {
     }
   }, [dispatch, user]);
 
-  // console.log("Fetched user from router: ", user);
+  console.log("Fetched user from router: ", user);
 
   if (isLoading) {
     return <QueueSpinner isLoading={isLoading} />;
