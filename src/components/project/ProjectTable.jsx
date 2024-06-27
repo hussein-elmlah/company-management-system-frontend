@@ -77,8 +77,8 @@ const ProjectTable = ({ projects }) => {
               <td>{project.description}</td>
               <td>{project.owner?.fullName}</td>
               <td>{project.owner?.mobileNumber}</td>
-              <td>{project.expectedStartDate.substring(0,10)}</td>
-              <td>{project.expectedCompletionDate.substring(0,10)}</td>
+              <td>{project.expectedStartDate?.substring(0,10)}</td>
+              <td>{project.expectedCompletionDate?.substring(0,10)}</td>
               <td>
                 <div className="d-flex justify-content-between">
                   <button className="btn btn-link text-primary" onClick={() => handleView(project.id)}>
