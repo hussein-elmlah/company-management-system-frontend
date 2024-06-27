@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { createProject } from '../../store/slices/projectSlice';
 import FormInput from './FormInput';
 import { validateForm } from './validateForm';
 import { useTranslation } from 'react-i18next';
 import '../../i18n';
+import { selectUser } from "../../store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const ProjectForm = () => {
   const { t } = useTranslation();
+  const user = useSelector(selectUser);
+  console.log("user from project form: ", user);
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.projects);
   const [formData, setFormData] = useState({
     name: '',
     location: '',
-    owner: '',
+    owner: {
+      fullName: '',
+      mobileNumber: '',
+    },
     plotNumber: '',
     planNumber: '',
     landPerimeter: '',
@@ -22,22 +29,38 @@ const ProjectForm = () => {
     numberOfFloors: '',
     buildingArea: '',
     totalBuildingArea: '',
-    basement: false,
-    groundAnnex: false,
+    annex: {
+      upper: false,
+      land: false,
+    },
     description: '',
     client: {
-      fullName: '',
-      mobileNumber: '',
+      user: user._id,
+      fullName: user.username,
+      mobileNumber: user.mobileNumber,
     },
   });
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({
-      ...formData,
-      [e.target.name]: value,
-    });
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === 'checkbox' ? checked : value;
+
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setFormData({
+        ...formData,
+        [parent]: {
+          ...formData[parent],
+          [child]: inputValue,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: inputValue,
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -53,7 +76,10 @@ const ProjectForm = () => {
           setFormData({
             name: '',
             location: '',
-            owner: '',
+            owner: {
+              fullName: '',
+              mobileNumber: '',
+            },
             plotNumber: '',
             planNumber: '',
             landPerimeter: '',
@@ -63,14 +89,18 @@ const ProjectForm = () => {
             numberOfFloors: '',
             buildingArea: '',
             totalBuildingArea: '',
-            basement: false,
-            groundAnnex: false,
+            annex: {
+              upper: false,
+              land: false,
+            },
             description: '',
             client: {
-              fullName: '',
-              mobileNumber: '',
+              user: user._id,
+              fullName: user.username,
+              mobileNumber: user.mobileNumber,
             },
           });
+          console.log('form data:', formData);
           setErrors({});
         })
         .catch((error) => {
@@ -85,7 +115,7 @@ const ProjectForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="container mt-4 p-4 bg-white shadow rounded">
-<div className="row g-3">
+      <div className="row g-3">
         <FormInput
           id="name"
           label={t('projectName')}
@@ -107,14 +137,24 @@ const ProjectForm = () => {
           placeholder={t('enterProjectLocation')}
         />
         <FormInput
-          id="owner"
+          id="owner.fullName"
           label={t('ownerName')}
           type="text"
-          name="owner"
-          value={formData.owner}
+          name="owner.fullName"
+          value={formData.owner.fullName}
           onChange={handleChange}
-          errors={errors.owner}
+          errors={errors.owner && errors.owner.fullName}
           placeholder={t('enterOwnerName')}
+        />
+        <FormInput
+          id="owner.mobileNumber"
+          label={t('owner-mobile-number')}
+          type="text"
+          name="owner.mobileNumber"
+          value={formData.owner.mobileNumber}
+          onChange={handleChange}
+          errors={errors.owner && errors.owner.mobileNumber}
+          placeholder={t('enterOwnerMobileNumber')}
         />
         <FormInput
           id="plotNumber"
@@ -214,29 +254,27 @@ const ProjectForm = () => {
           placeholder={t('enterTotalBuildingArea')}
         />
         <div className="mb-3 form-check">
-          <label className="form-check-label" htmlFor="basement">
-            {t('basement')}
+          <label className="form-check-label" htmlFor="annex.upper">
+            {t('upperAnnex')}
           </label>
           <input
             type="checkbox"
-            id="basement"
-            style={{'margin-left': '30px'}}
-            name="basement"
-            checked={formData.basement}
+            id="annex.upper"
+            name="annex.upper"
+            checked={formData.annex.upper}
             onChange={handleChange}
             className="form-check-input"
           />
         </div>
         <div className="mb-3 form-check">
-          <label className="form-check-label" htmlFor="groundAnnex">
+          <label className="form-check-label" htmlFor="annex.land">
             {t('groundAnnex')}
           </label>
           <input
             type="checkbox"
-            id="groundAnnex"
-            style={{'margin-left': '30px'}}
-            name="groundAnnex"
-            checked={formData.groundAnnex}
+            id="annex.land"
+            name="annex.land"
+            checked={formData.annex.land}
             onChange={handleChange}
             className="form-check-input"
           />
@@ -250,28 +288,6 @@ const ProjectForm = () => {
           onChange={handleChange}
           errors={errors.description}
           placeholder={t('enterProjectDescription')}
-        />
-
-        <FormInput
-          id="fullName"
-          label={t('full-name')}
-          type="text"
-          name="fullName"
-          defaultValue={formData.client.fullName}
-          onChange={handleChange}
-          errors={errors.fullName}
-          placeholder={t('enterYourFullName')}
-        />
-
-        <FormInput
-          id="mobileNumber"
-          label={t('mobile-number')}
-          type="text"
-          name="mobileNumber"
-          defaultValue={formData.client.mobileNumber}
-          onChange={handleChange}
-          errors={errors.mobileNumber}
-          placeholder={t('enterYourMobileNumber')}
         />
       </div>
       <button

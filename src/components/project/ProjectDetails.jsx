@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchProjectById, setSelectedProject } from '../../store/slices/projectSlice';
-import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../reusables/LoadingSpinner';
 import { FaProjectDiagram, FaUser, FaPhone, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +12,6 @@ const ProjectDetails = () => {
   const project = useSelector(state => state.projects.selectedProject);
   const loading = useSelector(state => state.projects.loading);
   const error = useSelector(state => state.projects.error);
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -29,11 +27,19 @@ const ProjectDetails = () => {
   }
 
   if (error) {
-    return <div className="container mt-4"><div className="alert alert-danger">{t('error')}: {error}</div></div>;
+    return (
+      <div className="container mt-4">
+        <div className="alert alert-danger">{t('error')}: {error}</div>
+      </div>
+    );
   }
 
   if (!project) {
-    return <div className="container mt-4"><div className="alert alert-info">{t('noProjectFound')}</div></div>;
+    return (
+      <div className="container mt-4">
+        <div className="alert alert-info">{t('noProjectFound')}</div>
+      </div>
+    );
   }
 
   return (
@@ -61,14 +67,93 @@ const ProjectDetails = () => {
                 <FaUser className="text-muted mr-2" />
                 <p className="text-muted mb-1">{t('ownerName')}</p>
               </div>
-              <p>{project.owner}</p>
+              <p>{project.owner.fullName}</p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center">
                 <FaPhone className="text-muted mr-2" />
                 <p className="text-muted mb-1">{t('ownerMobile')}</p>
               </div>
-              <p>{project.client?.mobileNumber}</p>
+              <p>{project.owner.mobileNumber}</p>
+            </div>
+          </div>
+          {/* Display Project Pictures */}
+          {/* {project.projectPictures.length > 0 && (
+            <div className="row mb-3">
+              <div className="col-md-12">
+                <p className="text-muted mb-1">{t('projectPictures')}</p>
+                <div className="row">
+                  {project.projectPictures.map((picture, index) => (
+                    <div key={index} className="col-md-3 mb-3">
+                      <div className="card">
+                        <img src={`http://localhost:5173/${picture}`} className="card-img-top" alt={`Project Picture ${index}`} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )} */}
+          
+          {/* Display Other Project Details */}
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('plotNumber')}</p>
+              <p>{project.plotNumber}</p>
+            </div>
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('planNumber')}</p>
+              <p>{project.planNumber}</p>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('landPerimeter')}</p>
+              <p>{project.landPerimeter}</p>
+            </div>
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('landArea')}</p>
+              <p>{project.landArea}</p>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('program')}</p>
+              <p>{project.program}</p>
+            </div>
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('type')}</p>
+              <p>{project.type}</p>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('numberOfFloors')}</p>
+              <p>{project.numberOfFloors}</p>
+            </div>
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('buildingArea')}</p>
+              <p>{project.buildingArea}</p>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <p className="text-muted mb-1">{t('totalBuildingArea')}</p>
+              <p>{project.totalBuildingArea}</p>
+            </div>
+            <div className="col-md-6">
+              <div className="d-flex align-items-center">
+                <FaInfoCircle className="text-muted mr-2" />
+                <p className="text-muted mb-1">{t('annexUpper')}</p>
+              </div>
+              <p>{project.annex.upper ? t('yes') : t('no')}</p>
+            </div>
+            <div className="col-md-6">
+              <div className="d-flex align-items-center">
+                <FaInfoCircle className="text-muted mr-2" />
+                <p className="text-muted mb-1">{t('annexLand')}</p>
+              </div>
+              <p>{project.annex.land ? t('yes') : t('no')}</p>
             </div>
           </div>
           <div className="mb-3">
