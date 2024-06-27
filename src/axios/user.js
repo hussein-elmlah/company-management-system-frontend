@@ -49,6 +49,11 @@ export const getUsersOfDepartment = async function (dept_id) {
   return response.data;
 };
 
+export const updateProjectEmployees = async function (proj_id, data) {
+  const response = await axiosInstance.put(`/projects/${proj_id}/employees`, data);
+  return response.data;
+};
+
 const UserService = {
   createUser,
   createEmpUser,
@@ -60,7 +65,8 @@ const UserService = {
   updateUser,
   getDepartments,
   getUserById,
-  getUsersOfDepartment
+  getUsersOfDepartment,
+  updateProjectEmployees
 };
 
 export default UserService;
