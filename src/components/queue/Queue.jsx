@@ -10,8 +10,7 @@ import { debounce } from "../../utilities/debounce";
 import { QueueSpinner } from "../reusables/LoadingSpinner";
 import { FaTasks } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-
+import { FaEye } from 'react-icons/fa';
 
 const Queue = () => {
   const navigate = useNavigate();
@@ -99,6 +98,10 @@ const Queue = () => {
       ...(searchWord && searchField && { [searchField]: searchWord }),
     };
     dispatch(fetchProjectsWithParams(params));
+  };
+
+  const handleView = (projectId) => {
+    navigate(`/projectdetails/${projectId}`);
   };
 
   const handleVisualizationChange = (e) => {
@@ -221,6 +224,7 @@ const Queue = () => {
         <table className="table table-striped table-bordered">
           <thead>
             <tr>
+              <th scope="col">view</th>
               <th scope="col">project name</th>
               <th scope="col">status</th>
               <th scope="col">location</th>
@@ -228,14 +232,19 @@ const Queue = () => {
               <th scope="col">client number</th>
               <th scope="col">owner</th>
               <th scope="col">project type</th>
-              <th scope="col">expected Start Date</th>
-              <th scope="col">expected Completion Date</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">Completion Date</th>
               <th scope="col">Assign</th>
             </tr>
           </thead>
           <tbody>
             {projects.map((project, index) => (
               <tr key={index}>
+                <td>
+                  <button className="btn btn-link text-primary" onClick={() => handleView(project.id)}>
+                    <FaEye />
+                  </button>
+                </td>
                 <td>{project.name}</td>
                 <td>{project.projectStatus}</td>
                 <td>{project.location}</td>

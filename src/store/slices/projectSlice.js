@@ -102,6 +102,31 @@ export const assignProject = createAsyncThunk(
   }
 );
 
+
+export const addProjectPicture = createAsyncThunk(
+  "projects/addProjectPicture",
+  async ({ projectId, pictureData }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`/projects/${projectId}/pictures`, pictureData);
+      return response.data; // Assuming response.data contains updated project object
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteProjectPicture = createAsyncThunk(
+  "projects/deleteProjectPicture",
+  async ({ projectId, pictureId }, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(`/projects/${projectId}/pictures/${pictureId}`);
+      return pictureId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   projects: [],
   projectList: [],
@@ -229,9 +254,45 @@ const projectSlice = createSlice({
       .addCase(assignProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+
+
+      .addCase(addProjectPicture.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addProjectPicture.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        // Assuming action.payload contains updated project object
+        state.selectedProject = action.payload;
+      })
+      .addCase(addProjectPicture.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      .addCase(deleteProjectPicture.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProjectPicture.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        // Assuming action.payload is the deleted pictureId
+        if (state.selectedProject) {
+          state.selectedProject.projectPictures = state.selectedProject.projectPictures.filter(
+            (picture) => picture.id !== action.payload
+          );
+        }
+      })
+      .addCase(deleteProjectPicture.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
-});
+})
 
 export const { setCurrentPage, setSelectedProject } = projectSlice.actions;
 

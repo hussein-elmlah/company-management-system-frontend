@@ -5,17 +5,22 @@ import { updateProject, fetchProjectById } from '../../store/slices/projectSlice
 import FormInput from './FormInput';
 import { validateForm } from './validateForm';
 import { useTranslation } from 'react-i18next';
+import { selectUser } from '../../store/slices/userSlice';
 
 const UpdateProjectForm = () => {
   const { t } = useTranslation();
   const { projectId } = useParams();
-  console.log(projectId);
   const dispatch = useDispatch();
   const { selectedProject: project, error } = useSelector((state) => state.projects);
+  const user = useSelector(selectUser);
+  
   const [formData, setFormData] = useState({
     name: '',
     location: '',
-    owner: '',
+    owner: {
+      fullName: '',
+      mobileNumber: '',
+    },
     plotNumber: '',
     planNumber: '',
     landPerimeter: '',
@@ -25,10 +30,19 @@ const UpdateProjectForm = () => {
     numberOfFloors: '',
     buildingArea: '',
     totalBuildingArea: '',
-    basement: false,
-    groundAnnex: false,
+    annex: {
+      upper: false,
+      land: false,
+    },
     description: '',
+    client: {
+      user: user._id,
+      fullName: user.username,
+      mobileNumber: user.mobileNumber,
+    },
+    fileLinkOriginal: '',
   });
+
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -39,16 +53,56 @@ const UpdateProjectForm = () => {
 
   useEffect(() => {
     if (project) {
-      setFormData(project);
+      setFormData({
+        name: project.name || '',
+        location: project.location || '',
+        owner: {
+          fullName: project.owner.fullName || '',
+          mobileNumber: project.owner.mobileNumber || '',
+        },
+        plotNumber: project.plotNumber || '',
+        planNumber: project.planNumber || '',
+        landPerimeter: project.landPerimeter || '',
+        landArea: project.landArea || '',
+        program: project.program || '',
+        type: project.type || '',
+        numberOfFloors: project.numberOfFloors || '',
+        buildingArea: project.buildingArea || '',
+        totalBuildingArea: project.totalBuildingArea || '',
+        annex: {
+          upper: project.annex?.upper || false,
+          land: project.annex?.land || false,
+        },
+        description: project.description || '',
+        client: {
+          user: project.client.user || user._id,
+          fullName: project.client.fullName || user.username,
+          mobileNumber: project.client.mobileNumber || user.mobileNumber,
+        },
+        fileLinkOriginal: project.fileLinkOriginal || '',
+      });
     }
-  }, [project]);
+  }, [project, user._id, user.username, user.mobileNumber]);
 
   const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({
-      ...formData,
-      [e.target.name]: value,
-    });
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === 'checkbox' ? checked : value;
+
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setFormData({
+        ...formData,
+        [parent]: {
+          ...formData[parent],
+          [child]: inputValue,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: inputValue,
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -60,6 +114,7 @@ const UpdateProjectForm = () => {
       dispatch(updateProject({ projectId: projectId, updatedFields: formData }))
         .then(() => {
           console.log('Project updated successfully!');
+          alert("Project updated successfully");
           setErrors({});
         })
         .catch((error) => {
@@ -75,7 +130,7 @@ const UpdateProjectForm = () => {
   return (
     <form onSubmit={handleSubmit} className="container mt-4 p-4 bg-white shadow rounded">
       <div className="row g-3">
-      <FormInput
+        <FormInput
           id="name"
           label={t('projectName')}
           type="text"
@@ -96,14 +151,24 @@ const UpdateProjectForm = () => {
           placeholder={t('enterProjectLocation')}
         />
         <FormInput
-          id="owner"
+          id="owner.fullName"
           label={t('ownerName')}
           type="text"
-          name="owner"
-          value={formData.owner}
+          name="owner.fullName"
+          value={formData.owner.fullName}
           onChange={handleChange}
-          errors={errors.owner}
+          errors={errors.owner && errors.owner.fullName}
           placeholder={t('enterOwnerName')}
+        />
+        <FormInput
+          id="owner.mobileNumber"
+          label={t('owner-mobile-number')}
+          type="text"
+          name="owner.mobileNumber"
+          value={formData.owner.mobileNumber}
+          onChange={handleChange}
+          errors={errors.owner && errors.owner.mobileNumber}
+          placeholder={t('enterOwnerMobileNumber')}
         />
         <FormInput
           id="plotNumber"
@@ -203,29 +268,29 @@ const UpdateProjectForm = () => {
           placeholder={t('enterTotalBuildingArea')}
         />
         <div className="mb-3 form-check">
-          <label className="form-check-label" htmlFor="basement">
-            {t('basement')}
+          <label className="form-check-label" htmlFor="annex.upper">
+            {t('upperAnnex')}
           </label>
           <input
             type="checkbox"
-            id="basement"
-            name="basement"
-            checked={formData.basement}
+            id="annex.upper"
+            name="annex.upper"
+            checked={formData.annex.upper}
             onChange={handleChange}
-            className="form-check-input"
+            className="form-check-input mx-2"
           />
         </div>
         <div className="mb-3 form-check">
-          <label className="form-check-label" htmlFor="groundAnnex">
+          <label className="form-check-label" htmlFor="annex.land">
             {t('groundAnnex')}
           </label>
           <input
             type="checkbox"
-            id="groundAnnex"
-            name="groundAnnex"
-            checked={formData.groundAnnex}
+            id="annex.land"
+            name="annex.land"
+            checked={formData.annex.land}
             onChange={handleChange}
-            className="form-check-input"
+            className="form-check-input mx-2"
           />
         </div>
         <FormInput
@@ -236,13 +301,11 @@ const UpdateProjectForm = () => {
           value={formData.description}
           onChange={handleChange}
           errors={errors.description}
-          placeholder={t('enterDescription')}
+          placeholder={t('enterProjectDescription')}
         />
       </div>
-      <button
-        type="submit"
-        className="btn btn-primary mt-3"
-      >
+
+      <button type="submit" className="btn btn-primary mt-3">
         {t('updateProject')}
       </button>
     </form>
