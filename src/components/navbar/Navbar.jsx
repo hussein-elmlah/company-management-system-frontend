@@ -2,11 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { fetchUserData, selectUser } from "../../store/slices/userSlice";
 import { useSelector } from "react-redux";
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Dropdown } from 'react-bootstrap';
-import { getMyNotifications, readAllNotifications } from '../../axios/notifications';
-import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../locales/LanguageSwitcher';
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Dropdown } from "react-bootstrap";
+import {
+  getMyNotifications,
+  readAllNotifications,
+} from "../../axios/notifications";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../locales/LanguageSwitcher";
 
 const fetchMyNotifications = async (id) => {
   try {
@@ -163,14 +166,13 @@ const Navbar = () => {
               </>
             )}
 
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/createproject">
-                {t("add project")}
-              </NavLink>
-            </li>
-
             {isLoggedIn && (
               <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/createproject">
+                    {t("add project")}
+                  </NavLink>
+                </li>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/projects">
                     {t("my projects")}
