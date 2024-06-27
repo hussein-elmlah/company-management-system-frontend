@@ -25,6 +25,7 @@ import Checkout from "./components/payment/Checkout";
 import Success from "./components/payment/Sucess";
 import { Cancel } from "@mui/icons-material";
 import AssignProject from "./components/project/AssignProject";
+import AssignProjectToEmployees from "./pages/Project/AssignProject";
 
 const UserLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -133,7 +134,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/projects/:projectId/assign',
-        element: <PrivateRoute element={<AssignProject/>} />
+        element: <PrivateRoute element={<AssignProjectToEmployees/>} />
       },
       {
         path: "/payment",

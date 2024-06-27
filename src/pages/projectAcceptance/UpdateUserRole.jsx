@@ -1,15 +1,8 @@
- 
-
-
-
-
-
-
 import   { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import UserService from '../../axios/user';
 
-const roles = ["client", "junior", "senior", "branchManager", "companyOwner"];
+const roles = ["client", "junior", "senior", "branchManager"];
 
 const UpdateUserProfile = () => {
   const { userId } = useParams();
@@ -61,8 +54,7 @@ const UpdateUserProfile = () => {
       setLoading(true);
       const updatedData = {
         role,
-        department,
-        contract
+        department
       };
       await UserService.updateUser(userId, updatedData);
       setSuccess('User profile updated successfully');
@@ -139,46 +131,6 @@ const UpdateUserProfile = () => {
                 </option>
               ))}
             </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="contractNumber">Contract Number:</label>
-            <input
-              type="text"
-              id="contractNumber"
-              className="form-control"
-              value={contract.number}
-              onChange={(e) => setContract({ ...contract, number: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="startDate">Start Date:</label>
-            <input
-              type="date"
-              id="startDate"
-              className="form-control"
-              value={contract.startDate}
-              onChange={(e) => setContract({ ...contract, startDate: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="endDate">End Date:</label>
-            <input
-              type="date"
-              id="endDate"
-              className="form-control"
-              value={contract.endDate}
-              onChange={(e) => setContract({ ...contract, endDate: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="salary">Salary:</label>
-            <input
-              type="number"
-              id="salary"
-              className="form-control"
-              value={contract.salary}
-              onChange={(e) => setContract({ ...contract, salary: e.target.value })}
-            />
           </div>
           <button type="submit" className="btn btn-primary">Update</button>
         </form>

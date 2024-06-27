@@ -30,8 +30,7 @@ const EmployeeSignupComponent = () => {
         .required(t("passwordRequired")),
     }),
     onSubmit: (values, { resetForm }) => {
-      values.type = "employee";
-      UserService.createUser(values)
+      UserService.createEmpUser(values)
         .then((response) => {
           console.log(response.headers);
           alert(t("signupSuccess"));
@@ -149,6 +148,7 @@ const EmployeeSignupComponent = () => {
               {...formik.getFieldProps("password")}
               placeholder={t("passwordPlaceholder")}
             />
+            
             {formik.touched.password && formik.errors.password ? (
               <div className="form-text text-danger">
                 <small>{formik.errors.password}</small>
