@@ -7,6 +7,7 @@ import LanguageSwitcher from '../locales/LanguageSwitcher';
 import { io } from 'socket.io-client';
 import { fetchUserData, selectUser } from '../../store/slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import UserService from '../../axios/user';
 
 const fetchMyNotifications = async (id) => {
   try {
