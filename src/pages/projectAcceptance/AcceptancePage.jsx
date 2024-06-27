@@ -168,6 +168,7 @@ const ProjectAcceptance = () => {
                 <FaCalendarAlt className="text-muted mr-2" />
                 <p className="text-muted small mb-0">{t('expectedStartDate')}: {expectedStartDate ? new Date(expectedStartDate).toLocaleDateString() : 'N/A'}</p>
               </div>
+              <br />
               <input 
                 type="date" 
                 id="expectedStartDate" 
@@ -181,6 +182,7 @@ const ProjectAcceptance = () => {
                 <FaCalendarAlt className="text-muted mr-2" />
                 <p className="text-muted small mb-0">{t('expectedCompletionDate')}: {expectedCompletionDate ? new Date(expectedCompletionDate).toLocaleDateString() : 'N/A'}</p>
               </div>
+              <br />
               <input 
                 type="date" 
                 id="expectedCompletionDate" 
@@ -189,13 +191,11 @@ const ProjectAcceptance = () => {
                 onChange={(e) => setExpectedCompletionDate(e.target.value)} 
               />
             </div>
-            <button className="btn btn-success" onClick={handleAccept}>Accept Project</button> &nbsp;
-            <button className="btn btn-danger" onClick={handleReject}>Reject Project</button>
           </div>
           <form onSubmit={handleSubmit}>
             <button type="submit" className="btn btn-primary mb-3">Update Dates</button>
           </form>
-          <button className="btn btn-success mr-2" onClick={handleAccept}>Accept Project</button>
+          <button className="btn btn-success mr-2" onClick={handleAccept}>Accept Project</button> &nbsp;
           <button className="btn btn-danger" onClick={handleReject}>Reject Project</button>
         </div>
       </div>
