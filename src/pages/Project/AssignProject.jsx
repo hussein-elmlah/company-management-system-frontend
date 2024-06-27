@@ -131,14 +131,16 @@ const AssignProjectToEmployees = () => {
     try {
       setLoading(true);
       // big array of assigned users and project id to be set as separate documents in project-employee
-      const updatedData = {
-        civilEmployees,
-        architectureEmployees,
-        mechanicalEmployees,
-        electricalEmployees
-      };
-      console.log(updatedData);
-      // await UserService.updateUser(userId, updatedData);
+      const updatedData = [
+        civilselected,
+        archselected,
+        mechselected,
+        elecselected
+      ];
+      console.log("clicked");
+      const employees = updatedData.flat().map(u=>u.value);
+      console.log(Array.from(employees));
+      await UserService.updateProjectEmployees(projectId, employees);
       setSuccess('The project has been assigned successfully');
     } catch (err) {
       setError('Error updating user profile');
