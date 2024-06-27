@@ -4,7 +4,6 @@ import { axiosInstance } from "../../axios";
 
 const Checkout = ({  }) => {
   const [token, setToken] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("card");
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");

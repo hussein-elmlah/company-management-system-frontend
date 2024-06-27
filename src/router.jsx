@@ -95,7 +95,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/projects",
-        element: <PrivateRoute element={<ProjectList />}  allowedRoles={[...employees,'client']} />,
+        element:<ProjectList />  
       },
       {
         path: "/createproject",
@@ -103,7 +103,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/projectdetails/:projectId",
-        element: <PrivateRoute element={<ProjectDetails />}  allowedRoles={[...employees,'client']} />,
+        element: <ProjectDetails /> 
       },
       {
         path: "/acceptance/:id",

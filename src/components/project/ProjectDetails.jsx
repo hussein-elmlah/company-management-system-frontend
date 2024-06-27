@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchProjectById, setSelectedProject } from '../../store/slices/projectSlice';
-import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../reusables/LoadingSpinner';
 import { FaProjectDiagram, FaUser, FaPhone, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import Swal from 'sweetalert2';
+import { axiosInstance } from "../../axios";
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -13,7 +14,6 @@ const ProjectDetails = () => {
   const project = useSelector(state => state.projects.selectedProject);
   const loading = useSelector(state => state.projects.loading);
   const error = useSelector(state => state.projects.error);
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -23,6 +23,26 @@ const ProjectDetails = () => {
       dispatch(setSelectedProject(null));
     };
   }, [dispatch, projectId]);
+
+  const handleCheckout = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axiosInstance.post("/payment", {
+        currency: 'usd',
+        projectId: projectId,
+      });
+
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error("Invalid response from server");
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error.message);
+      Swal.fire("Error!", "There was an issue during checkout. Please try again.", "error");
+    }
+  };
 
   if (loading) {
     return <LoadingSpinner />;
@@ -61,7 +81,7 @@ const ProjectDetails = () => {
                 <FaUser className="text-muted mr-2" />
                 <p className="text-muted mb-1">{t('ownerName')}</p>
               </div>
-              <p>{project.owner}</p>
+              <p>{project.owner.fullName}</p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center">
@@ -89,6 +109,13 @@ const ProjectDetails = () => {
                 <p className="text-muted small mb-0">{t('updatedAt')}: {new Date(project.updatedAt).toLocaleString()}</p>
               </div>
             </div>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleCheckout}
+            >
+              Checkout (${project.amount} USD)
+            </button>
           </div>
         </div>
       </div>
